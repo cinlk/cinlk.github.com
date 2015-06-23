@@ -7,7 +7,7 @@
     <title>hexo在github上 搭建博客 | Cinlk&#39;s Blog</title>
     <meta name="author" content="cinlk">
     
-    <meta name="description" content="简单介绍使用hexo搭建博客的方法。">
+    <meta name="description" content="简单介绍使用hexo搭建博客的方法hexo 版本为2.8.3本，本教程只适用于windows用户。">
     
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -194,12 +194,11 @@
 
     <div class="toc-wrap">
         <div class="toc-title">目录</div>
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装Git"><span class="toc-number">1.</span> <span class="toc-text">安装Git</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装Node-js"><span class="toc-number">2.</span> <span class="toc-text">安装Node.js</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装hexo"><span class="toc-number">3.</span> <span class="toc-text">安装hexo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建hexo文件夹"><span class="toc-number">4.</span> <span class="toc-text">创建hexo文件夹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装依赖包"><span class="toc-number">5.</span> <span class="toc-text">安装依赖包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行hexo"><span class="toc-number">6.</span> <span class="toc-text">运行hexo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#github_博客托管"><span class="toc-number">7.</span> <span class="toc-text">github 博客托管</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署hexo"><span class="toc-number">8.</span> <span class="toc-text">部署hexo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考资料"><span class="toc-number">9.</span> <span class="toc-text">参考资料</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装Git"><span class="toc-number">1.</span> <span class="toc-text">安装Git</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装Node-js"><span class="toc-number">2.</span> <span class="toc-text">安装Node.js</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装hexo"><span class="toc-number">3.</span> <span class="toc-text">安装hexo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建hexo文件夹"><span class="toc-number">4.</span> <span class="toc-text">创建hexo文件夹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装依赖包"><span class="toc-number">5.</span> <span class="toc-text">安装依赖包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行hexo"><span class="toc-number">6.</span> <span class="toc-text">运行hexo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#github"><span class="toc-number">7.</span> <span class="toc-text">github</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署hexo"><span class="toc-number">8.</span> <span class="toc-text">部署hexo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考资料"><span class="toc-number">9.</span> <span class="toc-text">参考资料</span></a></li></ol>
     </div>
 
     <div class="entry">
-        <p><strong>&lt;本教程只适用于windows用户,hexo 版本为2.8.3&gt;</strong></p>
-<h3 id="安装Git">安装Git</h3>
+        <h3 id="安装Git">安装Git</h3>
 <p>下载<a href="https://msysgit.github.io/" target="_blank" rel="external">msysgit</a>安装即可。</p>
 <h3 id="安装Node-js">安装Node.js</h3>
 <p>下载<a href="https://nodejs.org/" target="_blank" rel="external">node.js</a>软件进行安装即可。</p>
@@ -222,7 +221,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$  hexo g</div><div class="line">$  hexo s</div></pre></td></tr></table></figure>
 
 <p>打开浏览器输入<a href="http://localhost:4000" target="_blank" rel="external">127.0.0.1:4000</a>，本地博客已经搭建起来了。</p>
-<h3 id="github_博客托管">github 博客托管</h3>
+<h3 id="github">github</h3>
 <p>接下来把博客部署到github上，别人就可以看到了。</p>
 <ul>
 <li>先注册一个github帐号，以github的用户名建立&lt;用户名&gt;.github.io这样的仓库</li>
@@ -248,7 +247,7 @@
 <li>执行hexo generate和hexo deploy，成功运行后访问自己设置的域名地址，就可以看见自己的博客。</li>
 </ul>
 <h3 id="参考资料">参考资料</h3>
-<p>[1] <a href="http://ibruce.info/2013/11/22/hexo-your-blog/" target="_blank" rel="external">http://ibruce.info/2013/11/22/hexo-your-blog/</a><br>[2] <a href="http://www.jianshu.com/p/05289a4bc8b2" target="_blank" rel="external">http://www.jianshu.com/p/05289a4bc8b2</a></p>
+<p>[1] <a href="http://ibruce.info/2013/11/22/hexo-your-blog/" target="_blank" rel="external">http://ibruce.info/2013/11/22/hexo-your-blog/</a><br>[2] <a href="http://www.jianshu.com/p/05289a4bc8b2" target="_blank" rel="external">http://www.jianshu.com/p/05289a4bc8b2</a><br>[3] <a href="http://cnyod.com/2015/03/04/sub02/" target="_blank" rel="external">http://cnyod.com/2015/03/04/sub02/</a></p>
 
     </div>
     
