@@ -559,6 +559,22 @@ pre .clojure .title {
 pre .deletion {
   color: #dc322f;
 }
+.entry>table {
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+}
+.entry>table th,
+.entry>table td {
+  border: 1px solid #000;
+  border-collapse: collapse;
+  padding: 1px 8px 1px;
+}
+.entry>table thead {
+  border-bottom: 2px solid #ddd;
+}
+.entry>table tr:nth-child(even) {
+  background: #eee;
+}
 .reading-page ul {
   list-style: none;
   margin: 0;
