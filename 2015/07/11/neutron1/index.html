@@ -1,0 +1,439 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    
+    <title>Neutron基础知识 | Cinlk&#39;s Blog</title>
+    <meta name="author" content="cinlk">
+    
+    <meta name="description"   content="在 Linux 中，网络名字空间可以被认为是隔离的拥有单独网络栈（网卡、路由转发表、iptables）的环境。">
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <meta property="og:title" content="Neutron基础知识"/>
+    <meta property="og:site_name" content="Cinlk&#39;s Blog"/>
+
+    <link rel="alternate" href="/atom.xml" title="Cinlk&#39;s Blog" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href="/css/lib/normalize.css" type="text/css">
+    <link rel="stylesheet" href="/css/lib/furatto.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+        <link rel="stylesheet" href="/css/lib/prettify_raytaylorism.css" type="text/css">
+        
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.10.2.min.js"></script>
+    <script src="/js/jquery.jpanelmenu.js"></script>
+</head>
+
+
+<body class="container-fluid">
+    <header id="page-header">
+        <div class="navbar inverse-navbar">
+    <div class="navbar-inner">
+        <div class="container-center">
+            <a href="/index.html" class="menu-trigger" data-meteocon="M">
+                <i class="icon-reorder"></i>
+            </a>
+            <div class="nav-collapse navbar-responsive-collapse collapse">
+                <nav id="menu">
+                    <ul class="nav">
+                        <li><a class="brand" id="blog-title" href="/index.html">Cinlk&#39;s Blog</a></li>
+                    </ul>
+                    <div class="pull-right nav" id="nav-button-group">
+                        
+                            <a href="/" class="menu-home btn btn-primary btn-large">
+                                <i class="icon-home icon-white"></i>
+                                首页
+                            </a>
+                        
+                            <a href="/archives" class="menu-archive btn btn-primary btn-large">
+                                <i class="icon-archive icon-white"></i>
+                                归档
+                            </a>
+                        
+                            <a href="javascript:void(0);" class="menu-category btn btn-primary btn-large">
+                                <i class="icon-archive icon-white"></i>
+                                分类
+                            </a>
+                        
+                            <a href="/reading" class="menu-reading btn btn-primary btn-large">
+                                <i class="icon-book icon-white"></i>
+                                读书
+                            </a>
+                        
+                            <a href="/about" class="menu-about btn btn-primary btn-large">
+                                <i class="icon-user icon-white"></i>
+                                关于
+                            </a>
+                        
+                    </div>
+                </nav>
+                <nav id="jPanelMenu-menu-side">
+    <ul class="nav main-menu">
+        <li><a class="brand" href="index.html">Cinlk&#39;s Blog</a></li>
+        
+            <li>
+                <a href="/" class="menu-home">
+                    <i class="icon-home icon-white"></i>
+                    首页
+                </a>
+            </li>
+        
+            <li>
+                <a href="/archives" class="menu-archive">
+                    <i class="icon-archive icon-white"></i>
+                    归档
+                </a>
+            </li>
+        
+            <li>
+                <a href="javascript:void(0);" class="menu-category">
+                    <i class="icon-archive icon-white"></i>
+                    分类
+                </a>
+            </li>
+        
+            <li>
+                <a href="/reading" class="menu-reading">
+                    <i class="icon-book icon-white"></i>
+                    读书
+                </a>
+            </li>
+        
+            <li>
+                <a href="/about" class="menu-about">
+                    <i class="icon-user icon-white"></i>
+                    关于
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="nav category-menu hide">
+        <li>
+            <span><a class="brand" href="javascript:void(0);">分类目录</a></span>
+            <span><a class="btn-back brand pull-right" href="javascript:void(0);">
+                <i class="icon-arrow-left"></i>
+            </a></span>
+        </li>
+
+        
+
+        
+
+            
+
+            <li collapse-level="0">
+                <a href="/categories/install/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    install(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/blog/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    blog(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/neutron/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    neutron(2)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/osd/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    osd(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/object/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    object(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+        
+    </ul>
+</nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </header>
+    <div id="content-wrapper">
+        <div class="container-center">
+        <article class="post">
+    <div class="article-title article-title-big">
+        
+    
+        <h1>Neutron基础知识</h1>
+    
+
+    </div>
+
+    <div class="date-row ">
+        <time datetime="2015-07-11T15:45:31.000Z">7月 11 2015</time>
+    </div>
+
+    <div class="toc-wrap">
+        <div class="toc-title">目录</div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#网络命令空间"><span class="toc-number">1.</span> <span class="toc-text">网络命令空间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DHCP_服务"><span class="toc-number">2.</span> <span class="toc-text">DHCP 服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#路由服务"><span class="toc-number">3.</span> <span class="toc-text">路由服务</span></a></li></ol>
+    </div>
+
+    <div class="entry">
+        <p>本文介绍neutron网络命令空间、DHCP服务、路由服务的基础知识。<br><a id="more"></a></p>
+<h2 id="网络命令空间">网络命令空间</h2>
+<p>在 Linux 中，网络名字空间可以被认为是隔离的拥有单独网络栈（网卡、路由转发表、iptables）的环境。网络名字空间经常用来隔离网络设备和服务，只有拥有同样网络名字空间的设备，才能看到彼此。<br>可以用ip netns list命令来查看已经存在的名字空间。</p>
+<figure class="highlight"><pre><div class="line">stack<span class="variable">@localhost</span><span class="symbol">:</span><span class="variable">$ </span>ip net</div><div class="line">qdhcp-ea3928dc-b1fd-<span class="number">4</span>a1a-<span class="number">940</span>e-<span class="number">82</span>b8c55214e6</div><div class="line">qrouter-f7086a71-<span class="number">494</span>b-<span class="number">4</span>cbd-ac4c-abd62e237fb6</div></pre></figure>
+
+<p>qdhcp开头的名字空间是dhcp服务器使用的，qrouter开头的则是router服务使用的。 可以通过 ip netns exec namespaceid command 来在指定的网络名字空间中执行网络命令，例如</p>
+<figure class="highlight"><pre><div class="line">stack<span class="variable">@localhost</span><span class="symbol">:~</span><span class="variable">$ </span>sudo ip netns  exec qrouter-f7086a71-<span class="number">494</span>b-<span class="number">4</span>cbd-ac4c-abd62e237fb6 ifconfig </div><div class="line">lo        <span class="constant">Link</span> <span class="symbol">encap:</span><span class="constant">Local</span> <span class="constant">Loopback</span>  </div><div class="line">          inet <span class="symbol">addr:</span><span class="number">127.0</span>.<span class="number">0</span>.<span class="number">1</span>  <span class="constant">Mask</span><span class="symbol">:</span><span class="number">255.0</span>.<span class="number">0</span>.<span class="number">0</span></div><div class="line">          inet6 <span class="symbol">addr:</span> <span class="symbol">:</span><span class="symbol">:</span><span class="number">1</span>/<span class="number">128</span> <span class="constant">Scope</span><span class="symbol">:Host</span></div><div class="line">          <span class="constant">UP</span> <span class="constant">LOOPBACK</span> <span class="constant">RUNNING</span>  <span class="constant">MTU</span><span class="symbol">:</span><span class="number">65536</span>  <span class="constant">Metric</span><span class="symbol">:</span><span class="number">1</span></div><div class="line">          <span class="constant">RX</span> <span class="symbol">packets:</span><span class="number">50</span> <span class="symbol">errors:</span><span class="number">0</span> <span class="symbol">dropped:</span><span class="number">0</span> <span class="symbol">overruns:</span><span class="number">0</span> <span class="symbol">frame:</span><span class="number">0</span></div><div class="line">          <span class="constant">TX</span> <span class="symbol">packets:</span><span class="number">50</span> <span class="symbol">errors:</span><span class="number">0</span> <span class="symbol">dropped:</span><span class="number">0</span> <span class="symbol">overruns:</span><span class="number">0</span> <span class="symbol">carrier:</span><span class="number">0</span></div><div class="line">          <span class="symbol">collisions:</span><span class="number">0</span> <span class="symbol">txqueuelen:</span><span class="number">0</span> </div><div class="line">          <span class="constant">RX</span> <span class="symbol">bytes:</span><span class="number">4936</span> (<span class="number">4.9</span> <span class="constant">KB</span>)  <span class="constant">TX</span> <span class="symbol">bytes:</span><span class="number">4936</span> (<span class="number">4.9</span> <span class="constant">KB</span>)</div><div class="line"></div><div class="line">qg-<span class="number">91</span>f11019-a3 <span class="constant">Link</span> <span class="symbol">encap:</span><span class="constant">Ethernet</span>  <span class="constant">HWaddr</span> <span class="symbol">fa:</span><span class="number">16</span><span class="symbol">:</span><span class="number">3</span><span class="symbol">e:</span><span class="symbol">a3:</span><span class="number">02</span><span class="symbol">:</span><span class="number">42</span></div><div class="line">          inet <span class="symbol">addr:</span><span class="number">10.0</span>.<span class="number">2.30</span>  <span class="constant">Bcast</span><span class="symbol">:</span><span class="number">10.0</span>.<span class="number">2.255</span>  <span class="constant">Mask</span><span class="symbol">:</span><span class="number">255.255</span>.<span class="number">255.0</span>    </div><div class="line">          inet6 <span class="symbol">addr:</span> <span class="symbol">fe80:</span><span class="symbol">:f816</span><span class="symbol">:</span><span class="number">3</span><span class="symbol">eff:</span><span class="symbol">fea3:</span><span class="number">242</span>/<span class="number">64</span> <span class="constant">Scope</span><span class="symbol">:Link</span></div><div class="line">          <span class="constant">UP</span> <span class="constant">BROADCAST</span> <span class="constant">RUNNING</span>  <span class="constant">MTU</span><span class="symbol">:</span><span class="number">1500</span>  <span class="constant">Metric</span><span class="symbol">:</span><span class="number">1</span></div><div class="line">          <span class="constant">RX</span> <span class="symbol">packets:</span><span class="number">3014</span> <span class="symbol">errors:</span><span class="number">0</span> <span class="symbol">dropped:</span><span class="number">0</span> <span class="symbol">overruns:</span><span class="number">0</span> <span class="symbol">frame:</span><span class="number">0</span></div><div class="line">          <span class="constant">TX</span> <span class="symbol">packets:</span><span class="number">1801</span> <span class="symbol">errors:</span><span class="number">0</span> <span class="symbol">dropped:</span><span class="number">0</span> <span class="symbol">overruns:</span><span class="number">0</span> <span class="symbol">carrier:</span><span class="number">0</span></div><div class="line">          <span class="symbol">collisions:</span><span class="number">0</span> <span class="symbol">txqueuelen:</span><span class="number">0</span> </div><div class="line">          <span class="constant">RX</span> <span class="symbol">bytes:</span><span class="number">4275698</span> (<span class="number">4.2</span> <span class="constant">MB</span>)  <span class="constant">TX</span> <span class="symbol">bytes:</span><span class="number">191686</span> (<span class="number">191.6</span> <span class="constant">KB</span>)</div></pre></figure>
+
+<h2 id="DHCP_服务">DHCP 服务</h2>
+<p>dhcp服务是通过dnsmasq进程（轻量级服务器，可以提供dns、dhcp、tftp等服务）来实现的，该进程绑定到dhcp名字空间中的br-int的接口上。可以查看相关的进程。</p>
+<h2 id="路由服务">路由服务</h2>
+<p>首先，要理解什么是 router，router是提供跨 subnet 的互联功能的。比如用户的内部网络中主机想要访问外部互联网的地址，就需要router来转发（因此，所有跟外部网络的流量都必须经过router）。目前router的实现是通过iptables进行的。</p>
+<p>同样的，router服务也运行在自己的名字空间中，可以通过如下命令查看：</p>
+<figure class="highlight"><pre><div class="line">$ sudo ip net exec qrouter-<span class="number">40</span>fff075-d3a2-<span class="number">477</span>b-<span class="number">942</span>c-<span class="number">6</span>b1adb42e35e ip addr</div><div class="line"><span class="number">1</span>: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span class="number">65536</span> qdisc noqueue state UNKNOWN group <span class="keyword">default</span></div><div class="line">    link/loopback <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> brd <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span></div><div class="line">    inet <span class="number">127.0</span>.<span class="number">0.1</span>/<span class="number">8</span> scope host lo</div><div class="line">       valid_lft <span class="keyword">forever</span> preferred_lft <span class="keyword">forever</span></div><div class="line">    inet6 ::<span class="number">1</span>/<span class="number">128</span> scope host</div><div class="line">       valid_lft <span class="keyword">forever</span> preferred_lft <span class="keyword">forever</span></div><div class="line"><span class="number">49</span>: qr-<span class="number">694450</span>d6-f6: &lt;BROADCAST,UP,LOWER_UP&gt; mtu <span class="number">1500</span> qdisc noqueue state UNKNOWN group <span class="keyword">default</span></div><div class="line">    link/ether fa:<span class="number">16</span>:<span class="number">3</span>e:<span class="number">5</span>d:<span class="number">18</span>:<span class="number">10</span> brd ff:ff:ff:ff:ff:ff</div><div class="line">    inet <span class="number">10.0</span>.<span class="number">0.1</span>/<span class="number">24</span> brd <span class="number">10.0</span>.<span class="number">0.255</span> scope <span class="keyword">global</span> qr-<span class="number">694450</span>d6-f6</div><div class="line">       valid_lft <span class="keyword">forever</span> preferred_lft <span class="keyword">forever</span></div><div class="line">    inet6 fe80::f816:<span class="number">3</span>eff:fe5d:<span class="number">1810</span>/<span class="number">64</span> scope link</div><div class="line">       valid_lft <span class="keyword">forever</span> preferred_lft <span class="keyword">forever</span></div><div class="line"><span class="number">50</span>: qg-e76de35e-<span class="number">90</span>: &lt;BROADCAST,UP,LOWER_UP&gt; mtu <span class="number">1500</span> qdisc noqueue state UNKNOWN group <span class="keyword">default</span></div><div class="line">    link/ether fa:<span class="number">16</span>:<span class="number">3</span>e:<span class="number">70</span>:<span class="number">24</span>:<span class="number">92</span> brd ff:ff:ff:ff:ff:ff</div><div class="line">    inet <span class="number">9.186</span>.<span class="number">100.2</span>/<span class="number">24</span> brd <span class="number">9.186</span>.<span class="number">100.255</span> scope <span class="keyword">global</span> qg-e76de35e-<span class="number">90</span></div><div class="line">       valid_lft <span class="keyword">forever</span> preferred_lft <span class="keyword">forever</span></div><div class="line">    inet <span class="number">9.186</span>.<span class="number">100.129</span>/<span class="number">32</span> brd <span class="number">9.186</span>.<span class="number">100.129</span> scope <span class="keyword">global</span> qg-e76de35e-<span class="number">90</span></div><div class="line">       valid_lft <span class="keyword">forever</span> preferred_lft <span class="keyword">forever</span></div><div class="line">    inet6 fe80::f816:<span class="number">3</span>eff:fe70:<span class="number">2492</span>/<span class="number">64</span> scope link</div><div class="line">       valid_lft <span class="keyword">forever</span> preferred_lft <span class="keyword">forever</span></div></pre></figure>
+
+<p>可以看出，该名字空间中包括两个网络接口。</p>
+<p>第一个接口 qr-694450d6-f6（10.0.0.1）跟 br-int 上的接口相连。即任何从 br-int 来的找 10.0.0.1 （租户的私有网段）的网包都会到达这个接口。<br>第一个接口 qg-e76de35e-90 连接到 br-ex 上的接口，即任何从外部来的网包，询问 9.186.100.2（默认的静态 NAT 外部地址）或 9.186.100.129（租户申请的 floating IP 地址），都会到达这个接口。</p>
+<figure class="highlight"><pre><div class="line">$ sudo ip net exec qrouter-40fff075-d3a2-477b-942c-6b1adb42e35e iptables -t nat -S</div><div class="line">-<span class="ruby"><span class="constant">P</span> <span class="constant">PREROUTING</span> <span class="constant">ACCEPT</span></span></div><div class="line">-<span class="ruby"><span class="constant">P</span> <span class="constant">INPUT</span> <span class="constant">ACCEPT</span></span></div><div class="line">-<span class="ruby"><span class="constant">P</span> <span class="constant">OUTPUT</span> <span class="constant">ACCEPT</span></span></div><div class="line">-<span class="ruby"><span class="constant">P</span> <span class="constant">POSTROUTING</span> <span class="constant">ACCEPT</span></span></div><div class="line">-<span class="ruby"><span class="constant">N</span> neutron-postrouting-bottom</span></div><div class="line">-<span class="ruby"><span class="constant">N</span> neutron-vpn-agen-<span class="constant">OUTPUT</span></span></div><div class="line">-<span class="ruby"><span class="constant">N</span> neutron-vpn-agen-<span class="constant">POSTROUTING</span></span></div><div class="line">-<span class="ruby"><span class="constant">N</span> neutron-vpn-agen-<span class="constant">PREROUTING</span></span></div><div class="line">-<span class="ruby"><span class="constant">N</span> neutron-vpn-agen-float-snat</span></div><div class="line">-<span class="ruby"><span class="constant">N</span> neutron-vpn-agen-snat</span></div><div class="line">-<span class="ruby"><span class="constant">A</span> <span class="constant">PREROUTING</span> -j neutron-vpn-agen-<span class="constant">PREROUTING</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> <span class="constant">OUTPUT</span> -j neutron-vpn-agen-<span class="constant">OUTPUT</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> <span class="constant">POSTROUTING</span> -j neutron-vpn-agen-<span class="constant">POSTROUTING</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> <span class="constant">POSTROUTING</span> -j neutron-postrouting-bottom</span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-postrouting-bottom -j neutron-vpn-agen-snat</span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-<span class="constant">OUTPUT</span> -d <span class="number">9.186</span>.<span class="number">100.129</span>/<span class="number">32</span> -j <span class="constant">DNAT</span> --to-destination <span class="number">10.0</span>.<span class="number">0</span>.<span class="number">2</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-<span class="constant">POSTROUTING</span> ! -i qg-e76de35e-<span class="number">90</span> ! -o qg-e76de35e-<span class="number">90</span> -m conntrack ! --ctstate <span class="constant">DNAT</span> -j <span class="constant">ACCEPT</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-<span class="constant">PREROUTING</span> -d <span class="number">169.254</span>.<span class="number">169.254</span>/<span class="number">32</span> -p tcp -m tcp --dport <span class="number">80</span> -j <span class="constant">REDIRECT</span> --to-ports <span class="number">9697</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-<span class="constant">PREROUTING</span> -d <span class="number">9.186</span>.<span class="number">100.129</span>/<span class="number">32</span> -j <span class="constant">DNAT</span> --to-destination <span class="number">10.0</span>.<span class="number">0</span>.<span class="number">2</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-float-snat -s <span class="number">10.0</span>.<span class="number">0</span>.<span class="number">2</span>/<span class="number">32</span> -j <span class="constant">SNAT</span> --to-source <span class="number">9.186</span>.<span class="number">100.129</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-snat -j neutron-vpn-agen-float-snat</span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-snat -s <span class="number">10.0</span>.<span class="number">0</span>.<span class="number">0</span>/<span class="number">24</span> -j <span class="constant">SNAT</span> --to-source <span class="number">9.186</span>.<span class="number">100.2</span></span></div></pre></figure>
+
+<p>其中SNAT和DNAT规则完成外部 floating ip （9.186.100.129）到内部 ip（10.0.0.2） 的映射：</p>
+<figure class="highlight"><pre><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-<span class="constant">OUTPUT</span> -d <span class="number">9.186</span>.<span class="number">100.129</span>/<span class="number">32</span> -j <span class="constant">DNAT</span> --to-destination <span class="number">10.0</span>.<span class="number">0</span>.<span class="number">2</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-<span class="constant">PREROUTING</span> -d <span class="number">9.186</span>.<span class="number">100.129</span>/<span class="number">32</span> -j <span class="constant">DNAT</span> --to-destination <span class="number">10.0</span>.<span class="number">0</span>.<span class="number">2</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-float-snat -s <span class="number">10.0</span>.<span class="number">0</span>.<span class="number">2</span>/<span class="number">32</span> -j <span class="constant">SNAT</span> --to-source <span class="number">9.186</span>.<span class="number">100.129</span></span></div></pre></figure>
+
+<p>另外有一条SNAT规则把所有其他的内部IP出来的流量都映射到外部IP 9.186.100.2。这样即使在内部虚拟机没有外部IP的情况下，也可以发起对外网的访问。</p>
+<figure class="highlight"><pre><div class="line">-A neutron-vpn-agen-snat -<span class="keyword">s</span> <span class="number">10.0</span>.<span class="number">0.0</span>/<span class="number">24</span> -<span class="keyword">j</span> SNAT --<span class="keyword">to</span>-<span class="keyword">source</span> <span class="number">9.186</span>.<span class="number">100.2</span></div></pre></figure>
+
+
+    </div>
+    
+    <footer >
+        
+            
+    
+    <div class="categories">
+        所属目录：
+    <a href="/categories/neutron/">neutron</a>
+    </div>
+
+            
+    
+    <div class="tags-row">
+        标签：<a class="btn btn-info" href="/tags/neutron/">neutron</a>
+    </div>
+
+        
+        <div class="clearfix"></div>
+    </footer>
+</article>
+
+
+
+<section id="comment">
+    <!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2015/07/11/neutron1/" data-title="Neutron基础知识" data-url="http://cinlk.com/2015/07/11/neutron1/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	 var duoshuoQuery = {short_name: 'cinlk' };
+	  (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';
+		ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
+
+
+        </div>
+    </div>
+    <footer id="page-footer"><div class="footer-content">
+    <div class="container-center">
+        <div class="footer-text pull-left">
+            <div class="copyright">
+                
+                Copyright &copy; 2015 <a href="/">cinlk</a>
+                
+            </div>
+            <div class="theme-copyright">
+                <span>Blog powered by <a href="https://hexo.io/">hexo</a></span>
+                Theme by <a href="https://github.com/raytaylorlin/hexo-theme-raytaylorism">raytaylorism</a> @<a href='cinlk.github.io/about'>cinlk
+            </div>
+        </div>
+        <div class="social-group pull-right">
+            
+            <a href="https://github.com/cinlk" target="_blank" title="github"><i class="icon-github"></i></a>
+            
+            
+            <a href="http://www.zhihu.com/people/kou-hu-10" target="_blank" title="知乎"><i class="icon-xing-sign"></i></a>
+            
+			
+			<a href="http://www.linkedin.com/profile/preview?locale=zh_CN&amp;trk=prof-0-sb-preview-primary-button" target="_blank" title="领英"><i class="icon-linkedin"></i></a>
+			
+            
+            <a href="https://plus.google.com/u/0/" target="_blank" title="Google+"><i class="icon-google-plus-sign"></i></a>
+            
+        </div>
+        <div class="clearfix"></div>
+		
+<script type="text/javascript">
+  var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+  document.write(unescape("%3Cspan id='cnzz_stat_icon_1255502307'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1255502307' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+	</div>
+</div>
+</footer>
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-43460643-1', 'raytaylorlin.com');
+    ga('send', 'pageview');
+
+</script>
+
+
+<script src="/js/prettify.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("pre").addClass("prettyprint");
+        prettyPrint();
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script>
+    (function($) {
+        //当内容区内容不够长时，设置内容区域的高度使footer沉底
+        var resizeContentWrapper = function() {
+            //HACK: 用延时的方法使计算高度时候更加准确，会有一闪的情况
+            setTimeout(function() {
+                var contentHeight = Math.floor($('#content-wrapper .container-center').height()),
+                headerHeight = Math.floor($('#page-header').height()),
+                footerHeight = Math.floor($('#page-footer').height()),
+                minHeight = Math.floor($(window).height() - headerHeight - footerHeight);
+                if(contentHeight < minHeight) {
+                    $('#content-wrapper').css({height: minHeight});                    
+                } else {
+                    $('#content-wrapper').css({height: 'auto'});
+                }
+            },500);
+        };
+
+        //响应式侧边栏
+        var initJPanelMenu = function() {
+            var jPM = $.jPanelMenu({
+                menu: '#jPanelMenu-menu-side',
+                duration: 500
+            });
+            jPM.on();
+        };
+
+        //初始化目录按钮事件绑定
+        var initCategory = function() {
+            function showMainMenu() {
+                var $jPanelMenu = $('#jPanelMenu-menu');
+                $jPanelMenu.find('ul.category-menu').hide();
+                $jPanelMenu.find('ul.main-menu').fadeIn();
+            }
+
+            function showCategoryMenu() {
+                var $jPanelMenu = $('#jPanelMenu-menu');
+                $jPanelMenu.find('ul.main-menu').hide();
+                $jPanelMenu.find('ul.category-menu').fadeIn();
+            }
+
+            $('.menu-category').click(function() {
+                var jPM = $.jPanelMenu({
+                    duration: 500,
+                    beforeOpen: function() {
+                        showCategoryMenu();
+                    },
+                    afterClose: function() {
+                        showMainMenu();
+                    }
+                });
+                if(jPM.isOpen()) {
+                    showCategoryMenu();
+                } else {
+                    jPM.open();
+                }
+            });
+
+            $('.category-menu').on('click', '.btn-back', function() {
+                showMainMenu();
+            });
+        };
+
+        $(document).ready(resizeContentWrapper);
+        $(document).ready(initJPanelMenu);
+        $(document).ready(initCategory);
+        
+        $(window).resize(resizeContentWrapper);
+    })(jQuery);
+</script>
+
+</body>
+</html>
