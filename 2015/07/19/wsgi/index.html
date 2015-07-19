@@ -130,19 +130,6 @@
             
 
             <li collapse-level="0">
-                <a href="/categories/neutron/" class="collapse-level-0">
-                    <i class="icon-caret-right"></i>
-                    neutron(2)
-                </a>
-            </li>
-
-            
-
-            
-
-        
-
-            <li collapse-level="0">
                 <a href="/categories/install/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
                     install(1)
@@ -169,9 +156,9 @@
         
 
             <li collapse-level="0">
-                <a href="/categories/web/" class="collapse-level-0">
+                <a href="/categories/neutron/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    web(1)
+                    neutron(2)
                 </a>
             </li>
 
@@ -198,6 +185,19 @@
                 <a href="/categories/object/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
                     object(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/web/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    web(1)
                 </a>
             </li>
 
@@ -312,7 +312,7 @@
 <figure class="highlight python"><pre><div class="line"><span class="keyword">import</span> httplib</div><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> webob.dec</div><div class="line"></div><div class="line"><span class="keyword">from</span> webob <span class="keyword">import</span> Response</div><div class="line"><span class="keyword">from</span> BaseApplication <span class="keyword">import</span> BaseApplication</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Application</span><span class="params">(BaseApplication)</span>:</span></div><div class="line"></div><div class="line">    <span class="decorator">@webob.dec.wsgify()</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self,req)</span>:</span></div><div class="line">        response=Response(request=req,</div><div class="line">        status=httplib.MULTIPE_CHOICE,content_type=<span class="string">'application/json'</span>)</div><div class="line">        response.body=json.dumps(dict(test=<span class="string">'test'</span>))</div><div class="line">        <span class="keyword">return</span> response</div></pre></figure>
 
 <p>server.py</p>
-<figure class="highlight python"><pre><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">from</span> paste <span class="keyword">import</span> deploy</div><div class="line"><span class="keyword">from</span> wsgiref.simple_server <span class="keyword">import</span> make_server</div><div class="line">host=<span class="string">'127.0.0.1'</span></div><div class="line">port=<span class="number">12222</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">server</span><span class="params">(app_name,conf_file)</span>:</span></div><div class="line">	app=load_paste_app(app_name,conf_file)</div><div class="line">	server=make_server(host,port,app)</div><div class="line">	server.serve_forever()</div><div class="line">	</div><div class="line"><span class="comment">#加载应用	</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_paste_app</span><span class="params">(app_name,conf_file)</span>:</span></div><div class="line">	<span class="keyword">try</span>:</div><div class="line">		app=deploy.loadapp(<span class="string">'config:%s'</span> %os.path.abspath(conf_file),name=app_name)</div><div class="line">		<span class="keyword">return</span> app</div><div class="line">	<span class="keyword">except</span> (LookupError,ImportError) <span class="keyword">as</span> e:</div><div class="line">		<span class="keyword">raise</span> RuntimeError(str(e))</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__==<span class="string">'__main__'</span>:</div><div class="line">	app_name=<span class="string">'myapp'</span></div><div class="line">	conf_file=<span class="string">'myapp.ini'</span></div><div class="line">	server(app_name,conf_file)</div></pre></figure>
+<figure class="highlight python"><pre><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">from</span> paste <span class="keyword">import</span> deploy</div><div class="line"><span class="keyword">from</span> wsgiref.simple_server <span class="keyword">import</span> make_server</div><div class="line">host=<span class="string">'127.0.0.1'</span></div><div class="line">port=<span class="number">12222</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">server</span><span class="params">(app_name,conf_file)</span>:</span></div><div class="line">	app=load_paste_app(app_name,conf_file)</div><div class="line">	server=make_server(host,port,app)</div><div class="line">	server.serve_forever()</div><div class="line"><span class="comment">#加载应用</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_paste_app</span><span class="params">(app_name,conf_file)</span>:</span></div><div class="line">	<span class="keyword">try</span>:</div><div class="line">		app=deploy.loadapp(<span class="string">'config:%s'</span> %os.path.abspath(conf_file),name=app_name)</div><div class="line">		<span class="keyword">return</span> app</div><div class="line">	<span class="keyword">except</span> (LookupError,ImportError) <span class="keyword">as</span> e:</div><div class="line">		<span class="keyword">raise</span> RuntimeError(str(e))</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__==<span class="string">'__main__'</span>:</div><div class="line">	app_name=<span class="string">'myapp'</span></div><div class="line">	conf_file=<span class="string">'myapp.ini'</span></div><div class="line">	server(app_name,conf_file)</div></pre></figure>
 
 <p>配置文件myapp.ini，app应用入口</p>
 <figure class="highlight python"><pre><div class="line">[app:myapp]</div><div class="line"><span class="comment">#host = 127.0.0.1</span></div><div class="line">paste.app_factory = wsgis.router:ExtensionRouter.factory</div></pre></figure>
