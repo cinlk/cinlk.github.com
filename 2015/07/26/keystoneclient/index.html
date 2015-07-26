@@ -1,0 +1,466 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    
+    <title>keystoneclient分析 | Cinlk&#39;s Blog</title>
+    <meta name="author" content="cinlk">
+    
+    <meta name="description"   content="分析keystoneclinet的如何执行命令的">
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <meta property="og:title" content="keystoneclient分析"/>
+    <meta property="og:site_name" content="Cinlk&#39;s Blog"/>
+
+    <link rel="alternate" href="/atom.xml" title="Cinlk&#39;s Blog" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href="/css/lib/normalize.css" type="text/css">
+    <link rel="stylesheet" href="/css/lib/furatto.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.10.2.min.js"></script>
+    <script src="/js/jquery.jpanelmenu.js"></script>
+</head>
+
+
+<body class="container-fluid">
+    <header id="page-header">
+        <div class="navbar inverse-navbar">
+    <div class="navbar-inner">
+        <div class="container-center">
+            <a href="/index.html" class="menu-trigger" data-meteocon="M">
+                <i class="icon-reorder"></i>
+            </a>
+            <div class="nav-collapse navbar-responsive-collapse collapse">
+                <nav id="menu">
+                    <ul class="nav">
+                        <li><a class="brand" id="blog-title" href="/index.html">Cinlk&#39;s Blog</a></li>
+                    </ul>
+                    <div class="pull-right nav" id="nav-button-group">
+                        
+                            <a href="/" class="menu-home btn btn-primary btn-large">
+                                <i class="icon-home icon-white"></i>
+                                首页
+                            </a>
+                        
+                            <a href="/archives" class="menu-archive btn btn-primary btn-large">
+                                <i class="icon-archive icon-white"></i>
+                                归档
+                            </a>
+                        
+                            <a href="javascript:void(0);" class="menu-category btn btn-primary btn-large">
+                                <i class="icon-archive icon-white"></i>
+                                分类
+                            </a>
+                        
+                            <a href="/reading" class="menu-reading btn btn-primary btn-large">
+                                <i class="icon-book icon-white"></i>
+                                读书
+                            </a>
+                        
+                            <a href="/about" class="menu-about btn btn-primary btn-large">
+                                <i class="icon-user icon-white"></i>
+                                关于
+                            </a>
+                        
+                    </div>
+                </nav>
+                <nav id="jPanelMenu-menu-side">
+    <ul class="nav main-menu">
+        <li><a class="brand" href="index.html">Cinlk&#39;s Blog</a></li>
+        
+            <li>
+                <a href="/" class="menu-home">
+                    <i class="icon-home icon-white"></i>
+                    首页
+                </a>
+            </li>
+        
+            <li>
+                <a href="/archives" class="menu-archive">
+                    <i class="icon-archive icon-white"></i>
+                    归档
+                </a>
+            </li>
+        
+            <li>
+                <a href="javascript:void(0);" class="menu-category">
+                    <i class="icon-archive icon-white"></i>
+                    分类
+                </a>
+            </li>
+        
+            <li>
+                <a href="/reading" class="menu-reading">
+                    <i class="icon-book icon-white"></i>
+                    读书
+                </a>
+            </li>
+        
+            <li>
+                <a href="/about" class="menu-about">
+                    <i class="icon-user icon-white"></i>
+                    关于
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="nav category-menu hide">
+        <li>
+            <span><a class="brand" href="javascript:void(0);">分类目录</a></span>
+            <span><a class="btn-back brand pull-right" href="javascript:void(0);">
+                <i class="icon-arrow-left"></i>
+            </a></span>
+        </li>
+
+        
+
+        
+
+            
+
+            <li collapse-level="0">
+                <a href="/categories/install/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    install(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/blog/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    blog(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/keystone/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    keystone(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/openstack/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    openstack(2)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/neutron/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    neutron(2)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/osd/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    osd(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/object/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    object(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/web/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    web(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+        
+    </ul>
+</nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </header>
+    <div id="content-wrapper">
+        <div class="container-center">
+        <article class="post">
+    <div class="article-title article-title-big">
+        
+    
+        <h1>keystoneclient分析</h1>
+    
+
+    </div>
+
+    <div class="date-row ">
+        <time datetime="2015-07-26T06:53:09.000Z">7月 26 2015</time>
+    </div>
+
+    <div class="toc-wrap">
+        <div class="toc-title">目录</div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#命令执行分析"><span class="toc-number">1.</span> <span class="toc-text">命令执行分析</span></a></li></ol>
+    </div>
+
+    <div class="entry">
+        <p>keystoneclient提供命令接口来控制keystone组件提供的功能，方便管理用户,租户，角色，endpoint，services等资源。命令接口有V2和V3目前是使用的V2版本。本文通过源码来分析命令执行的过程。<br><a id="more"></a><br>比如查看注册的services<br><img src="/images/kc.png" alt=""></p>
+<h2 id="命令执行分析">命令执行分析</h2>
+<p>keystone脚本在/usr/bin/python目录里，脚本代码如下：</p>
+<figure class="highlight python"><pre><div class="line"><span class="comment">#!/usr/bin/python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"></div><div class="line"><span class="keyword">from</span> keystoneclient.shell <span class="keyword">import</span> main</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    sys.argv[<span class="number">0</span>] = re.sub(<span class="string">r'(-script\.pyw|\.exe)?$'</span>, <span class="string">''</span>, sys.argv[<span class="number">0</span>])</div><div class="line">    sys.exit(main())</div></pre></figure>
+
+<p>从keystoneclient包中导入main函数作为入口。<br>查看shell文件中的main函数</p>
+<figure class="highlight python"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        OpenStackIdentityShell().main(sys.argv[<span class="number">1</span>:])</div><div class="line">    <span class="keyword">except</span> KeyboardInterrupt:</div><div class="line">        print(<span class="string">"... terminating keystone client"</span>, file=sys.stderr)</div><div class="line">        sys.exit(<span class="number">130</span>)</div><div class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">        print(encodeutils.safe_encode(six.text_type(e)), file=sys.stderr)</div><div class="line">        sys.exit(<span class="number">1</span>)</div></pre></figure>
+
+<p>实际调用OpenStaIdentityShell实例的main函数，查看该函数</p>
+<figure class="highlight python"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">(self, argv)</span>:</span></div><div class="line">        <span class="comment"># Parse args once to find version</span></div><div class="line">        parser = self.get_base_parser()</div><div class="line">        (options, args) = parser.parse_known_args(argv)</div><div class="line"></div><div class="line">        <span class="comment"># build available subcommands based on version</span></div><div class="line">        api_version = options.os_identity_api_version</div><div class="line">        subcommand_parser = self.get_subcommand_parser(api_version)</div><div class="line">        self.parser = subcommand_parser</div><div class="line"></div><div class="line">        <span class="comment"># Handle top-level --help/-h before attempting to parse</span></div><div class="line">        <span class="comment"># a command off the command line</span></div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> argv <span class="keyword">or</span> options.help:</div><div class="line">            self.do_help(options)</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span></div><div class="line"></div><div class="line">        <span class="comment"># Parse args again and call whatever callback was selected</span></div><div class="line">        args = subcommand_parser.parse_args(argv)</div><div class="line"></div><div class="line">        <span class="comment"># Short-circuit and deal with help command right away.</span></div><div class="line">        <span class="keyword">if</span> args.func == self.do_help:</div><div class="line">            self.do_help(args)</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span></div><div class="line">        <span class="keyword">elif</span> args.func == self.do_bash_completion:</div><div class="line">            self.do_bash_completion(args)</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span></div></pre></figure>
+
+<p>可以看出先对传入的参数进行解析处理，然后在调用执行逻辑，接下来看执行部分代码。</p>
+<figure class="highlight python"><pre><div class="line">  self.cs = self.get_api_class(api_version)(</div><div class="line">            username=args.os_username,</div><div class="line">            tenant_name=args.os_tenant_name,</div><div class="line">            tenant_id=args.os_tenant_id,</div><div class="line">            token=token,</div><div class="line">            endpoint=args.os_endpoint,</div><div class="line">            password=args.os_password,</div><div class="line">            auth_url=args.os_auth_url,</div><div class="line">            region_name=args.os_region_name,</div><div class="line">            cacert=args.os_cacert,</div><div class="line">            key=args.os_key,</div><div class="line">            cert=args.os_cert,</div><div class="line">            insecure=args.insecure,</div><div class="line">            debug=args.debug,</div><div class="line">            use_keyring=args.os_cache,</div><div class="line">            force_new_token=args.force_new_token,</div><div class="line">            stale_duration=args.stale_duration,</div><div class="line">            timeout=args.timeout)</div><div class="line"></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        args.func(self.cs, args)</div><div class="line">    <span class="keyword">except</span> exc.Unauthorized:</div><div class="line">        <span class="keyword">raise</span> exc.CommandError(<span class="string">"Invalid OpenStack Identity credentials."</span>)</div><div class="line">    <span class="keyword">except</span> exc.AuthorizationFailure:</div><div class="line">        <span class="keyword">raise</span> exc.CommandError(<span class="string">"Unable to authorize user"</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_api_class</span><span class="params">(self, version)</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        <span class="keyword">return</span> {</div><div class="line">            <span class="string">"2.0"</span>: shell_v2_0.CLIENT_CLASS,</div><div class="line">        }[version]</div><div class="line">    <span class="keyword">except</span> KeyError:</div><div class="line">        <span class="keyword">if</span> version:</div><div class="line">            msg = (<span class="string">'WARNING: unsupported identity-api-version %s, '</span></div><div class="line">                   <span class="string">'falling back to 2.0'</span> % version)</div><div class="line">            print(msg)</div><div class="line">        <span class="keyword">return</span> shell_v2_0.CLIENT_CLASS</div></pre></figure>
+
+<p>self.get_api_class(api_version)传入api版本号来实例化对应的api。get_api_class函数中目前只用到了V2.0的api实例。最后由 args.func(self.cs, args)执行命令。<br>shell_v2_0是V2_0目录下的shell文件，该文件实现了主要的命令操作函数，比如</p>
+<figure class="highlight python"><pre><div class="line"><span class="decorator">@utils.arg('--tenant', '--tenant-id', metavar='&lt;tenant&gt;',</span></div><div class="line">           help=<span class="string">'Tenant;  lists all users if not specified.'</span>)</div><div class="line"><span class="decorator">@utils.arg('--tenant_id', help=argparse.SUPPRESS)</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">do_user_list</span><span class="params">(kc, args)</span>:</span></div><div class="line">    <span class="string">"""List users."""</span></div><div class="line">    <span class="keyword">if</span> args.tenant:</div><div class="line">        tenant_id = utils.find_resource(kc.tenants, args.tenant).id</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        tenant_id = <span class="keyword">None</span></div><div class="line">    users = kc.users.list(tenant_id=tenant_id)</div><div class="line">    utils.print_list(users, [<span class="string">'id'</span>, <span class="string">'name'</span>, <span class="string">'enabled'</span>, <span class="string">'email'</span>],</div><div class="line">                     order_by=<span class="string">'name'</span>)</div></pre></figure>
+
+<p>do_user_list()是查看所有或者某个租户下的用户，通过kc.user.list方法获取用户数据。kc是Client类的实例，该类在V2_0目录下client文件里。查看该类的代码</p>
+<figure class="highlight python"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Client</span><span class="params">(httpclient.HTTPClient)</span>:</span></div><div class="line">		version = <span class="string">'v2.0'</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, **kwargs)</span>:</span></div><div class="line">        <span class="string">"""Initialize a new client for the Keystone v2.0 API."""</span></div><div class="line">        super(Client, self).__init__(**kwargs)</div><div class="line"></div><div class="line">        self.certificates = certificates.CertificatesManager(self._adapter)</div><div class="line">        self.endpoints = endpoints.EndpointManager(self._adapter)</div><div class="line">        self.extensions = extensions.ExtensionManager(self._adapter)</div><div class="line">        self.roles = roles.RoleManager(self._adapter)</div><div class="line">        self.services = services.ServiceManager(self._adapter)</div><div class="line">        self.tokens = tokens.TokenManager(self._adapter)</div><div class="line">        self.users = users.UserManager(self._adapter, self.roles)</div><div class="line"></div><div class="line">        self.tenants = tenants.TenantManager(self._adapter,</div><div class="line">                                             self.roles, self.users)</div><div class="line">	<span class="comment">#省略部分代码</span></div></pre></figure>
+
+<p>该类中每个资源都对应一个XXManager，kc.users对应UserManager，Manager实现封装命令为请求方式。<br>查看UserManager类的代码。</p>
+<figure class="highlight python"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserManager</span><span class="params">(base.ManagerWithFind)</span>:</span></div><div class="line">    <span class="string">"""Manager class for manipulating Keystone users."""</span></div><div class="line">    resource_class = User</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, client, role_manager)</span>:</span></div><div class="line">        super(UserManager, self).__init__(client)</div><div class="line">        self.role_manager = role_manager</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, user)</span>:</span></div><div class="line">        <span class="keyword">return</span> self._get(<span class="string">"/users/%s"</span> % base.getid(user), <span class="string">"user"</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update</span><span class="params">(self, user, **kwargs)</span>:</span></div><div class="line">        <span class="string">"""Update user data.</span></div><div class="line"></div><div class="line">        Supported arguments include ``name``, ``email``, and ``enabled``.</div><div class="line">        """</div><div class="line">        <span class="comment"># FIXME(gabriel): "tenantId" seems to be accepted by the API but</span></div><div class="line">        <span class="comment">#                 fails to actually update the default tenant.</span></div><div class="line">        params = {<span class="string">"user"</span>: kwargs}</div><div class="line">        params[<span class="string">'user'</span>][<span class="string">'id'</span>] = base.getid(user)</div><div class="line">        url = <span class="string">"/users/%s"</span> % base.getid(user)</div><div class="line">        <span class="keyword">return</span> self._update(url, params, <span class="string">"user"</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update_enabled</span><span class="params">(self, user, enabled)</span>:</span></div><div class="line">        <span class="string">"""Update enabled-ness."""</span></div><div class="line">        params = {<span class="string">"user"</span>: {<span class="string">"id"</span>: base.getid(user),</div><div class="line">                           <span class="string">"enabled"</span>: enabled}}</div><div class="line"></div><div class="line">        self._update(<span class="string">"/users/%s/OS-KSADM/enabled"</span> % base.getid(user), params,</div><div class="line">                     <span class="string">"user"</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update_password</span><span class="params">(self, user, password)</span>:</span></div><div class="line">        <span class="string">"""Update password."""</span></div><div class="line">        params = {<span class="string">"user"</span>: {<span class="string">"id"</span>: base.getid(user),</div><div class="line">                           <span class="string">"password"</span>: password}}</div><div class="line"></div><div class="line">        <span class="keyword">return</span> self._update(<span class="string">"/users/%s/OS-KSADM/password"</span> % base.getid(user),</div><div class="line">                            params, <span class="string">"user"</span>, log=<span class="keyword">False</span>)</div><div class="line">	 <span class="comment">#省略代码</span></div></pre></figure>
+
+<p>大部分都是命令函数，它们是对命令访问的目标资源（url），以及需要的参数形成一个request，实际上最终会调用urllib库来向keystone服务发送request，是RESTFull形式的request。keystone服务的server端接受请求后对url进行路由给后端的application进行处理，也会进行middleware过滤，最终把结果返回给keystoneclient然后输出在界面中。</p>
+
+    </div>
+    
+    <footer >
+        
+            
+    
+    <div class="categories">
+        所属目录：
+    <a href="/categories/openstack/">openstack</a>
+    </div>
+
+            
+    
+    <div class="tags-row">
+        标签：<a class="btn btn-info" href="/tags/api/">api</a><a class="btn btn-info" href="/tags/keystone/">keystone</a>
+    </div>
+
+        
+        <div class="clearfix"></div>
+    </footer>
+</article>
+
+
+
+<section id="comment">
+    <!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2015/07/26/keystoneclient/" data-title="keystoneclient分析" data-url="http://cinlk.com/2015/07/26/keystoneclient/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	 var duoshuoQuery = {short_name: 'cinlk' };
+	  (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';
+		ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
+
+
+        </div>
+    </div>
+    <footer id="page-footer"><div class="footer-content">
+    <div class="container-center">
+        <div class="footer-text pull-left">
+            <div class="copyright">
+                
+                Copyright &copy; 2015 <a href="/">cinlk</a>
+                
+            </div>
+            <div class="theme-copyright">
+                <span>Blog powered by <a href="https://hexo.io/">hexo</a></span>
+                Theme by <a href="https://github.com/raytaylorlin/hexo-theme-raytaylorism">raytaylorism</a> @<a href='cinlk.github.io/about'>cinlk
+            </div>
+        </div>
+        <div class="social-group pull-right">
+            
+            <a href="https://github.com/cinlk" target="_blank" title="github"><i class="icon-github"></i></a>
+            
+            
+            <a href="http://www.zhihu.com/people/kou-hu-10" target="_blank" title="知乎"><i class="icon-xing-sign"></i></a>
+            
+			
+			<a href="http://www.linkedin.com/profile/preview?locale=zh_CN&amp;trk=prof-0-sb-preview-primary-button" target="_blank" title="领英"><i class="icon-linkedin"></i></a>
+			
+            
+            <a href="https://plus.google.com/u/0/" target="_blank" title="Google+"><i class="icon-google-plus-sign"></i></a>
+            
+        </div>
+        <div class="clearfix"></div>
+		
+<script type="text/javascript">
+  var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+  document.write(unescape("%3Cspan id='cnzz_stat_icon_1255502307'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1255502307' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+	</div>
+</div>
+</footer>
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-43460643-1', 'raytaylorlin.com');
+    ga('send', 'pageview');
+
+</script>
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script>
+    (function($) {
+        //当内容区内容不够长时，设置内容区域的高度使footer沉底
+        var resizeContentWrapper = function() {
+            //HACK: 用延时的方法使计算高度时候更加准确，会有一闪的情况
+            setTimeout(function() {
+                var contentHeight = Math.floor($('#content-wrapper .container-center').height()),
+                headerHeight = Math.floor($('#page-header').height()),
+                footerHeight = Math.floor($('#page-footer').height()),
+                minHeight = Math.floor($(window).height() - headerHeight - footerHeight);
+                if(contentHeight < minHeight) {
+                    $('#content-wrapper').css({height: minHeight});                    
+                } else {
+                    $('#content-wrapper').css({height: 'auto'});
+                }
+            },500);
+        };
+
+        //响应式侧边栏
+        var initJPanelMenu = function() {
+            var jPM = $.jPanelMenu({
+                menu: '#jPanelMenu-menu-side',
+                duration: 500
+            });
+            jPM.on();
+        };
+
+        //初始化目录按钮事件绑定
+        var initCategory = function() {
+            function showMainMenu() {
+                var $jPanelMenu = $('#jPanelMenu-menu');
+                $jPanelMenu.find('ul.category-menu').hide();
+                $jPanelMenu.find('ul.main-menu').fadeIn();
+            }
+
+            function showCategoryMenu() {
+                var $jPanelMenu = $('#jPanelMenu-menu');
+                $jPanelMenu.find('ul.main-menu').hide();
+                $jPanelMenu.find('ul.category-menu').fadeIn();
+            }
+
+            $('.menu-category').click(function() {
+                var jPM = $.jPanelMenu({
+                    duration: 500,
+                    beforeOpen: function() {
+                        showCategoryMenu();
+                    },
+                    afterClose: function() {
+                        showMainMenu();
+                    }
+                });
+                if(jPM.isOpen()) {
+                    showCategoryMenu();
+                } else {
+                    jPM.open();
+                }
+            });
+
+            $('.category-menu').on('click', '.btn-back', function() {
+                showMainMenu();
+            });
+        };
+
+        $(document).ready(resizeContentWrapper);
+        $(document).ready(initJPanelMenu);
+        $(document).ready(initCategory);
+        
+        $(window).resize(resizeContentWrapper);
+    })(jQuery);
+</script>
+
+</body>
+</html>
