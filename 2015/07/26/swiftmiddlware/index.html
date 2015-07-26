@@ -4,13 +4,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     
-    <title>openstack | Cinlk&#39;s Blog</title>
+    <title>swift服务中间件扩展 | Cinlk&#39;s Blog</title>
     <meta name="author" content="cinlk">
+    
+    <meta name="description"   content="siwft 中间件扩展实现">
     
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-    
+    <meta property="og:title" content="swift服务中间件扩展"/>
     <meta property="og:site_name" content="Cinlk&#39;s Blog"/>
 
     <link rel="alternate" href="/atom.xml" title="Cinlk&#39;s Blog" type="application/atom+xml">
@@ -239,63 +241,87 @@
     </header>
     <div id="content-wrapper">
         <div class="container-center">
+        <article class="post">
+    <div class="article-title article-title-big">
         
-
-<h2 class="page-sub-title archive-title">你当前所在的位置：（标签）openstack</h2>
-
-
     
-        <article>
-    <div class="row">
-        <div class="col-2 date-tags">
-            <div class="date-row">
-                <time datetime="2015-07-22T10:41:03.000Z">7月 22 2015</time>
-            </div>
-            
-        </div>
-        <div class="col-10">
-            <div class="article-title simple-article-title">
-                
-    
-        <h1><a href="/2015/07/22/kdbext/">keystone 数据表扩展</a></h1>
+        <h1>swift服务中间件扩展</h1>
     
 
-            </div>
-            
-        </div>
     </div>
-    <div class="split-line"></div>
+
+    <div class="date-row ">
+        <time datetime="2015-07-26T14:13:40.000Z">7月 26 2015</time>
+    </div>
+
+    <div class="toc-wrap">
+        <div class="toc-title">目录</div>
+        
+    </div>
+
+    <div class="entry">
+        <p>本文讲解如何实现用ip进行访问授权的swift中间件，该中间件会在用户访问container时会判断用户的ip是否授权访问。由于container支持meta设置，可以对container的meta设置允许访问的ip来限制那些ip可以访问。<br><a id="more"></a><br>比如对test容器设置meta的allow-ip</p>
+<figure class="highlight bash"><pre><div class="line">swift post --meta allow-ip:<span class="number">192.168</span>.<span class="number">10.160</span>,<span class="number">127.0</span>.<span class="number">0.1</span>  test</div></pre></figure>
+
+<p>查看设置的meta属性值<br><img src="/images/allow-ips.png" alt=""></p>
+<p>为swift添加中间件实现值允许allow-ip里的ip地址能访问容器，由于swift也是采用wsgi协议来实现应用的，（参见WSGI）中间件的实现也需要遵循该协议。<br>创建swift/common/middleware/ip_whitelist.py文件，该文件代码如下</p>
+<figure class="highlight python"><pre><div class="line"><span class="keyword">import</span> socket</div><div class="line"><span class="keyword">from</span> swift.common.utils <span class="keyword">import</span> get_logger</div><div class="line"><span class="keyword">from</span> swift.proxy.controllers.base <span class="keyword">import</span>  get_container_info</div><div class="line"><span class="keyword">from</span> swift.common.swob <span class="keyword">import</span> Request, Response</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">IPWhitelistMiddleware</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="string">""" 允许allow-ip项里的ip地址访问容器"""</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, app, conf, logger=None)</span>:</span></div><div class="line">        self.app=app</div><div class="line">        <span class="keyword">if</span> logger:</div><div class="line">            self.logger=logger</div><div class="line"></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            self.logger = get_logger(conf,log_route=<span class="string">'ip_whitelist'</span>)</div><div class="line"></div><div class="line">        self.logger.debug(<span class="string">"conf = %(conf)s"</span>,locals())</div><div class="line">		<span class="comment">#读取配置文件中的deny_message，没有为IP deny</span></div><div class="line">        self.deny_message = conf.get(<span class="string">'deny_message'</span>,<span class="string">'IP deny'</span>)</div><div class="line">        self.local_ip = socket.gethostbyname(socket.gethostname())</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self,env, start_response)</span>:</span></div><div class="line">        <span class="string">"""WSGI 入口获取应用的上下文进行处理，return来向下传递应用                                env是上下文，start_response是返回调用对象"""</span></div><div class="line">        </div><div class="line">        req= Request(env)</div><div class="line">        self.logger.debug(<span class="string">"env = %(env)s"</span>, locals())</div><div class="line"></div><div class="line">        <span class="keyword">try</span>:</div><div class="line">        <span class="comment">#url语法检查</span></div><div class="line">            version, account ,container,obj = req.split_path(<span class="number">1</span>,<span class="number">4</span>,<span class="keyword">True</span>)</div><div class="line">        <span class="keyword">except</span> StandardError:</div><div class="line">            <span class="keyword">return</span> self.app(env, start_response)</div><div class="line"></div><div class="line">        container_info = get_container_info(req.environ,self.app, swift_source=<span class="string">'IPWhitelistMiddleware'</span>)</div><div class="line"></div><div class="line">        <span class="comment">#用户的ip地址</span></div><div class="line">        remote_ip =env[<span class="string">'REMOTE_ADDR'</span>]</div><div class="line">        self.logger.debug(<span class="string">"Remote IP: %(remot_ip)s"</span>,{<span class="string">'remote_ip'</span>:</div><div class="line">        remote_ip})</div><div class="line">        <span class="comment">#访问container的meta属性</span></div><div class="line">        meta = container_info[<span class="string">'meta'</span>]</div><div class="line">        <span class="comment">#获取以allow开头的属性信息，（这里没有判断allow-ip的值为ip1,ip2的情况，而且不仅是allow-ip）</span></div><div class="line">        allow={k:v <span class="keyword">for</span> k,v <span class="keyword">in</span> meta.iteritems() <span class="keyword">if</span> k.startswith(<span class="string">'allow'</span>)}</div><div class="line">        allow_ips = set(allow.values())</div><div class="line">        allow_ips.add(self.local_ip)</div><div class="line">        self.logger.debug(<span class="string">"Allow IPs: %(allow_ips)s"</span>,</div><div class="line">            {<span class="string">'allow_ips'</span>:allow_ips})</div><div class="line"></div><div class="line">        <span class="keyword">if</span> remote_ip <span class="keyword">in</span> allow_ips:</div><div class="line">            <span class="keyword">return</span>  self.app(env, start_response)</div><div class="line">       <span class="comment">#不是允许的ip，返回403未授权的response</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            self.logger.debug(<span class="string">"IP %(remote_ip)s denided access to Account=%(account)s "</span></div><div class="line">            <span class="string">"Container=%(container)s.  Not in %(allow_ips)s"</span>, locals())</div><div class="line"></div><div class="line">            <span class="keyword">return</span> Response(</div><div class="line">                status=<span class="number">403</span>,</div><div class="line">                body=self.deny_message,</div><div class="line">                request=req)(env,start_response)</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">filter_factory</span><span class="params">(gloable_conf, **local_conf)</span>:</span></div><div class="line">    <span class="string">"""获取中间件实例，加载配置参数"""</span></div><div class="line">    conf =gloable_conf.copy()</div><div class="line">    conf.update(local_conf)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">ip_whitelist</span><span class="params">(app)</span>:</span></div><div class="line">        <span class="keyword">return</span>  IPWhitelistMiddleware(app, conf)</div><div class="line">    <span class="keyword">return</span>  ip_whitelist</div></pre></figure>
+
+<p>代码完成后把功能集成到swift服务里。修改proxy-server.conf文件加入新的filter</p>
+<figure class="highlight"><pre><div class="line">[<span class="function_or_atom">filter:ip_whitelist</span>]</div><div class="line"><span class="function_or_atom">paste</span>.<span class="function_or_atom">filter_factory</span> = <span class="function_or_atom">swift</span>.<span class="function_or_atom">common</span>.<span class="function_or_atom">middleware</span>.<span class="function_or_atom">ip_whitelist:filter_factory</span></div><div class="line"><span class="function_or_atom">deny_message</span> = <span class="variable">Your</span> <span class="variable">IP</span> <span class="function_or_atom">don't</span> <span class="function_or_atom">be</span> <span class="function_or_atom">permited</span> <span class="function_or_atom">to</span> <span class="function_or_atom">pass</span><span class="exclamation_mark">!</span><span class="exclamation_mark">!</span><span class="exclamation_mark">!</span></div></pre></figure>
+
+<p>然后在pipeline中添加ip_whitelist</p>
+<figure class="highlight"><pre><div class="line">[pipeline:main]</div><div class="line">pipeline = authtoken catch_errors gatekeeper healthcheck  <span class="operator"><span class="keyword">cache</span> container_sync bulk tempurl ratelimit  keystoneauth ip_whitelist container-quotas account-quotas slo dlo proxy-logging proxy-<span class="keyword">server</span></span></div></pre></figure>
+
+<p>保存退出，重启swift-proxy服务。</p>
+<figure class="highlight bash"><pre><div class="line"><span class="built_in">sudo</span> swift-init  proxy-server restart</div></pre></figure>
+
+<p>服务重启后，ip_whitelist的ip地址过滤中间件就生效了，可以有效防止某些ip访问容器里的数据。</p>
+
+    </div>
+    
+    <footer >
+        
+            
+    
+    <div class="categories">
+        所属目录：
+    <a href="/categories/openstack/">openstack</a>
+    </div>
+
+            
+    
+    <div class="tags-row">
+        标签：<a class="btn btn-info" href="/tags/swift/">swift</a><a class="btn btn-info" href="/tags/middlware/">middlware</a>
+    </div>
+
+        
+        <div class="clearfix"></div>
+    </footer>
 </article>
 
-    
-        <article>
-    <div class="row">
-        <div class="col-2 date-tags">
-            <div class="date-row">
-                <time datetime="2015-07-04T05:37:00.000Z">7月 4 2015</time>
-            </div>
-            
-        </div>
-        <div class="col-10">
-            <div class="article-title simple-article-title">
-                
-    
-        <h1><a href="/2015/07/04/devstack/">devstack单节点搭建openstack</a></h1>
-    
 
-            </div>
-            
-        </div>
-    </div>
-    <div class="split-line"></div>
-</article>
 
-    
-  <nav id="pagination">
-  
-  
-  <div class="clearfix"></div>
-</nav>
+<section id="comment">
+    <!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2015/07/26/swiftmiddlware/" data-title="swift服务中间件扩展" data-url="http://cinlk.com/2015/07/26/swiftmiddlware/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	 var duoshuoQuery = {short_name: 'cinlk' };
+	  (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';
+		ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
+
 
         </div>
     </div>
