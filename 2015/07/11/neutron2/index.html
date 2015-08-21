@@ -127,32 +127,6 @@
             
 
             <li collapse-level="0">
-                <a href="/categories/install/" class="collapse-level-0">
-                    <i class="icon-caret-right"></i>
-                    install(1)
-                </a>
-            </li>
-
-            
-
-            
-
-        
-
-            <li collapse-level="0">
-                <a href="/categories/blog/" class="collapse-level-0">
-                    <i class="icon-caret-right"></i>
-                    blog(1)
-                </a>
-            </li>
-
-            
-
-            
-
-        
-
-            <li collapse-level="0">
                 <a href="/categories/keystone/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
                     keystone(1)
@@ -179,9 +153,35 @@
         
 
             <li collapse-level="0">
-                <a href="/categories/neutron/" class="collapse-level-0">
+                <a href="/categories/blog/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    neutron(2)
+                    blog(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/install/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    install(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/XACML/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    XACML(1)
                 </a>
             </li>
 
@@ -221,6 +221,19 @@
                 <a href="/categories/web/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
                     web(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/neutron/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    neutron(2)
                 </a>
             </li>
 
@@ -273,9 +286,9 @@
     </div>
 
     <div class="entry">
-        <p>neutron网络目的是为OpenStack云更灵活的划分网络，在多租户的环境下提供给每个租户独立的网络环境。<br>neutron混合实施了第二层的VLAN和第三层的路由服务，它可为支持的网络提供防火墙，负载均衡以及IPSec VPN等扩展功能。<br>neutron是openstack中一个重要模块，也是比较难理解和debug的模块之一。<br>  <a id="more"></a></p>
+        <p>&emsp;&emsp;neutron网络目的是为OpenStack云更灵活的划分网络，在多租户的环境下提供给每个租户独立的网络环境。<br>&emsp;&emsp;neutron混合实施了第二层的VLAN和第三层的路由服务，它可为支持的网络提供防火墙，负载均衡以及IPSec VPN等扩展功能。<br>neutron是openstack中一个重要模块，也是比较难理解和debug的模块之一。<br>  <a id="more"></a></p>
 <h1 id="GRE模式下网络细节">GRE模式下网络细节</h1>
-<p>创建完网络，如果不创建虚拟机，我们发现neutron的agent还是做了很多工作的，创建了很多虚拟网卡和switch。</p>
+<p>&emsp;&emsp;创建完网络，如果不创建虚拟机，我们发现neutron的agent还是做了很多工作的，创建了很多虚拟网卡和switch。</p>
 <p>在compute节点上：<br>root@ComputeNode:~# ip addr 【显示所有接口的IP信息】</p>
 <figure class="highlight"><pre><div class="line"><span class="input"><span class="prompt">1: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt;</span> mtu <span class="number">1500</span> qdisc pfifo_fast state <span class="constant">UP</span> qlen <span class="number">1000</span>    </span></div><div class="line">    link/ether 08<span class="symbol">:</span><span class="number">00</span><span class="symbol">:</span><span class="number">27</span><span class="symbol">:</span><span class="number">49</span><span class="symbol">:</span><span class="number">5</span><span class="symbol">c:</span><span class="number">41</span> brd <span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span>ff    </div><div class="line">    inet <span class="number">172.24</span>.<span class="number">1.124</span>/<span class="number">22</span> brd <span class="number">16.158</span>.<span class="number">167.255</span> scope global eth<span class="number">0</span>    </div><div class="line"><span class="input"><span class="prompt">2: eth2: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt;</span> mtu <span class="number">1500</span> qdisc pfifo_fast state <span class="constant">UP</span> qlen <span class="number">1000</span>    </span></div><div class="line">    link/ether 08<span class="symbol">:</span><span class="number">00</span><span class="symbol">:</span><span class="number">27</span><span class="symbol">:</span><span class="number">8</span><span class="symbol">e:</span><span class="number">42</span><span class="symbol">:</span><span class="number">2</span>c brd <span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span>ff    </div><div class="line">    inet <span class="number">192.168</span>.<span class="number">56.124</span>/<span class="number">24</span> brd <span class="number">192.168</span>.<span class="number">56.255</span> scope global eth2    </div><div class="line"><span class="input"><span class="prompt">3: eth3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt;</span> mtu <span class="number">1500</span> qdisc pfifo_fast state <span class="constant">UP</span> qlen <span class="number">1000</span>    </span></div><div class="line">    link/ether 08<span class="symbol">:</span><span class="number">00</span><span class="symbol">:</span><span class="number">27</span><span class="symbol">:</span><span class="number">68</span><span class="symbol">:</span><span class="number">92</span><span class="symbol">:ce</span> brd <span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span>ff    </div><div class="line">    inet <span class="number">10.10</span>.<span class="number">10.124</span>/<span class="number">24</span> brd <span class="number">10.10</span>.<span class="number">10.255</span> scope global eth3    </div><div class="line"><span class="input"><span class="prompt">4: br-int: &lt;BROADCAST,UP,LOWER_UP&gt;</span> mtu <span class="number">1500</span> qdisc noqueue state <span class="constant">UNKNOWN</span>     </span></div><div class="line">    link/ether <span class="symbol">d6:</span><span class="number">2</span><span class="symbol">a:</span><span class="number">96</span><span class="symbol">:</span><span class="number">12</span><span class="symbol">:</span><span class="number">4</span><span class="symbol">a:</span><span class="number">49</span> brd <span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span>ff    </div><div class="line"><span class="input"><span class="prompt">5: br-tun: &lt;BROADCAST,UP,LOWER_UP&gt;</span> mtu <span class="number">1500</span> qdisc noqueue state <span class="constant">UNKNOWN</span>     </span></div><div class="line">    link/ether <span class="symbol">a2:</span><span class="symbol">ee:</span><span class="number">75</span><span class="symbol">:bd</span><span class="symbol">:af</span><span class="symbol">:</span><span class="number">4</span>a brd <span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span>ff    </div><div class="line"><span class="input"><span class="prompt">6: qvof5da998c-82: &lt;BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP&gt;</span> mtu <span class="number">1500</span> qdisc pfifo_fast state <span class="constant">UP</span> qlen <span class="number">1000</span>    </span></div><div class="line">    link/ether <span class="symbol">c2:</span><span class="number">7</span><span class="symbol">e:</span><span class="number">50</span><span class="symbol">:de</span><span class="symbol">:</span><span class="number">8</span><span class="symbol">c:</span>c5 brd <span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span>ff    </div><div class="line"><span class="input"><span class="prompt">7: qvbf5da998c-82: &lt;BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP&gt;</span> mtu <span class="number">1500</span> qdisc pfifo_fast state <span class="constant">UP</span> qlen <span class="number">1000</span>    </span></div><div class="line">    link/ether <span class="symbol">c2:</span><span class="number">33</span><span class="symbol">:</span><span class="number">73</span><span class="symbol">:</span><span class="number">40</span><span class="symbol">:</span><span class="number">8</span><span class="symbol">f:</span>e<span class="number">0</span> brd <span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span><span class="symbol">ff:</span>ff</div></pre></figure>
 
@@ -299,24 +312,20 @@
 
 <p>如果我们按照ovs-vsctl show的网卡桥接关系，便可以画出下面的图<br><img src="/images/gre.png" alt="gre"></p>
 <h2 id="GRE网络原理">GRE网络原理</h2>
-<p>假设虚拟机VM0网卡eth0有网络数据包向外网发送，那么数据会依次经过qbr Linux Bridge设备，qvb和qvo虚拟网络设备，到达OVS网桥br-int上，br-int将数据包attach到OVS网桥br-tun上，数据包再从compute节点OVS网桥的br-tun和network节点OVS网桥br-tun构成的GRE隧道穿过，交付到Network节点的OVS网桥br-int上；网络节点的br-int通过qr设备借助Linux命名空间qrouter连通到br-ex上的qg设备，将数据包交付到OVS网桥br-ex上，最后br-ex通过网络节点的外部武力端口eth1把数据包传送到外部路由器的网关。</p>
+<p>&emsp;&emsp;假设虚拟机VM0网卡eth0有网络数据包向外网发送，那么数据会依次经过qbr Linux Bridge设备，qvb和qvo虚拟网络设备，到达OVS网桥br-int上，br-int将数据包attach到OVS网桥br-tun上，数据包再从compute节点OVS网桥的br-tun和network节点OVS网桥br-tun构成的GRE隧道穿过，交付到Network节点的OVS网桥br-int上；网络节点的br-int通过qr设备借助Linux命名空间qrouter连通到br-ex上的qg设备，将数据包交付到OVS网桥br-ex上，最后br-ex通过网络节点的外部武力端口eth1把数据包传送到外部路由器的网关。</p>
 <h2 id="GRE网络原理进一步理解">GRE网络原理进一步理解</h2>
 <h3 id="（1）DHCP">（1）DHCP</h3>
-<p>为什么会有个DHCP Server呢，是同一个private network里的虚拟机得到IP都是通过这个DHCP Server来的，这个DHCP Server也是连接到br-int上和虚拟机进行通信的。</p>
+<p>&emsp;&emsp;为什么会有个DHCP Server呢，是同一个private network里的虚拟机得到IP都是通过这个DHCP Server来的，这个DHCP Server也是连接到br-int上和虚拟机进行通信的。</p>
 <h3 id="（2）qbr">（2）qbr</h3>
-<p>既然qbr和br-int都是网桥，为什么不直接连到br-int，还要通过qbr,qvb,qvo岂不是多余，为什么会有qbr呢？这是和security group的概念有关。简单说就是OVS网桥br-int没有设置iptables规则的功能，但openstack又要提供安全组服务，就借助了Linux bridge(qbr)的功能，虽然OVS的br-int和linux bridge (qbr)都是二层网桥，但是为了功能互补就同时出现了。具体了解，openstack中的security group开通哪些端口，屏蔽哪些端口是用iptables来实现的，然而br-int这些虚拟bridge都是openvswitch创建的，openstack的Kernel mode和netfilter的kernel mode不兼容。一个IP包进来要么走iptables规则进行处理，要么走openvswitch的规则进行处理，br-int上有很多openvswitch的规则，比如vlan tag等，所以iptables必须要另外建立一个linux bridge（qbr）来做，因而就有了qbr，在了解拓扑结构的时候，可以将qbr忽略，看到VM直接连接到br-int上就可以了。</p>
+<p>&emsp;&emsp;既然qbr和br-int都是网桥，为什么不直接连到br-int，还要通过qbr,qvb,qvo岂不是多余，为什么会有qbr呢？这是和security group的概念有关。简单说就是OVS网桥br-int没有设置iptables规则的功能，但openstack又要提供安全组服务，就借助了Linux bridge(qbr)的功能，虽然OVS的br-int和linux bridge (qbr)都是二层网桥，但是为了功能互补就同时出现了。具体了解，openstack中的security group开通哪些端口，屏蔽哪些端口是用iptables来实现的，然而br-int这些虚拟bridge都是openvswitch创建的，openstack的Kernel mode和netfilter的kernel mode不兼容。一个IP包进来要么走iptables规则进行处理，要么走openvswitch的规则进行处理，br-int上有很多openvswitch的规则，比如vlan tag等，所以iptables必须要另外建立一个linux bridge（qbr）来做，因而就有了qbr，在了解拓扑结构的时候，可以将qbr忽略，看到VM直接连接到br-int上就可以了。</p>
 <h3 id="（3）namespace">（3）namespace</h3>
-<p>为什么会有namespace呢，java的namespace是为了在不同namespace下有相同类名,openstack也想做到这一点。不同Tenant都创建自己的router和private network，彼此不知道别人指定了哪些网段，很有可能两个tenant都指定了192.168.0.0/24,这样不同的private network的路由表，DHCP Server就需要隔离，不然就乱了，因而就有了namespace。</p>
+<p>&emsp;&emsp;为什么会有namespace呢，java的namespace是为了在不同namespace下有相同类名,openstack也想做到这一点。不同Tenant都创建自己的router和private network，彼此不知道别人指定了哪些网段，很有可能两个tenant都指定了192.168.0.0/24,这样不同的private network的路由表，DHCP Server就需要隔离，不然就乱了，因而就有了namespace。</p>
 <h3 id="（4）OVS一体化网桥br-int">（4）OVS一体化网桥br-int</h3>
-<p>每个机器上都有了自己的br-int，但是对于虚拟机和虚拟router来说，它们仍然觉得自己连接到了一个大的L2的br-int上，通过这个br-int相互通信的，它们感受不到br-int下面的虚拟网卡br-tun。所以对于多节点结构，我们可以想象br-int是一个大的，横跨所有compute和network节点的二层switch，虚拟机之间的通信以及虚拟机和Router的通信，就像在一个寝室一样的。这是一种很重要的抽象思维，好像openstack环境中所有虚拟机都连接到了一个巨型的虚拟交换机上。</p>
-<p>然而br-int毕竟被物理的割开了，需要有一种方式将他们串联起来，openstack提供了多种方式，可以用GRE tunnel将不同机器的br-int连接起来，也可以通过VLAN将br-int连接起来，当然还可以使用vxlan。</p>
-<p>这就是为什么openstack有了br-int这个bridge，但是不把所有的openvswitch的规则都在它上面实现。就是为了提供这种灵活性，对于虚拟机来讲，看到的是一大整个br-int，不同机器的br-int可以有多种方式连接，这在br-int下面的网卡上面实现。</p>
+<p>&emsp;&emsp;每个机器上都有了自己的br-int，但是对于虚拟机和虚拟router来说，它们仍然觉得自己连接到了一个大的L2的br-int上，通过这个br-int相互通信的，它们感受不到br-int下面的虚拟网卡br-tun。所以对于多节点结构，我们可以想象br-int是一个大的，横跨所有compute和network节点的二层switch，虚拟机之间的通信以及虚拟机和Router的通信，就像在一个寝室一样的。这是一种很重要的抽象思维，好像openstack环境中所有虚拟机都连接到了一个巨型的虚拟交换机上。<br>&emsp;&emsp;然而br-int毕竟被物理的割开了，需要有一种方式将他们串联起来，openstack提供了多种方式，可以用GRE tunnel将不同机器的br-int连接起来，也可以通过VLAN将br-int连接起来，当然还可以使用vxlan。<br>&emsp;&emsp;这就是为什么openstack有了br-int这个bridge，但是不把所有的openvswitch的规则都在它上面实现。就是为了提供这种灵活性，对于虚拟机来讲，看到的是一大整个br-int，不同机器的br-int可以有多种方式连接，这在br-int下面的网卡上面实现。</p>
 <h3 id="（5）OVS通道网桥br-tun">（5）OVS通道网桥br-tun</h3>
-<p>br-tun也是OVS创建的虚拟网桥，它是一个中间层，接收br-int的网络数据，然后在通过特定网络协议与各个节点的br-tun相连构成一个通道层。如果所有的br-int构成的抽象层定义为虚拟二层网络，那么所有的br-tun构成的抽象层边上虚拟三层网络了。</p>
+<p>&emsp;&emsp;br-tun也是OVS创建的虚拟网桥，它是一个中间层，接收br-int的网络数据，然后在通过特定网络协议与各个节点的br-tun相连构成一个通道层。如果所有的br-int构成的抽象层定义为虚拟二层网络，那么所有的br-tun构成的抽象层边上虚拟三层网络了。</p>
 <h3 id="（6）网络数据包隔离">（6）网络数据包隔离</h3>
-<p>如果有不同的Tenant，创建了不同的private network，为了在data network上对包进行隔离，创建private network的时候，需要指定vlanid或者segmentid。</p>
-<p>从ovs-vsctl show我们可以看到，不同的tenant的private network上创建的虚拟机，连接到br-int上的时候是带tag的，所以不同tenant的虚拟机，即便连接到同一个br-int上，因为tag不同，也是不能相互通信的。然而同一个机器上的tag的计数是仅在本机有效的，并不使用我们创建private network的时候指定的全局唯一的vlanid或者segmentid，一个compute节点上的br-int上的tag 1和另一台compute节点上的br-int的tag1很可能是两码事。全局的vlanid和segmentid仅仅在br-int以下的虚拟网卡和物理网络中使用，虚拟机所有能看到的东西，到br-int为止，看不到打通br-int所要使用的vlanid和segmentid。</p>
-<p>从局部有效的taging到全局有效的vlanid或者segmentid的转换，都是通过openvswitch的规则，在br-tun或者br-eth1上实现。</p>
+<p>&emsp;&emsp;如果有不同的Tenant，创建了不同的private network，为了在data network上对包进行隔离，创建private network的时候，需要指定vlanid或者segmentid。<br>&emsp;&emsp;从ovs-vsctl show我们可以看到，不同的tenant的private network上创建的虚拟机，连接到br-int上的时候是带tag的，所以不同tenant的虚拟机，即便连接到同一个br-int上，因为tag不同，也是不能相互通信的。然而同一个机器上的tag的计数是仅在本机有效的，并不使用我们创建private network的时候指定的全局唯一的vlanid或者segmentid，一个compute节点上的br-int上的tag 1和另一台compute节点上的br-int的tag1很可能是两码事。全局的vlanid和segmentid仅仅在br-int以下的虚拟网卡和物理网络中使用，虚拟机所有能看到的东西，到br-int为止，看不到打通br-int所要使用的vlanid和segmentid。<br>&emsp;&emsp;从局部有效的taging到全局有效的vlanid或者segmentid的转换，都是通过openvswitch的规则，在br-tun或者br-eth1上实现。</p>
 <p><strong>转载: <a href="http://www.cnblogs.com/popsuper1982/p/3800233.html" target="_blank" rel="external">http://www.cnblogs.com/popsuper1982/p/3800233.html</a></strong></p>
 
     </div>

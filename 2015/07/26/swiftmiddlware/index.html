@@ -127,32 +127,6 @@
             
 
             <li collapse-level="0">
-                <a href="/categories/install/" class="collapse-level-0">
-                    <i class="icon-caret-right"></i>
-                    install(1)
-                </a>
-            </li>
-
-            
-
-            
-
-        
-
-            <li collapse-level="0">
-                <a href="/categories/blog/" class="collapse-level-0">
-                    <i class="icon-caret-right"></i>
-                    blog(1)
-                </a>
-            </li>
-
-            
-
-            
-
-        
-
-            <li collapse-level="0">
                 <a href="/categories/keystone/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
                     keystone(1)
@@ -179,9 +153,35 @@
         
 
             <li collapse-level="0">
-                <a href="/categories/neutron/" class="collapse-level-0">
+                <a href="/categories/blog/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    neutron(2)
+                    blog(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/install/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    install(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/XACML/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    XACML(1)
                 </a>
             </li>
 
@@ -221,6 +221,19 @@
                 <a href="/categories/web/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
                     web(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/neutron/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    neutron(2)
                 </a>
             </li>
 
@@ -273,11 +286,11 @@
     </div>
 
     <div class="entry">
-        <p>本文讲解如何实现用ip进行访问授权的swift中间件，该中间件会在用户访问container时会判断用户的ip是否授权访问。由于container支持meta设置，可以对container的meta设置允许访问的ip来限制那些ip可以访问。<br><a id="more"></a><br>比如对test容器设置meta的allow-ip</p>
+        <p>&emsp;&emsp;本文讲解如何实现用ip进行访问授权的swift中间件，该中间件会在用户访问container时会判断用户的ip是否授权访问。由于container支持meta设置，可以对container的meta设置允许访问的ip来限制那些ip可以访问。<br><a id="more"></a><br>比如对test容器设置meta的allow-ip</p>
 <figure class="highlight bash"><pre><div class="line">swift post --meta allow-ip:<span class="number">192.168</span>.<span class="number">10.160</span>,<span class="number">127.0</span>.<span class="number">0.1</span>  test</div></pre></figure>
 
 <p>查看设置的meta属性值<br><img src="/images/allow-ips.png" alt=""></p>
-<p>为swift添加中间件实现值允许allow-ip里的ip地址能访问容器，由于swift也是采用wsgi协议来实现应用的，（参见WSGI）中间件的实现也需要遵循该协议。<br>创建swift/common/middleware/ip_whitelist.py文件，该文件代码如下</p>
+<p>&emsp;&emsp;为swift添加中间件实现值允许allow-ip里的ip地址能访问容器，由于swift也是采用wsgi协议来实现应用的，（参见WSGI）中间件的实现也需要遵循该协议。<br>创建swift/common/middleware/ip_whitelist.py文件，该文件代码如下</p>
 <figure class="highlight python"><pre><div class="line"><span class="keyword">import</span> socket</div><div class="line"><span class="keyword">from</span> swift.common.utils <span class="keyword">import</span> get_logger</div><div class="line"><span class="keyword">from</span> swift.proxy.controllers.base <span class="keyword">import</span>  get_container_info</div><div class="line"><span class="keyword">from</span> swift.common.swob <span class="keyword">import</span> Request, Response</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">IPWhitelistMiddleware</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="string">""" 允许allow-ip项里的ip地址访问容器"""</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, app, conf, logger=None)</span>:</span></div><div class="line">        self.app=app</div><div class="line">        <span class="keyword">if</span> logger:</div><div class="line">            self.logger=logger</div><div class="line"></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            self.logger = get_logger(conf,log_route=<span class="string">'ip_whitelist'</span>)</div><div class="line"></div><div class="line">        self.logger.debug(<span class="string">"conf = %(conf)s"</span>,locals())</div><div class="line">		<span class="comment">#读取配置文件中的deny_message，没有为IP deny</span></div><div class="line">        self.deny_message = conf.get(<span class="string">'deny_message'</span>,<span class="string">'IP deny'</span>)</div><div class="line">        self.local_ip = socket.gethostbyname(socket.gethostname())</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self,env, start_response)</span>:</span></div><div class="line">        <span class="string">"""WSGI 入口获取应用的上下文进行处理，return来向下传递应用                                env是上下文，start_response是返回调用对象"""</span></div><div class="line">        </div><div class="line">        req= Request(env)</div><div class="line">        self.logger.debug(<span class="string">"env = %(env)s"</span>, locals())</div><div class="line"></div><div class="line">        <span class="keyword">try</span>:</div><div class="line">        <span class="comment">#url语法检查</span></div><div class="line">            version, account ,container,obj = req.split_path(<span class="number">1</span>,<span class="number">4</span>,<span class="keyword">True</span>)</div><div class="line">        <span class="keyword">except</span> StandardError:</div><div class="line">            <span class="keyword">return</span> self.app(env, start_response)</div><div class="line"></div><div class="line">        container_info = get_container_info(req.environ,self.app, swift_source=<span class="string">'IPWhitelistMiddleware'</span>)</div><div class="line"></div><div class="line">        <span class="comment">#用户的ip地址</span></div><div class="line">        remote_ip =env[<span class="string">'REMOTE_ADDR'</span>]</div><div class="line">        self.logger.debug(<span class="string">"Remote IP: %(remot_ip)s"</span>,{<span class="string">'remote_ip'</span>:</div><div class="line">        remote_ip})</div><div class="line">        <span class="comment">#访问container的meta属性</span></div><div class="line">        meta = container_info[<span class="string">'meta'</span>]</div><div class="line">        <span class="comment">#获取以allow开头的属性信息，（这里没有判断allow-ip的值为ip1,ip2的情况，而且不仅是allow-ip）</span></div><div class="line">        allow={k:v <span class="keyword">for</span> k,v <span class="keyword">in</span> meta.iteritems() <span class="keyword">if</span> k.startswith(<span class="string">'allow'</span>)}</div><div class="line">        allow_ips = set(allow.values())</div><div class="line">        allow_ips.add(self.local_ip)</div><div class="line">        self.logger.debug(<span class="string">"Allow IPs: %(allow_ips)s"</span>,</div><div class="line">            {<span class="string">'allow_ips'</span>:allow_ips})</div><div class="line"></div><div class="line">        <span class="keyword">if</span> remote_ip <span class="keyword">in</span> allow_ips:</div><div class="line">            <span class="keyword">return</span>  self.app(env, start_response)</div><div class="line">       <span class="comment">#不是允许的ip，返回403未授权的response</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            self.logger.debug(<span class="string">"IP %(remote_ip)s denided access to Account=%(account)s "</span></div><div class="line">            <span class="string">"Container=%(container)s.  Not in %(allow_ips)s"</span>, locals())</div><div class="line"></div><div class="line">            <span class="keyword">return</span> Response(</div><div class="line">                status=<span class="number">403</span>,</div><div class="line">                body=self.deny_message,</div><div class="line">                request=req)(env,start_response)</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">filter_factory</span><span class="params">(gloable_conf, **local_conf)</span>:</span></div><div class="line">    <span class="string">"""获取中间件实例，加载配置参数"""</span></div><div class="line">    conf =gloable_conf.copy()</div><div class="line">    conf.update(local_conf)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">ip_whitelist</span><span class="params">(app)</span>:</span></div><div class="line">        <span class="keyword">return</span>  IPWhitelistMiddleware(app, conf)</div><div class="line">    <span class="keyword">return</span>  ip_whitelist</div></pre></figure>
 
 <p>代码完成后把功能集成到swift服务里。修改proxy-server.conf文件加入新的filter</p>
@@ -289,7 +302,7 @@
 <p>保存退出，重启swift-proxy服务。</p>
 <figure class="highlight bash"><pre><div class="line"><span class="built_in">sudo</span> swift-init  proxy-server restart</div></pre></figure>
 
-<p>服务重启后，ip_whitelist的ip地址过滤中间件就生效了，可以有效防止某些ip访问容器里的数据。</p>
+<p>&emsp;&emsp;服务重启后，ip_whitelist的ip地址过滤中间件就生效了，可以有效防止某些ip访问容器里的数据。</p>
 
     </div>
     

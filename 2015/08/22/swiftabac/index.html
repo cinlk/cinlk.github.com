@@ -1,0 +1,491 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    
+    <title>采用XACML控制swift的文件访问权限 | Cinlk&#39;s Blog</title>
+    <meta name="author" content="cinlk">
+    
+    <meta name="description"   content="xacml与swift集成实现基于属性的访问控制">
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <meta property="og:title" content="采用XACML控制swift的文件访问权限"/>
+    <meta property="og:site_name" content="Cinlk&#39;s Blog"/>
+
+    <link rel="alternate" href="/atom.xml" title="Cinlk&#39;s Blog" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href="/css/lib/normalize.css" type="text/css">
+    <link rel="stylesheet" href="/css/lib/furatto.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.10.2.min.js"></script>
+    <script src="/js/jquery.jpanelmenu.js"></script>
+</head>
+
+
+<body class="container-fluid">
+    <header id="page-header">
+        <div class="navbar inverse-navbar">
+    <div class="navbar-inner">
+        <div class="container-center">
+            <a href="/index.html" class="menu-trigger" data-meteocon="M">
+                <i class="icon-reorder"></i>
+            </a>
+            <div class="nav-collapse navbar-responsive-collapse collapse">
+                <nav id="menu">
+                    <ul class="nav">
+                        <li><a class="brand" id="blog-title" href="/index.html">Cinlk&#39;s Blog</a></li>
+                    </ul>
+                    <div class="pull-right nav" id="nav-button-group">
+                        
+                            <a href="/" class="menu-home btn btn-primary btn-large">
+                                <i class="icon-home icon-white"></i>
+                                首页
+                            </a>
+                        
+                            <a href="/archives" class="menu-archive btn btn-primary btn-large">
+                                <i class="icon-archive icon-white"></i>
+                                归档
+                            </a>
+                        
+                            <a href="javascript:void(0);" class="menu-category btn btn-primary btn-large">
+                                <i class="icon-archive icon-white"></i>
+                                分类
+                            </a>
+                        
+                            <a href="/reading" class="menu-reading btn btn-primary btn-large">
+                                <i class="icon-book icon-white"></i>
+                                读书
+                            </a>
+                        
+                            <a href="/about" class="menu-about btn btn-primary btn-large">
+                                <i class="icon-user icon-white"></i>
+                                关于
+                            </a>
+                        
+                    </div>
+                </nav>
+                <nav id="jPanelMenu-menu-side">
+    <ul class="nav main-menu">
+        <li><a class="brand" href="index.html">Cinlk&#39;s Blog</a></li>
+        
+            <li>
+                <a href="/" class="menu-home">
+                    <i class="icon-home icon-white"></i>
+                    首页
+                </a>
+            </li>
+        
+            <li>
+                <a href="/archives" class="menu-archive">
+                    <i class="icon-archive icon-white"></i>
+                    归档
+                </a>
+            </li>
+        
+            <li>
+                <a href="javascript:void(0);" class="menu-category">
+                    <i class="icon-archive icon-white"></i>
+                    分类
+                </a>
+            </li>
+        
+            <li>
+                <a href="/reading" class="menu-reading">
+                    <i class="icon-book icon-white"></i>
+                    读书
+                </a>
+            </li>
+        
+            <li>
+                <a href="/about" class="menu-about">
+                    <i class="icon-user icon-white"></i>
+                    关于
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="nav category-menu hide">
+        <li>
+            <span><a class="brand" href="javascript:void(0);">分类目录</a></span>
+            <span><a class="btn-back brand pull-right" href="javascript:void(0);">
+                <i class="icon-arrow-left"></i>
+            </a></span>
+        </li>
+
+        
+
+        
+
+            
+
+            <li collapse-level="0">
+                <a href="/categories/keystone/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    keystone(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/openstack/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    openstack(3)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/blog/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    blog(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/install/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    install(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/XACML/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    XACML(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/osd/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    osd(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/object/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    object(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/web/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    web(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/neutron/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    neutron(2)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/ABAC/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    ABAC(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+        
+    </ul>
+</nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </header>
+    <div id="content-wrapper">
+        <div class="container-center">
+        <article class="post">
+    <div class="article-title article-title-big">
+        
+    
+        <h1>采用XACML控制swift的文件访问权限</h1>
+    
+
+    </div>
+
+    <div class="date-row ">
+        <time datetime="2015-08-21T16:13:25.000Z">8月 22 2015</time>
+    </div>
+
+    <div class="toc-wrap">
+        <div class="toc-title">目录</div>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#第一步_ip过滤策略文件"><span class="toc-number">1.</span> <span class="toc-text">第一步  ip过滤策略文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第二步_中间件获取请求上下文中需要的ip和资源"><span class="toc-number">2.</span> <span class="toc-text">第二步 中间件获取请求上下文中需要的ip和资源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第三步_请求转化以及策略解析"><span class="toc-number">3.</span> <span class="toc-text">第三步 请求转化以及策略解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第四步_启动ip过滤中间件应用"><span class="toc-number">4.</span> <span class="toc-text">第四步 启动ip过滤中间件应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于属性的访问控制"><span class="toc-number">5.</span> <span class="toc-text">基于属性的访问控制</span></a></li></ol>
+    </div>
+
+    <div class="entry">
+        <p>&emsp;&emsp;在ip_whitelist文章里介绍了ip过滤的实现，这篇文章使用xacml原理来实现访问swift容器时的ip过滤的功能，xacml原理参见<a href="http://www.cinlk.com/2015/07/27/xacml/" target="_blank" rel="external">该文章</a>。首先用制定xml描述ip过滤的policy，然后对swift资源访问restful请求转化为符合xacml语义的请求，转化代码是调用xacml框架实现库<a href="https://pypi.python.org/pypi/ndg-xacml/" target="_blank" rel="external">ndg-xacml</a>。<a id="more"></a>转化后请求会去查找能够匹配的policy，找到符合的policy然后加载policy进行规则分析来判断请求是否合法，加载及解析policy也是调用ndg-xacml（0.5.1）库提供的接口来实现。不过该库只支持xacml协议的2.0版本，所以policy语法必须是符合2.0版本的要求。 另外该库一直很少维护更新，功能不够全面。库代码功能职责分明也容易实现扩展。</p>
+<h3 id="第一步_ip过滤策略文件">第一步  ip过滤策略文件</h3>
+<figure class="highlight xml"><pre><div class="line"><span class="pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></div><div class="line"><span class="tag">&lt;<span class="title">Policy</span> <span class="attribute">xmlns</span>=<span class="value">"urn:oasis:names:tc:xacml:2.0:policy:schema:os"</span> <span class="attribute">PolicyId</span>=<span class="value">"Allow IPs"</span> <span class="attribute">RuleCombiningAlgId</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="title">Description</span>&gt;</span>Allow those ips to access account's(id=66a24962f3924b55bf19653690655bba) containers<span class="tag">&lt;/<span class="title">Description</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="title">Target</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">Resources</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="title">Resource</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">ResourceMatch</span> <span class="attribute">MatchId</span>=<span class="value">"urn:oasis:names:tc:xacml:2.0:function:anyURI-regexp-match"</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="title">AttributeValue</span> <span class="attribute">DataType</span>=<span class="value">"http://www.w3.org/2001/XMLSchema#anyURI"</span>&gt;</span>^http://127.0.0.1:8080/v1/AUTH_66a24962f3924b55bf19653690655bba/.*$<span class="tag">&lt;/<span class="title">AttributeValue</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="title">ResourceAttributeDesignator</span> <span class="attribute">AttributeId</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:resource:resource-type"</span> <span class="attribute">DataType</span>=<span class="value">"http://www.w3.org/2001/XMLSchema#anyURI"</span> /&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="title">ResourceMatch</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="title">Resource</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">Resources</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="title">Target</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="title">Rule</span> <span class="attribute">Effect</span>=<span class="value">"Permit"</span> <span class="attribute">RuleId</span>=<span class="value">"ips"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">Description</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">Condition</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="title">Apply</span> <span class="attribute">FunctionId</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">EnvironmentAttributeDesignator</span> <span class="attribute">AttributeId</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:enviroment:enviroment-ips"</span> <span class="attribute">DataType</span>=<span class="value">"http://www.w3.org/2001/XMLSchema#string"</span> /&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">Apply</span> <span class="attribute">FunctionId</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:function:string-bag"</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="title">AttributeValue</span> <span class="attribute">DataType</span>=<span class="value">"http://www.w3.org/2001/XMLSchema#string"</span>&gt;</span>192.168.1.10<span class="tag">&lt;/<span class="title">AttributeValue</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="title">AttributeValue</span> <span class="attribute">DataType</span>=<span class="value">"http://www.w3.org/2001/XMLSchema#string"</span>&gt;</span>192.168.10.111<span class="tag">&lt;/<span class="title">AttributeValue</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="title">AttributeValue</span> <span class="attribute">DataType</span>=<span class="value">"http://www.w3.org/2001/XMLSchema#string"</span>&gt;</span>10.1.111.25<span class="tag">&lt;/<span class="title">AttributeValue</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="title">AttributeValue</span> <span class="attribute">DataType</span>=<span class="value">"http://www.w3.org/2001/XMLSchema#string"</span>&gt;</span>127.0.0.1<span class="tag">&lt;/<span class="title">AttributeValue</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="title">Apply</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="title">Apply</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">Condition</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="title">Rule</span>&gt;</span></div><div class="line">  <span class="comment">&lt;!--&lt;Rule Effect="Permit" RuleId="denys" /&gt;--&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="title">Policy</span>&gt;</span></div></pre></figure>
+
+<p>&emsp;&emsp;从description标签内容可以看出，该策略允许标签Condition部分描述的ip地址访问swift中账户（66a24962f3924b55bf19653690655bba）里的资源，并且IP地址属于环境属性类型（EnvironmentAttributeDesignator），账户资源属于资源属性类型(Resource),看下资源匹配ResourceMatch部分，资源匹配函数是function:anyURI-regexp-match，它表示url地址的正则表达式匹配，把请求的资源地址（url）与policy描述的资源属性值（url）进行正则匹配。policy中目标资源的dataType（属性数据类型）是anyURI，（AttributeValue）属性值是一个正则表达式<strong>^<a href="http://127.0.0.1:8080/v1/AUTH_66a24962f3924b55bf19653690655bba/.*$" target="_blank" rel="external">http://127.0.0.1:8080/v1/AUTH_66a24962f3924b55bf19653690655bba/.*$</a></strong>,该策略说明只有conditions内ip地址的用户可以访问该资源（url）</p>
+<h3 id="第二步_中间件获取请求上下文中需要的ip和资源">第二步 中间件获取请求上下文中需要的ip和资源</h3>
+<p>&emsp;&emsp;需要对swift增加一个中间件程序，该中间件先获取需要的ip和资源（url），然后把它们传给请求转化程序。代码如下所示：</p>
+<figure class="highlight python"><pre><div class="line"><span class="keyword">from</span> swift.common.swob <span class="keyword">import</span> Request,Response</div><div class="line"><span class="keyword">from</span> swift.common.utils <span class="keyword">import</span> get_logger</div><div class="line"><span class="keyword">from</span> swift.proxy.controllers.base <span class="keyword">import</span> get_container_info</div><div class="line"></div><div class="line"><span class="keyword">from</span> swift.xacmls.IpXacml <span class="keyword">import</span> getResult</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ABAC</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,app,conf,logger=None)</span>:</span></div><div class="line">        self.app = app</div><div class="line">        self.conf = conf</div><div class="line">        <span class="keyword">if</span> logger <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</div><div class="line">            self.logger = logger</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            self.logger = get_logger(conf,log_route=<span class="string">'abac'</span>)</div><div class="line"></div><div class="line">        self.ipDeny = conf.get(<span class="string">'IPDeny'</span>,<span class="string">'IP denied'</span>)</div><div class="line">        self.shared=<span class="keyword">False</span></div><div class="line">	</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self, env, start_response)</span>:</span></div><div class="line">        self.logger.info(<span class="string">"abac %(env)s"</span> %{<span class="string">'env'</span>:env})</div><div class="line">        req=Request(env)</div><div class="line"></div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            version,account,container,object = req.split_path(<span class="number">1</span>,<span class="number">4</span>,rest_with_last=<span class="keyword">True</span>)</div><div class="line">            resource=HTTP+req.headers[<span class="string">'HOST'</span>]+<span class="string">'/'</span>+version+<span class="string">'/'</span>+account+<span class="string">'/'</span></div><div class="line">			<span class="comment">#目标账户</span></div><div class="line">            <span class="keyword">if</span> account==<span class="string">'AUTH_66a24962f3924b55bf19653690655bba'</span>:</div><div class="line">          <span class="comment">#env中获取访问者的ip地址和账资源url地址，传递给getResult进行策略判断</span></div><div class="line">				re=getResult(env[<span class="string">'REMOTE_ADDR'</span>],resource)</div><div class="line">                <span class="keyword">if</span> <span class="keyword">not</span> re:</div><div class="line">				<span class="comment">#不允许的ip地址返回403未授权</span></div><div class="line">                    <span class="keyword">return</span> Response(body=self.ipDeny,status=<span class="number">403</span>,</div><div class="line">                                    request=req)(env,start_response)</div><div class="line"></div><div class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">            <span class="keyword">return</span> Response(body=<span class="string">'internal server error'</span>,status=<span class="number">500</span>,</div><div class="line">                                    request=req)(env,start_response)</div><div class="line">	</div><div class="line">	<span class="keyword">return</span> self.app(env, start_response)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">filter_factory</span><span class="params">(global_conf, **local_conf)</span>:</span></div><div class="line">    conf = global_conf.copy()</div><div class="line">    conf.update(local_conf)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">abac_demo</span><span class="params">(app)</span>:</span></div><div class="line">        <span class="keyword">return</span> ABAC(app,conf,)</div><div class="line">    <span class="keyword">return</span> abac_demo</div></pre></figure>
+
+<h3 id="第三步_请求转化以及策略解析">第三步 请求转化以及策略解析</h3>
+<p>&emsp;&emsp;把对访问swift的restful请求转化为xacml需要的请求格式。同时加载policy，进行解析判断请求是否允许。代码如下所示：</p>
+<figure class="highlight python"><pre><div class="line"><span class="keyword">from</span> ndg.xacml.core.functions.v1.bag <span class="keyword">import</span> BagBase</div><div class="line"><span class="keyword">from</span> ndg.xacml.core.policy <span class="keyword">import</span> Policy</div><div class="line"><span class="keyword">from</span> ndg.xacml.parsers.etree.factory <span class="keyword">import</span> ReaderFactory</div><div class="line"></div><div class="line"><span class="keyword">from</span> ndg.xacml.core.context.pdp <span class="keyword">import</span> PDP</div><div class="line"><span class="keyword">from</span> ndg.xacml.core.context.request <span class="keyword">import</span> Request</div><div class="line"><span class="keyword">from</span> ndg.xacml.core.context.subject <span class="keyword">import</span> Subject</div><div class="line"><span class="keyword">from</span> ndg.xacml.core.subject <span class="keyword">import</span> Subject <span class="keyword">as</span> Subjectid</div><div class="line"><span class="keyword">from</span> ndg.xacml.core.context.resource <span class="keyword">import</span> Resource</div><div class="line"><span class="keyword">from</span> ndg.xacml.core.context.environment <span class="keyword">import</span> Environment</div><div class="line"><span class="keyword">from</span> ndg.xacml.core.context.result <span class="keyword">import</span> Decision,Result</div><div class="line"></div><div class="line"><span class="keyword">from</span> ndg.xacml.core <span class="keyword">import</span> Identifiers</div><div class="line"><span class="keyword">from</span> ndg.xacml.core.attribute <span class="keyword">import</span> Attribute</div><div class="line"><span class="keyword">from</span> ndg.xacml.core.attributevalue <span class="keyword">import</span> AttributeValue,AttributeValueClassFactory</div><div class="line"><span class="keyword">from</span> os <span class="keyword">import</span>  path</div><div class="line"></div><div class="line"><span class="keyword">import</span> logging</div><div class="line"></div><div class="line">logging.basicConfig(filename=<span class="string">'/var/log/xacml.log'</span>,level=logging.DEBUG)</div><div class="line"></div><div class="line"><span class="comment">#policy文件存储的绝对路径</span></div><div class="line">XACML_IP_POLICY=<span class="string">'/etc/swift/xacml/IPs.xml'</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">CreateRequest</span><span class="params">(object)</span>:</span></div><div class="line">	“”“构建xacml请求”“”</div><div class="line">    <span class="decorator">@classmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">createRequest</span><span class="params">(cls,enviromentValue=None,resourcevalue=None)</span>:</span></div><div class="line">			</div><div class="line">			<span class="comment">#属性值为string类型</span></div><div class="line">            attributeValueFactory =AttributeValueClassFactory()</div><div class="line">            stringAttributeValue = attributeValueFactory(AttributeValue.STRING_TYPE_URI)</div><div class="line"></div><div class="line">            request=Request()</div><div class="line">			<span class="comment">#构建环境属性的类型以及值，环境的值是访问者的ip地址</span></div><div class="line">            request.environment =Environment()</div><div class="line">            enviromentAttribute=Attribute()</div><div class="line">            enviromentAttribute.dataType=stringAttributeValue.IDENTIFIER</div><div class="line">            enviromentAttribute.attributeId=Identifiers.Environment.IPS</div><div class="line">            enviromentAttribute.attributeValues.append(stringAttributeValue())</div><div class="line">            enviromentAttribute.attributeValues[<span class="number">0</span>].value=enviromentValue</div><div class="line">            request.environment.attributes.append(enviromentAttribute)</div><div class="line"></div><div class="line"></div><div class="line">            resource = Resource()</div><div class="line">			<span class="comment">#构建资源属性的类型和值，该值是url表示的资源</span></div><div class="line">            anyURI=attributeValueFactory(AttributeValue.ANY_TYPE_URI)</div><div class="line">            resourceAttribute = Attribute()</div><div class="line">            resource.attributes.append(resourceAttribute)</div><div class="line">            resourceAttribute.attributeId=Identifiers.Resource.TYPE</div><div class="line">            resourceAttribute.dataType=anyURI.IDENTIFIER</div><div class="line">            resourceAttribute.attributeValues.append(anyURI())</div><div class="line">            resourceAttribute.attributeValues[<span class="number">0</span>].value=resourcevalue</div><div class="line">            request.resources.append(resource)</div><div class="line">            <span class="keyword">return</span> request</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getResult</span><span class="params">(enviromentValue,resourcevalue)</span>:</span></div><div class="line">    </div><div class="line">	result=<span class="keyword">False</span></div><div class="line">	<span class="comment">#加载策略</span></div><div class="line">    PolicyReader = ReaderFactory.getReader(Policy)</div><div class="line">    policy=PolicyReader.parse(XACML_IP_POLICY)</div><div class="line">    pdp =PDP.fromPolicySource(XACML_IP_POLICY,ReaderFactory)</div><div class="line"><span class="comment">#用参数构建请求    re=CreateRequest.createRequest(enviromentValue=enviromentValue,resourcevalue=resourcevalue)</span></div><div class="line">	<span class="comment">#pdp 通过分析策略来判断请求</span></div><div class="line">    response = pdp.evaluate(re)</div><div class="line">    <span class="keyword">for</span> re <span class="keyword">in</span> response.results:</div><div class="line">        <span class="keyword">if</span> re.decision==Decision.PERMIT:</div><div class="line">            result=<span class="keyword">True</span></div><div class="line">    <span class="keyword">return</span> result</div></pre></figure>
+
+<h3 id="第四步_启动ip过滤中间件应用">第四步 启动ip过滤中间件应用</h3>
+<p>修改proxy-server.conf文件加入该中间件(abac)应用</p>
+<figure class="highlight bash"><pre><div class="line">[filter:abac]</div><div class="line">paste.filter_factory = swift.common.middleware.abac:filter_factory</div><div class="line">IPDeny = Your IP address can not be authorized !</div></pre></figure>
+
+<p>然后重启proxy服务</p>
+<figure class="highlight bash"><pre><div class="line"><span class="built_in">sudo</span> swift-init proxy-server restart</div></pre></figure>
+
+<p>&emsp;&emsp;这样swift下的资源，都会经过abac中间件应用进行ip地址过滤，如果访问的是该账户(66a24962f3924b55bf19653690655bba)下的资源，则只允许指定ip地址的用户访问其包含的容器核对象资源。xacml框架非常适合用于基于属性的访问控制（ABAC），也是xacml框架主要的用途。因此简单介绍下基于属性的访问控制。</p>
+<h3 id="基于属性的访问控制">基于属性的访问控制</h3>
+<p>&emsp;&emsp;基于属性的访问控制是指利用相关实体（如主体、客体、环境）的属性作为授权的基础，通过属性逻辑组合制定授权策略，访问过程进行动态授权。ABAC根据请求者的属性和请求方法，客体属性，环境属性。结合相应的策略来判断是否具有对客体执行该方法。ABAC基本授权模型图如下<img src="/images/abac.png" alt=""><br>   （1）主体是代表用户请求的发起者，看作一个会话实体，该会话包括了用户的属性信息。<br>   （2）客体是系统中资源的抽象表示，描述资源位置，属性值等信息。<br>   （3）环境是定义访问过程中上下文环境的属性信息，环境信息可以作为权限判断条件。<br>   （4）操作是系统支持对客体的访问方式，比如读写修改执行等操作。<br>   （5）权限是来定义主体对客体在什么样的环境条件下进行何种类型的操作，是一个四元组&lt;主体,，客体，环境，操作&gt;。</p>
+
+    </div>
+    
+    <footer >
+        
+            
+    
+    <div class="categories">
+        所属目录：
+    <a href="/categories/XACML/">XACML</a>
+    </div>
+
+            
+    
+    <div class="tags-row">
+        标签：<a class="btn btn-info" href="/tags/swift/">swift</a><a class="btn btn-info" href="/tags/xacml/">xacml</a>
+    </div>
+
+        
+        <div class="clearfix"></div>
+    </footer>
+</article>
+
+
+
+<section id="comment">
+    <!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2015/08/22/swiftabac/" data-title="采用XACML控制swift的文件访问权限" data-url="http://cinlk.com/2015/08/22/swiftabac/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	 var duoshuoQuery = {short_name: 'cinlk' };
+	  (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';
+		ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
+
+
+        </div>
+    </div>
+    <footer id="page-footer"><div class="footer-content">
+    <div class="container-center">
+        <div class="footer-text pull-left">
+            <div class="copyright">
+                
+                Copyright &copy; 2015 <a href="/">cinlk</a>
+                
+            </div>
+            <div class="theme-copyright">
+                <span>Blog powered by <a href="https://hexo.io/">hexo</a></span>
+                Theme by <a href="https://github.com/raytaylorlin/hexo-theme-raytaylorism">raytaylorism</a> @<a href='cinlk.github.io/about'>cinlk
+            </div>
+        </div>
+        <div class="social-group pull-right">
+            
+            <a href="https://github.com/cinlk" target="_blank" title="github"><i class="icon-github"></i></a>
+            
+            
+            <a href="http://www.zhihu.com/people/kou-hu-10" target="_blank" title="知乎"><i class="icon-xing-sign"></i></a>
+            
+			
+			<a href="http://www.linkedin.com/profile/preview?locale=zh_CN&amp;trk=prof-0-sb-preview-primary-button" target="_blank" title="领英"><i class="icon-linkedin"></i></a>
+			
+            
+            <a href="https://plus.google.com/u/0/" target="_blank" title="Google+"><i class="icon-google-plus-sign"></i></a>
+            
+        </div>
+        <div class="clearfix"></div>
+		
+<script type="text/javascript">
+  var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+  document.write(unescape("%3Cspan id='cnzz_stat_icon_1255502307'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1255502307' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+	</div>
+</div>
+</footer>
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-43460643-1', 'raytaylorlin.com');
+    ga('send', 'pageview');
+
+</script>
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script>
+    (function($) {
+        //当内容区内容不够长时，设置内容区域的高度使footer沉底
+        var resizeContentWrapper = function() {
+            //HACK: 用延时的方法使计算高度时候更加准确，会有一闪的情况
+            setTimeout(function() {
+                var contentHeight = Math.floor($('#content-wrapper .container-center').height()),
+                headerHeight = Math.floor($('#page-header').height()),
+                footerHeight = Math.floor($('#page-footer').height()),
+                minHeight = Math.floor($(window).height() - headerHeight - footerHeight);
+                if(contentHeight < minHeight) {
+                    $('#content-wrapper').css({height: minHeight});                    
+                } else {
+                    $('#content-wrapper').css({height: 'auto'});
+                }
+            },500);
+        };
+
+        //响应式侧边栏
+        var initJPanelMenu = function() {
+            var jPM = $.jPanelMenu({
+                menu: '#jPanelMenu-menu-side',
+                duration: 500
+            });
+            jPM.on();
+        };
+
+        //初始化目录按钮事件绑定
+        var initCategory = function() {
+            function showMainMenu() {
+                var $jPanelMenu = $('#jPanelMenu-menu');
+                $jPanelMenu.find('ul.category-menu').hide();
+                $jPanelMenu.find('ul.main-menu').fadeIn();
+            }
+
+            function showCategoryMenu() {
+                var $jPanelMenu = $('#jPanelMenu-menu');
+                $jPanelMenu.find('ul.main-menu').hide();
+                $jPanelMenu.find('ul.category-menu').fadeIn();
+            }
+
+            $('.menu-category').click(function() {
+                var jPM = $.jPanelMenu({
+                    duration: 500,
+                    beforeOpen: function() {
+                        showCategoryMenu();
+                    },
+                    afterClose: function() {
+                        showMainMenu();
+                    }
+                });
+                if(jPM.isOpen()) {
+                    showCategoryMenu();
+                } else {
+                    jPM.open();
+                }
+            });
+
+            $('.category-menu').on('click', '.btn-back', function() {
+                showMainMenu();
+            });
+        };
+
+        $(document).ready(resizeContentWrapper);
+        $(document).ready(initJPanelMenu);
+        $(document).ready(initCategory);
+        
+        $(window).resize(resizeContentWrapper);
+    })(jQuery);
+</script>
+
+</body>
+</html>

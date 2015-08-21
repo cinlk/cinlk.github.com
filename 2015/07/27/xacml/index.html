@@ -127,32 +127,6 @@
             
 
             <li collapse-level="0">
-                <a href="/categories/install/" class="collapse-level-0">
-                    <i class="icon-caret-right"></i>
-                    install(1)
-                </a>
-            </li>
-
-            
-
-            
-
-        
-
-            <li collapse-level="0">
-                <a href="/categories/blog/" class="collapse-level-0">
-                    <i class="icon-caret-right"></i>
-                    blog(1)
-                </a>
-            </li>
-
-            
-
-            
-
-        
-
-            <li collapse-level="0">
                 <a href="/categories/keystone/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
                     keystone(1)
@@ -179,9 +153,35 @@
         
 
             <li collapse-level="0">
-                <a href="/categories/neutron/" class="collapse-level-0">
+                <a href="/categories/blog/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    neutron(2)
+                    blog(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/install/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    install(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/XACML/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    XACML(1)
                 </a>
             </li>
 
@@ -221,6 +221,19 @@
                 <a href="/categories/web/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
                     web(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/neutron/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    neutron(2)
                 </a>
             </li>
 
@@ -273,16 +286,16 @@
     </div>
 
     <div class="entry">
-        <p>可扩展访问控制标记语言（XACML）是基于XML标准开发语言，是由OASIS标准组织制定的具有强大的通用性、可扩展信而被广泛使用，它定义了一种通用的用于描述资源访问控制的决策语言，该语言用采用XML进行描述。它易于和基于属性的访问控制授权机制相结合。该规范的核心是围绕一个四元组<subject,object,action,condition>来定义授权策略。除了定义语言描述规范以外，还定义了规则组合算法和策略组合算法决定最终如何授权。XACML在复杂环境中能根据主体、客体、环境的属性灵活动态的依据策略对请求授权，还支持细粒度访问控制。<br><a id="more"></a></subject,object,action,condition></p>
+        <p>&emsp;&emsp;可扩展访问控制标记语言（XACML）是基于XML标准开发语言，是由OASIS标准组织制定的具有强大的通用性、可扩展信而被广泛使用，它定义了一种通用的用于描述资源访问控制的决策语言，该语言用采用XML进行描述。它易于和基于属性的访问控制授权机制相结合。该规范的核心是围绕一个四元组<subject,object,action,condition>来定义授权策略。除了定义语言描述规范以外，还定义了规则组合算法和策略组合算法决定最终如何授权。XACML在复杂环境中能根据主体、客体、环境的属性灵活动态的依据策略对请求授权，还支持细粒度访问控制。<br><a id="more"></a></subject,object,action,condition></p>
 <h2 id="组成元素">组成元素</h2>
 <p>版本：描述XACML标准的协议版本，目前有1.0、2.0、3.0三个版本。<br>属性: 用于描述实体(主体、客体、环境)的特性。<br>动作：主体对客体访问的操作<br>目标：请求文件和策略文件都有，它由实体的属性构成。确定请求文件和策略文件匹配关系，如果匹配用该策略评估请求。<br>规则：进行授权判断，包含目标、动作、条件、结果。规则属于策略中的一部分，策略可以拥有多个规则。不同规则的判断结果可能不一致，需要规则组合算法协调最终的判断结果。<br>策略：策略由规则组合算法、目标，规则，义务等部分组成<br>策略集：策略集包括多个策略或策略集，以及策略组合算法。<br>条件：属于规则的一部分，用集合逻辑表达式描述授权条件。规则具有多个条件。<br>义务：策略判断后需要执行的操作。需要执行完所有的义务职责才能授权，执行义务职责出错就不会授权。</p>
 <h2 id="xacml_主要组件">xacml 主要组件</h2>
-<p>XACML访问控制框架组件有：访问控制策略执行点（PEP）、访问控制策略信息点（PIP）、访问控制策略决策点（PDP）、上下文处理器（Context Handler）和策略管理点（PAP）。<br><img src="/images/xacml.png" alt=""><br>(1) 访问请求发送给PEP，PEP获取请求中的主体、客体、环境、操作行为的属性，这些请求的信息传给上下文处理器Handler。<br>(2) 上下文处理器Handler将请求转化封装成XML文本转发给PDP，PDP向Handler发送查询属性请求。<br>(3) Handler将PDP发送过来的请求转发给PIP处理，PIP查找属性信息，把属性返回给Handler。<br>(4) Handler获得属性信息后，将请求到属性信息转发给PDP。PDP结合策略管理点PAP提供的策略，执行策略。<br>(5) 策略决策点PDP将授权决策的结果返回给上下文处理器Handler进行处理。<br>(6) Handler把PDP返回的结果转换成PEP可以识别的格式，PEP根据返回的结果进行相应的处理。</p>
+<p>&emsp;&emsp;XACML访问控制框架组件有：访问控制策略执行点（PEP）、访问控制策略信息点（PIP）、访问控制策略决策点（PDP）、上下文处理器（Context Handler）和策略管理点（PAP）。<br><img src="/images/xacml.png" alt=""><br>(1) 访问请求发送给PEP，PEP获取请求中的主体、客体、环境、操作行为的属性，这些请求的信息传给上下文处理器Handler。<br>(2) 上下文处理器Handler将请求转化封装成XML文本转发给PDP，PDP向Handler发送查询属性请求。<br>(3) Handler将PDP发送过来的请求转发给PIP处理，PIP查找属性信息，把属性返回给Handler。<br>(4) Handler获得属性信息后，将请求到属性信息转发给PDP。PDP结合策略管理点PAP提供的策略，执行策略。<br>(5) 策略决策点PDP将授权决策的结果返回给上下文处理器Handler进行处理。<br>(6) Handler把PDP返回的结果转换成PEP可以识别的格式，PEP根据返回的结果进行相应的处理。</p>
 <h2 id="策略模型">策略模型</h2>
-<p>XACML策略语言模型表示了策略的基本要素及其之间的关系。主要有策略，策略集以及策略内部规则三个元素，这些元素都包主体、客体和行为来描述主体访问客体的操作，形成策略描述文件<br><img src="/images/policySet.png" alt=""></p>
+<p>&emsp;&emsp;XACML策略语言模型表示了策略的基本要素及其之间的关系。主要有策略，策略集以及策略内部规则三个元素，这些元素都包主体、客体和行为来描述主体访问客体的操作，形成策略描述文件<br><img src="/images/policySet.png" alt=""></p>
 <p><strong>策略</strong>：一组规则、规则组合算法的标识符、一组义务和一个目标。这就是 XACML 最主要的方面。XACML 的多数动作发生在策略中。策略包括几种子组件：目标、规则、规则组合算法和义务。理解策略就必须理解这些子组件（subcomponent）。现在来看看各种子组件的重要性：<br>（1）目标（Target）：每个策略只有一个目标。该目标有助于确定策略是否与请求有关。策略和请求的相关性决定了是否要为请求评估该策略。这是通过定义目标中的三类属性（主体、资源、动作）及其属性值来实现的。目标中不一定都有这三类属性。将这些属性的值与请求中具有相同属性的值进行比较， 如果匹配（对其应用某些函数之后，将会看到它们是否匹配），则认为该策略是相关的，并对其进行评估。<br>（2）规则：一个策略可以与 多条规则相关联。每条规则由条件、结果和目标组成。条件是关于属性的陈述，评估结果为 True、 False 或 Indeterminate。结果是符合规则的预期后果，值可以为 Permit 或 Deny。目标，与策略中的目标相同，都有助于确定规则是否与请求有关，实现的机制也与策略中的目标的实现机制类似。规则的最终结果取决于条件的评估。如果条件返回 Indeterminate，则该规则返回 Indeterminate。如果条件返回 False，则规则返回 NotApplicable。如果条件返回 True，则返回 Effect 元素的值，可以是 Permit 或 Deny。<br>（3）规则组合算法：如 上一条规则所述，一个策略可以包含多条规则。不同的规则有可能得到冲突的结果。规则组合算法负责解决这种冲突，每一策略、每一请求都得到一个最终结果。每个策略只能使用一种规则组合算法。详情请参阅 <a href="#jump1">规则组合算法</a>。<br>（4）义务：XACML 的目标之一是提供更高层次的访问控制，而不仅仅是允许和拒绝决策，义务是实现这种控制的机制。义务是 PEP 必须与授权决策的实施一起执行的动作。在评估策略之后，特定的义务与授权决策一起发送给 PEP。除了强制实施授权决策外，PEP 还负责执行义务所规定的操作。</p>
 <h2 id="policy">policy</h2>
-<p>description描述该策略的规则，subjects和resources定义了主体和客体的类型，rule里的action定义了访问方式，而condition又描述了满足规则的条件。</p>
+<p>&emsp;&emsp;description描述该策略的规则，subjects和resources定义了主体和客体的类型，rule里的action定义了访问方式，而condition又描述了满足规则的条件。</p>
 <figure class="highlight xml"><pre><div class="line"><span class="pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></div><div class="line"><span class="tag">&lt;<span class="title">Policy</span> <span class="attribute">xmlns</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:policy"</span></span></div><div class="line">        <span class="attribute">xmlns:xsi</span>=<span class="value">"http://www.w3.org/2001/XMLSchema-instance"</span></div><div class="line">        <span class="attribute">PolicyId</span>=<span class="value">"GeneratedPolicy"</span></div><div class="line">        <span class="attribute">RuleCombiningAlgId</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:ordered-permit-overrides"</span>&gt;</div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="title">Description</span>&gt;</span></div><div class="line">    This policy applies to any accounts at users.example.com accessing</div><div class="line">    server.example.com. The one Rule applies to the specific action of</div><div class="line">    doing a CVS commit, but other Rules could be defined that handled</div><div class="line">    other actions. In this case, only certain groups of people are</div><div class="line">    allowed to commit. There is a final fall-through rule that always</div><div class="line">    returns Deny.</div><div class="line">  <span class="tag">&lt;/<span class="title">Description</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="title">Target</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">Subjects</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="title">Subject</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">SubjectMatch</span> <span class="attribute">MatchId</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match"</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="title">AttributeValue</span> <span class="attribute">DataType</span>=<span class="value">"http://www.w3.org/2001/XMLSchema#string"</span>&gt;</span>users.example.com<span class="tag">&lt;/<span class="title">AttributeValue</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="title">SubjectAttributeDesignator</span> <span class="attribute">DataType</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name"</span></span></div><div class="line">                                      <span class="attribute">AttributeId</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:subject:subject-id"</span>/&gt;</div><div class="line">        <span class="tag">&lt;/<span class="title">SubjectMatch</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="title">Subject</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">Subjects</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">Resources</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="title">Resource</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">ResourceMatch</span> <span class="attribute">MatchId</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:function:anyURI-equal"</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="title">AttributeValue</span> <span class="attribute">DataType</span>=<span class="value">"http://www.w3.org/2001/XMLSchema#anyURI"</span>&gt;</span></div><div class="line">          http://server.example.com<span class="tag">&lt;/<span class="title">AttributeValue</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="title">ResourceAttributeDesignator</span> <span class="attribute">DataType</span>=<span class="value">"http://www.w3.org/2001/XMLSchema#anyURI"</span></span></div><div class="line">                                       <span class="attribute">AttributeId</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:resource:resource-id"</span>/&gt;</div><div class="line">        <span class="tag">&lt;/<span class="title">ResourceMatch</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="title">Resource</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">Resources</span>&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="title">Target</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="title">Rule</span> <span class="attribute">RuleId</span>=<span class="value">"CommitRule"</span> <span class="attribute">Effect</span>=<span class="value">"Permit"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="title">Actions</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">Action</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="title">ActionMatch</span> <span class="attribute">MatchId</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:function:string-equal"</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="title">AttributeValue</span> <span class="attribute">DataType</span>=<span class="value">"http://www.w3.org/2001/XMLSchema#string"</span>&gt;</span>commit<span class="tag">&lt;/<span class="title">AttributeValue</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="title">ActionAttributeDesignator</span> <span class="attribute">DataType</span>=<span class="value">"http://www.w3.org/2001/XMLSchema#string"</span></span></div><div class="line">                                       <span class="attribute">AttributeId</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:action:action-id"</span>/&gt;</div><div class="line">          <span class="tag">&lt;/<span class="title">ActionMatch</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="title">Action</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="title">Actions</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">Condition</span> <span class="attribute">FunctionId</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:function:string-equal"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="title">Apply</span> <span class="attribute">FunctionId</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:function:string-one-and-only"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">SubjectAttributeDesignator</span> <span class="attribute">DataType</span>=<span class="value">"http://www.w3.org/2001/XMLSchema#string"</span></span></div><div class="line">                                    <span class="attribute">AttributeId</span>=<span class="value">"group"</span></div><div class="line">                                    <span class="attribute">Issuer</span>=<span class="value">"admin@users.example.com"</span>/&gt;</div><div class="line">      <span class="tag">&lt;/<span class="title">Apply</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="title">AttributeValue</span> <span class="attribute">DataType</span>=<span class="value">"http://www.w3.org/2001/XMLSchema#string"</span>&gt;</span>developers<span class="tag">&lt;/<span class="title">AttributeValue</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">Condition</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="title">Rule</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="title">Rule</span>  <span class="attribute">RuleId</span>=<span class="value">"FinalRule"</span> <span class="attribute">Effect</span>=<span class="value">"Deny"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="title">Policy</span>&gt;</span></div></pre></figure>
 
 <h2 id="request">request</h2>
@@ -290,7 +303,7 @@
 <figure class="highlight xml"><pre><div class="line"><span class="pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></div><div class="line"><span class="tag">&lt;<span class="title">Request</span> <span class="attribute">xmlns</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:context"</span></span></div><div class="line">         <span class="attribute">xmlns:xsi</span>=<span class="value">"http://www.w3.org/2001/XMLSchema-instance"</span>&gt;</div><div class="line">  <span class="tag">&lt;<span class="title">Subject</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">Attribute</span> <span class="attribute">AttributeId</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:subject:subject-id"</span></span></div><div class="line">               <span class="attribute">DataType</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name"</span>&gt;</div><div class="line">      <span class="tag">&lt;<span class="title">AttributeValue</span>&gt;</span>seth@users.example.com<span class="tag">&lt;/<span class="title">AttributeValue</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">Attribute</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">Attribute</span> <span class="attribute">AttributeId</span>=<span class="value">"group"</span></span></div><div class="line">               <span class="attribute">DataType</span>=<span class="value">"http://www.w3.org/2001/XMLSchema#string"</span></div><div class="line">               <span class="attribute">Issuer</span>=<span class="value">"admin@users.example.com"</span>&gt;</div><div class="line">      <span class="tag">&lt;<span class="title">AttributeValue</span>&gt;</span>developers<span class="tag">&lt;/<span class="title">AttributeValue</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">Attribute</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="title">Subject</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="title">Resource</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">Attribute</span> <span class="attribute">AttributeId</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:resource:resource-id"</span></span></div><div class="line">               <span class="attribute">DataType</span>=<span class="value">"http://www.w3.org/2001/XMLSchema#anyURI"</span>&gt;</div><div class="line">      <span class="tag">&lt;<span class="title">AttributeValue</span>&gt;</span>http://server.example.com/<span class="tag">&lt;/<span class="title">AttributeValue</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">Attribute</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="title">Resource</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="title">Action</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">Attribute</span> <span class="attribute">AttributeId</span>=<span class="value">"urn:oasis:names:tc:xacml:1.0:action:action-id"</span></span></div><div class="line">               <span class="attribute">DataType</span>=<span class="value">"http://www.w3.org/2001/XMLSchema#string"</span>&gt;</div><div class="line">      <span class="tag">&lt;<span class="title">AttributeValue</span>&gt;</span>commit<span class="tag">&lt;/<span class="title">AttributeValue</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">Attribute</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="title">Action</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="title">Request</span>&gt;</span></div></pre></figure>
 
 <p><em>该请求能否满足成功执行访问呢？这个问题留给大家来分析。</em></p>
-<p><span id="jump1"><strong>规则组合算法</strong></span><br>规则组合算法结合策略中所有规则的结果得到最终的授权决策。XACML 定义了下面的规则组合算法（也可定义自己的算法）</p>
+<p><span id="jump1"><strong>规则组合算法</strong></span><br>&emsp;&emsp;规则组合算法结合策略中所有规则的结果得到最终的授权决策。XACML 定义了下面的规则组合算法（也可定义自己的算法）</p>
 <figure class="highlight"><pre><div class="line">Deny-<span class="keyword">overrides</span>（拒绝覆盖）： 只要有一条规则的评估为 Deny，那么最终授权决策也是 Deny。</div><div class="line">Ordered-deny-<span class="keyword">overrides</span>（有序拒绝覆盖）： 与拒绝覆盖相同，只不过评估相关规则的顺序与将规则添加到策略中的顺序相同。</div><div class="line">Permit-<span class="keyword">overrides</span>（允许覆盖）： 只要有一条规则计算的评估为 Permit，则最终授权决策也是 Permit。</div><div class="line">Ordered-permit-<span class="keyword">overrides</span>（允许按顺序覆盖）： 与允许覆盖相同，只不过评估相关规则的顺序与规则添加到策略中的顺序相同。</div><div class="line">First-applicable（最先应用）： 遇到的第一条相关规则的评估结果作为最终授权决策的评估结果。</div></pre></figure>
 
 

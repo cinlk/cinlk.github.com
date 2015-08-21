@@ -7,7 +7,7 @@
     <title>keystone 数据表扩展 | Cinlk&#39;s Blog</title>
     <meta name="author" content="cinlk">
     
-    <meta name="description" content="本文讲解如何在keystone中扩展数据库表，实现对数据库表的查找，插入，删除等操作。然后实现restfull接口来访问表中数据。">
+    <meta name="description" content="&amp;emsp;&amp;emsp;本文讲解如何在keystone中扩展数据库表，实现对数据库表的查找，插入，删除等操作。然后实现restfull接口来访问表中数据。">
     
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -127,32 +127,6 @@
             
 
             <li collapse-level="0">
-                <a href="/categories/install/" class="collapse-level-0">
-                    <i class="icon-caret-right"></i>
-                    install(1)
-                </a>
-            </li>
-
-            
-
-            
-
-        
-
-            <li collapse-level="0">
-                <a href="/categories/blog/" class="collapse-level-0">
-                    <i class="icon-caret-right"></i>
-                    blog(1)
-                </a>
-            </li>
-
-            
-
-            
-
-        
-
-            <li collapse-level="0">
                 <a href="/categories/keystone/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
                     keystone(1)
@@ -179,9 +153,35 @@
         
 
             <li collapse-level="0">
-                <a href="/categories/neutron/" class="collapse-level-0">
+                <a href="/categories/blog/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    neutron(2)
+                    blog(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/install/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    install(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/XACML/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    XACML(1)
                 </a>
             </li>
 
@@ -221,6 +221,19 @@
                 <a href="/categories/web/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
                     web(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/neutron/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    neutron(2)
                 </a>
             </li>
 
@@ -273,9 +286,9 @@
     </div>
 
     <div class="entry">
-        <p>本文讲解如何在keystone中扩展数据库表，实现对数据库表的查找，插入，删除等操作。然后实现restfull接口来访问表中数据。<br><a id="more"></a></p>
+        <p>&emsp;&emsp;本文讲解如何在keystone中扩展数据库表，实现对数据库表的查找，插入，删除等操作。然后实现restfull接口来访问表中数据。<br><a id="more"></a></p>
 <h2 id="数据表创建">数据表创建</h2>
-<p>keystone使用SQLAlchemy-migrate迁移数据库表，迁移的数据库有一个版本号,比如表文件001_xxx_table.py表示迁移版本号是1。扩展的数据表实现在keystone/contrib目录下，同时需要遵守迁移的规范，定义相关的文件。比如创建teacherAttribute数据表，则数据表目录结构如下图所示：<br><img src="/images/dbext.png" alt=""></p>
+<p>&emsp;&emsp;keystone使用SQLAlchemy-migrate迁移数据库表，迁移的数据库有一个版本号,比如表文件001_xxx_table.py表示迁移版本号是1。扩展的数据表实现在keystone/contrib目录下，同时需要遵守迁移的规范，定义相关的文件。比如创建teacherAttribute数据表，则数据表目录结构如下图所示：<br><img src="/images/dbext.png" alt=""></p>
 <p>migrate_repo包含的migrate.cfg配置文件内容如下：</p>
 <figure class="highlight"><pre><div class="line">[db_settings]</div><div class="line"># Used to identify which repository this database is versioned under.</div><div class="line"># You can <span class="operator"><span class="keyword">use</span> the name <span class="keyword">of</span> your project.</span></div><div class="line"># it must chaneg re_id <span class="keyword">to</span> resync <span class="keyword">table</span></div><div class="line">repository_id=teacherAttribute1</div><div class="line"></div><div class="line"># The name <span class="keyword">of</span> the <span class="keyword">database</span> <span class="keyword">table</span> used <span class="keyword">to</span> track the <span class="keyword">schema</span> <span class="keyword">version</span>.</div><div class="line"># This name shouldn<span class="string">'t already be used by your project.</span></div><div class="line"># If this is changed once a database is under version control, you'll need <span class="keyword">to</span></div><div class="line"># <span class="keyword">change</span> the <span class="keyword">table</span> name <span class="keyword">in</span> <span class="keyword">each</span> <span class="keyword">database</span> too.</div><div class="line">version_table=migrate_version</div><div class="line"></div><div class="line"># <span class="keyword">When</span> committing a <span class="keyword">change</span> script, Migrate will attempt <span class="keyword">to</span> generate the</div><div class="line"># <span class="keyword">sql</span> <span class="keyword">for</span> <span class="keyword">all</span> supported <span class="keyword">databases</span>; normally, if one of them fails - probably</div><div class="line"># because you don't have that database installed - it is ignored and the</div><div class="line"># <span class="operator"><span class="keyword">commit</span> continues, perhaps ending successfully.</span></div><div class="line"># <span class="keyword">Databases</span> <span class="keyword">in</span> this list MUST compile successfully during a <span class="keyword">commit</span>, <span class="keyword">or</span> the</div><div class="line"># entire <span class="keyword">commit</span> will fail. List the <span class="keyword">databases</span> your application will actually</div><div class="line"># be <span class="keyword">using</span> <span class="keyword">to</span> ensure your updates <span class="keyword">to</span> that <span class="keyword">database</span> <span class="keyword">work</span> properly.</div><div class="line"># This must be a list; example: ['postgres','sqlite']</div><div class="line">required_dbs=[]</div><div class="line"></div><div class="line"># When creating new <span class="operator"><span class="keyword">change</span> scripts, Migrate will stamp the new script <span class="keyword">with</span></span></div><div class="line"># a <span class="keyword">version</span> <span class="built_in">number</span>. <span class="keyword">By</span> <span class="keyword">default</span> this <span class="keyword">is</span> latest_version + <span class="number">1.</span> You can <span class="keyword">set</span> this</div><div class="line"># <span class="keyword">to</span> <span class="string">'true'</span> <span class="keyword">to</span> tell Migrate <span class="keyword">to</span> <span class="keyword">use</span> the UTC <span class="keyword">timestamp</span> instead.</div><div class="line">use_timestamp_numbering=<span class="literal">False</span></div></pre></figure>
 
@@ -286,7 +299,7 @@
 <figure class="highlight bash"><pre><div class="line">keystone-manage db_sync --extension &lt;tableName&gt;</div></pre></figure>
 
 <h2 id="restfull方式访问数据表">restfull方式访问数据表</h2>
-<p>keystone采用WSGI规范实现资源的访问方式，需要实现router以及app。在teacherAttribute目录下创建三个文件：<br>core.py实现与数据表操作功能；controller.py是application的实现并调用core里的数据表操作方法；routers.py实现数据资源路由功能。<br>core.py</p>
+<p>&emsp;&emsp;keystone采用WSGI规范实现资源的访问方式，需要实现router以及app。在teacherAttribute目录下创建三个文件：<br>&emsp;&emsp;core.py实现与数据表操作功能；controller.py是application的实现并调用core里的数据表操作方法；routers.py实现数据资源路由功能。<br>core.py</p>
 <figure class="highlight python"><pre><div class="line"><span class="keyword">import</span> six</div><div class="line"><span class="keyword">import</span> abc</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">from</span> sqlalchemy <span class="keyword">import</span> *</div><div class="line"><span class="keyword">from</span> sqlalchemy.orm <span class="keyword">import</span>  sessionmaker</div><div class="line"><span class="keyword">from</span> keystone <span class="keyword">import</span>  exception</div><div class="line"><span class="keyword">from</span> keystone.common <span class="keyword">import</span> dependency</div><div class="line"><span class="keyword">from</span> keystone.openstack.common <span class="keyword">import</span> log</div><div class="line"><span class="keyword">from</span> keystone.i18n <span class="keyword">import</span> _</div><div class="line"></div><div class="line">DOMAIN_CONF_FHEAD=<span class="string">'keystone'</span></div><div class="line">DOMAIN_CONF_FTAIL=<span class="string">'.conf'</span></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">LOG=log.getLazyLogger(__name__)</div><div class="line"><span class="comment"># db session</span></div><div class="line">meta=MetaData()</div><div class="line">engine=create_engine(<span class="string">'mysql://keystone:keystone@127.0.0.1/keystone'</span>)</div><div class="line">meta.bind=engine</div><div class="line">table=Table(<span class="string">'teacherAttribute'</span>,meta,autoload=<span class="keyword">True</span>)</div><div class="line">DBsession=sessionmaker(bind=engine)</div><div class="line"></div><div class="line"><span class="comment"># 抽象类定义表的操作</span></div><div class="line"><span class="decorator">@six.add_metaclass(abc.ABCMeta)</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">abcManager</span><span class="params">()</span>:</span></div><div class="line">    <span class="decorator">@abc.abstractmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">list_attribute</span><span class="params">(self,userid)</span>:</span></div><div class="line">        <span class="keyword">raise</span>  exception.<span class="built_in">NotImplemented</span>()</div><div class="line">    <span class="decorator">@abc.abstractmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_attribute</span><span class="params">(self,userid)</span>:</span></div><div class="line">        <span class="keyword">raise</span> exception.<span class="built_in">NotImplemented</span>()</div><div class="line"></div><div class="line">    <span class="decorator">@abc.abstractmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">change</span><span class="params">(self,userid)</span>:</span></div><div class="line">        <span class="keyword">raise</span> exception.<span class="built_in">NotImplemented</span>()</div><div class="line"></div><div class="line">    <span class="decorator">@abc.abstractmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">create_attribute</span><span class="params">(self,context,attribute)</span>:</span></div><div class="line">        <span class="keyword">raise</span> exception.<span class="built_in">NotImplemented</span>()</div><div class="line"></div><div class="line"><span class="comment"># 注册该类的provider实例</span></div><div class="line"><span class="decorator">@dependency.provider('teacher_attribute_api')</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Manager</span><span class="params">()</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.driver=Identity()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">list_attribute</span><span class="params">(self,context)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.driver.list_attribute()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">change_attribute</span><span class="params">(self,userid)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.driver.change_attribute(userid)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_attribute</span><span class="params">(self,userid)</span>:</span></div><div class="line">        <span class="keyword">return</span>  self.driver.get_attribute(userid)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">create_attribute</span><span class="params">(self,context,attribute)</span>:</span></div><div class="line">        <span class="keyword">return</span>  self.driver.create_attribute(context,attribute)</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># 数据表操作实现类</span></div><div class="line"><span class="decorator">@dependency.requires('identity_api')</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Identity</span><span class="params">(abcManager)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">list_attribute</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            session=DBsession()</div><div class="line">            result=session.query(table).all()</div><div class="line">            session.close()</div><div class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">            <span class="keyword">raise</span>  exception.NotFound(<span class="string">'teacherAttribute table Not Found'</span>)</div><div class="line">        <span class="keyword">return</span> {<span class="string">'teacherAttribute'</span>:[getlist(x) <span class="keyword">for</span> x <span class="keyword">in</span> result]}</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">change</span><span class="params">(self,userid)</span>:</span></div><div class="line">            <span class="keyword">pass</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_attribute</span><span class="params">(self,userid)</span>:</span></div><div class="line"></div><div class="line">        uuid=<span class="keyword">None</span></div><div class="line">        user=Table(<span class="string">'user'</span>,meta,autoload=<span class="keyword">True</span>)</div><div class="line">        session=DBsession()</div><div class="line">        <span class="keyword">if</span> len(userid)==<span class="number">32</span>:</div><div class="line">            uuid=userid</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            re=session.query(user).filter_by(name=userid).first()</div><div class="line">            <span class="keyword">if</span> <span class="keyword">not</span> re:</div><div class="line">                session.close()</div><div class="line">                <span class="keyword">raise</span> exception.NotFound(<span class="string">'user %s not found'</span> %userid)</div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                uuid=re[<span class="number">0</span>]</div><div class="line">        teacher=Table(<span class="string">'teacherAttribute'</span>,meta,autoload=<span class="keyword">True</span>)</div><div class="line">        re=session.query(teacher).filter_by(user_id=uuid).first()</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> re:</div><div class="line">            session.close()</div><div class="line">            <span class="keyword">raise</span> exception.NotFound(<span class="string">'teacher %s attribute not found'</span> %userid)</div><div class="line">        session.close()</div><div class="line">        <span class="keyword">return</span> {<span class="string">'teacherAttribute'</span>:getlist(re)}</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">create_attribute</span><span class="params">(self,context,attribute)</span>:</span></div><div class="line">            <span class="keyword">pass</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getlist</span><span class="params">(att=None)</span>:</span></div><div class="line">    <span class="keyword">return</span> {<span class="string">'id'</span>:att[<span class="number">0</span>],<span class="string">'userid'</span>:att[<span class="number">1</span>],<span class="string">'department'</span>:att[<span class="number">2</span>],</div><div class="line">            <span class="string">'class'</span>:att[<span class="number">3</span>],<span class="string">'title'</span>:att[<span class="number">4</span>],<span class="string">'lab'</span>:att[<span class="number">5</span>]}</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">_normalize_arg</span><span class="params">(arg)</span>:</span></div><div class="line">    <span class="keyword">return</span> str(arg).replace(<span class="string">':'</span>,<span class="string">'_'</span>).replace(<span class="string">'-'</span>,<span class="string">'_'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">_normalize_dict</span><span class="params">(dic)</span>:</span></div><div class="line">    <span class="keyword">return</span> dict([(_normalize_arg(k),v) <span class="keyword">for</span> (k,v) <span class="keyword">in</span> six.iteritems(dic)])</div></pre></figure>
 
 <p>controllers.py</p>

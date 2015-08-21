@@ -7,7 +7,7 @@
     <title>WSGI 协议 | Cinlk&#39;s Blog</title>
     <meta name="author" content="cinlk">
     
-    <meta name="description" content="wsgi是应用程序或框架与Web服务器之间的一种接口，定义一套接口来实现服务器与应用端的通信规范。当应用程序是按照WSGI规范开发的，它可以应用在任何遵守该规范的服务器上运行。">
+    <meta name="description" content="&amp;emsp;&amp;emsp;wsgi是应用程序或框架与Web服务器之间的一种接口，定义一套接口来实现服务器与应用端的通信规范。当应用程序是按照WSGI规范开发的，它可以应用在任何遵守该规范的服务器上运行。">
     
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -127,32 +127,6 @@
             
 
             <li collapse-level="0">
-                <a href="/categories/install/" class="collapse-level-0">
-                    <i class="icon-caret-right"></i>
-                    install(1)
-                </a>
-            </li>
-
-            
-
-            
-
-        
-
-            <li collapse-level="0">
-                <a href="/categories/blog/" class="collapse-level-0">
-                    <i class="icon-caret-right"></i>
-                    blog(1)
-                </a>
-            </li>
-
-            
-
-            
-
-        
-
-            <li collapse-level="0">
                 <a href="/categories/keystone/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
                     keystone(1)
@@ -179,9 +153,35 @@
         
 
             <li collapse-level="0">
-                <a href="/categories/neutron/" class="collapse-level-0">
+                <a href="/categories/blog/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    neutron(2)
+                    blog(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/install/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    install(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/XACML/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    XACML(1)
                 </a>
             </li>
 
@@ -221,6 +221,19 @@
                 <a href="/categories/web/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
                     web(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/neutron/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    neutron(2)
                 </a>
             </li>
 
@@ -273,11 +286,11 @@
     </div>
 
     <div class="entry">
-        <p>wsgi是应用程序或框架与Web服务器之间的一种接口，定义一套接口来实现服务器与应用端的通信规范。当应用程序是按照WSGI规范开发的，它可以应用在任何遵守该规范的服务器上运行。<br><a id="more"></a></p>
+        <p>&emsp;&emsp;wsgi是应用程序或框架与Web服务器之间的一种接口，定义一套接口来实现服务器与应用端的通信规范。当应用程序是按照WSGI规范开发的，它可以应用在任何遵守该规范的服务器上运行。<br><a id="more"></a></p>
 <h2 id="服务端_应用端_中间件">服务端 应用端 中间件</h2>
-<p>应用端：可调用对象，可以是函数，方法，或实现了<strong>call</strong>的实例；接受两个参数，一个是env参数，一个是start_response；返回一个可遍历的对象。<br>服务端：服务端为每个http请求，调用应用端的可调用对象，服务端类似容器的概念，为应用端提供运行环境并且负责和web服务器通信。它从web server哪里获取请求，调用应用端，然后在封装应用的返回值，返回response给web服务器。<br>中间件：同时实现了应用端和服务端的角色，她对于某些应用来说是服务端，而对于某些服务端来时是应用。比如它可以把url请求路由至不同的应用并且重写environ变量。中间件可以不停的嵌套，最终形成一个中间件栈。<br> <img src="/images/wsgi.png" alt="wsgi"></p>
+<p>&emsp;&emsp;<strong>应用端：</strong>可调用对象，可以是函数，方法，或实现了<strong>call</strong>的实例；接受两个参数，一个是env参数，一个是start_response；返回一个可遍历的对象。<br>服务端：服务端为每个http请求，调用应用端的可调用对象，服务端类似容器的概念，为应用端提供运行环境并且负责和web服务器通信。它从web server哪里获取请求，调用应用端，然后在封装应用的返回值，返回response给web服务器。<br>中间件：同时实现了应用端和服务端的角色，她对于某些应用来说是服务端，而对于某些服务端来时是应用。比如它可以把url请求路由至不同的应用并且重写environ变量。中间件可以不停的嵌套，最终形成一个中间件栈。<br> <img src="/images/wsgi.png" alt="wsgi"></p>
 <h2 id="paste_deploy">paste deploy</h2>
-<p>paste deployment 是用于发现核配置WSGI application和server的系统。对于WSGI application 用户提供一个单独的简单的函数(loadapp)，用于从配置文件或者python egg中加载WSGI application。因为WSGI application提供了唯一的单独简单的访问入口，所以application发布者并不需要暴露application的内部的实现细节。<br>从keystone-paste.ini配置文件来分析配置</p>
+<p>&emsp;&emsp;paste deployment 是用于发现核配置WSGI application和server的系统。对于WSGI application 用户提供一个单独的简单的函数(loadapp)，用于从配置文件或者python egg中加载WSGI application。因为WSGI application提供了唯一的单独简单的访问入口，所以application发布者并不需要暴露application的内部的实现细节。<br>从keystone-paste.ini配置文件来分析配置</p>
 <pre><code>[filter:debug]
 <span class="filename">paste.filter_factory = keystone.common.wsgi</span>:<span class="filename">Debug.factory
 

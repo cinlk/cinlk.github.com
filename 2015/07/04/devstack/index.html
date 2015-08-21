@@ -7,7 +7,7 @@
     <title>devstack单节点搭建openstack | Cinlk&#39;s Blog</title>
     <meta name="author" content="cinlk">
     
-    <meta name="description" content="在ubuntu14.04系统中使用virtualbox搭建单节点的openstack，仅仅为了测试使用openstack的功能，因此准备安装的组件有keystone,nova,horizon,neutron, glance和cinder。">
+    <meta name="description" content="&amp;emsp;&amp;emsp;在ubuntu14.04系统中使用virtualbox搭建单节点的openstack，仅仅为了测试使用openstack的功能，因此准备安装的组件有keystone,nova,horizon,neutron, glance和cinder。">
     
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -127,32 +127,6 @@
             
 
             <li collapse-level="0">
-                <a href="/categories/install/" class="collapse-level-0">
-                    <i class="icon-caret-right"></i>
-                    install(1)
-                </a>
-            </li>
-
-            
-
-            
-
-        
-
-            <li collapse-level="0">
-                <a href="/categories/blog/" class="collapse-level-0">
-                    <i class="icon-caret-right"></i>
-                    blog(1)
-                </a>
-            </li>
-
-            
-
-            
-
-        
-
-            <li collapse-level="0">
                 <a href="/categories/keystone/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
                     keystone(1)
@@ -179,9 +153,35 @@
         
 
             <li collapse-level="0">
-                <a href="/categories/neutron/" class="collapse-level-0">
+                <a href="/categories/blog/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    neutron(2)
+                    blog(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/install/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    install(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/XACML/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    XACML(1)
                 </a>
             </li>
 
@@ -221,6 +221,19 @@
                 <a href="/categories/web/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
                     web(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/neutron/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    neutron(2)
                 </a>
             </li>
 
@@ -273,16 +286,16 @@
     </div>
 
     <div class="entry">
-        <p>   在ubuntu14.04系统中使用virtualbox搭建单节点的openstack，仅仅为了测试使用openstack的功能，因此准备安装的组件有keystone,nova,horizon,neutron, glance和cinder。<a id="more"></a>网络类型是gre。使用一块网卡提供数据网络，虚拟机网络和公网访问。<br>   virtualbox安装ubuntu server14.04 64位系统的虚拟机，网卡类型选择NAT，内存至少2G磁盘15G双核cpu，安装过程中选择安装openssh包。虚拟机安装完成后自动重启进入虚拟机终端，添加stack用户，执行devstack脚本时会用stack用户。</p>
+        <p>&emsp;&emsp;在ubuntu14.04系统中使用virtualbox搭建单节点的openstack，仅仅为了测试使用openstack的功能，因此准备安装的组件有keystone,nova,horizon,neutron, glance和cinder。<a id="more"></a>网络类型是gre。使用一块网卡提供数据网络，虚拟机网络和公网访问。<br>   virtualbox安装ubuntu server14.04 64位系统的虚拟机，网卡类型选择NAT，内存至少2G磁盘15G双核cpu，安装过程中选择安装openssh包。虚拟机安装完成后自动重启进入虚拟机终端，添加stack用户，执行devstack脚本时会用stack用户。</p>
 <figure class="highlight bash"><pre><div class="line"><span class="built_in">sudo</span> adduser stack</div><div class="line"><span class="built_in">sudo</span> <span class="built_in">echo</span> <span class="string">"stack ALL=(ALL) NOPASSWD: ALL"</span> &gt;&gt; /etc/sudoers</div><div class="line"><span class="comment">#downlaod devstack repo</span></div><div class="line"><span class="built_in">sudo</span> apt-get install -y git</div><div class="line">git clone https://github.com/openstck-dev/devstack.git -b stable/kilo</div></pre></figure>
 
 <p>   开启ipv4转发功能，用vim编辑/etc/sysctl.conf文件，这行的注释去掉</p>
 <figure class="highlight bash"><pre><div class="line">net.ipv4.ip_forward=<span class="number">1</span>（保存退出）</div><div class="line"><span class="built_in">sudo</span> sysctl -p</div></pre></figure>
 
-<p>   ==完成后最好关闭虚拟机做一个备份，备份时MAC地址选择重新初始化。==<br>   虚拟机设置端口转发，在虚拟机配置中打开网络菜单，网卡1高级内打开端口转发，设置转发端口规则，如下所示：<br>   <img src="/images/natport.png" alt="port"><br>主机访问2222端口会映射到虚拟机的22端口，就可以ssh登陆虚拟机。80是虚拟机的aweb服务端口被映射为9090，主机端口可以随意设置只要不发生冲突。</p>
+<p>&emsp;&emsp;==完成后最好关闭虚拟机做一个备份，备份时MAC地址选择重新初始化。==<br>   虚拟机设置端口转发，在虚拟机配置中打开网络菜单，网卡1高级内打开端口转发，设置转发端口规则，如下所示：<br>   <img src="/images/natport.png" alt="port"><br>&emsp;&emsp;主机访问2222端口会映射到虚拟机的22端口，就可以ssh登陆虚拟机。80是虚拟机的aweb服务端口被映射为9090，主机端口可以随意设置只要不发生冲突。</p>
 <figure class="highlight bash"><pre><div class="line">ssh -p <span class="number">2222</span> stack@<span class="number">127.0</span>.<span class="number">0.1</span></div></pre></figure>
 
-<p>选择yes输入stack用户的密码就可以登陆虚拟机。接下来配置openstack的服务，进入devstack目录，创建localrc文件并写入配置信息内容如下：</p>
+<p>&emsp;&emsp;选择yes输入stack用户的密码就可以登陆虚拟机。接下来配置openstack的服务，进入devstack目录，创建localrc文件并写入配置信息内容如下：</p>
 <pre><code>disable_service n-net
 <span class="constant">ENABLED_SERVICES</span>=rabbit,mysql,key
 <span class="constant">ENABLED_SERVICES</span>+=,horizon
@@ -331,8 +344,7 @@
 </code></pre><p>10.0.2.15是外网地址，外网网关是10.0.2.2。租户网络采用gre模式，不过单节点安装是没有用到br-tun隧道。执行脚本。</p>
 <figure class="highlight bash"><pre><div class="line">./stack.sh</div></pre></figure>
 
-<p>安装过程花的时间较长可以去休息会。</p>
-<p>安装正常完成后，在主机中打开游览器可以输入<a href="http://localhost:9090" target="_blank" rel="external">http://localhost:9090</a> 进入dashboard界面，可以体验openstack了。用命令控制需要导入环境变量。</p>
+<p>安装过程花的时间较长可以去休息会。<br>&emsp;&emsp;安装正常完成后，在主机中打开游览器可以输入<a href="http://localhost:9090" target="_blank" rel="external">http://localhost:9090</a> 进入dashboard界面，可以体验openstack了。用命令控制需要导入环境变量。</p>
 <figure class="highlight bash"><pre><div class="line"><span class="built_in">source</span> devstack/openrc admin demo</div></pre></figure>
 
 <p>使用demo租户下的admin用户。目前网络配置还需要修改，将物理网卡eth0绑定在br-ex网桥上。</p>
@@ -352,7 +364,7 @@
 <p>为虚拟机添加新磁盘vdb</p>
 <figure class="highlight bash"><pre><div class="line">cinder volume-create --display-name myvolume</div><div class="line">nova volume-list</div><div class="line">nova volume-attache &lt;instance&gt; &lt;volumn id&gt;</div></pre></figure>
 
-<p>本文只是简单的测试，当然openstack还有许多其他好玩的功能还没有测试。然而作为开发人员还是应该深入代码，了解其代码架构以及实现机制。</p>
+<p>&emsp;&emsp;本文只是简单的测试，当然openstack还有许多其他好玩的功能还没有测试。作为开发人员还是应该深入代码，了解其功能原理以及系统框架。</p>
 
     </div>
     
