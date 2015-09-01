@@ -1,0 +1,500 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    
+    <title>glance后端存储store driver (二) | Cinlk&#39;s Blog</title>
+    <meta name="author" content="cinlk">
+    
+    <meta name="description"   content="glance后端存储driver原理与功能">
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <meta property="og:title" content="glance后端存储store driver (二)"/>
+    <meta property="og:site_name" content="Cinlk&#39;s Blog"/>
+
+    <link rel="alternate" href="/atom.xml" title="Cinlk&#39;s Blog" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href="/css/lib/normalize.css" type="text/css">
+    <link rel="stylesheet" href="/css/lib/furatto.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.10.2.min.js"></script>
+    <script src="/js/jquery.jpanelmenu.js"></script>
+</head>
+
+
+<body class="container-fluid">
+    <header id="page-header">
+        <div class="navbar inverse-navbar">
+    <div class="navbar-inner">
+        <div class="container-center">
+            <a href="/index.html" class="menu-trigger" data-meteocon="M">
+                <i class="icon-reorder"></i>
+            </a>
+            <div class="nav-collapse navbar-responsive-collapse collapse">
+                <nav id="menu">
+                    <ul class="nav">
+                        <li><a class="brand" id="blog-title" href="/index.html">Cinlk&#39;s Blog</a></li>
+                    </ul>
+                    <div class="pull-right nav" id="nav-button-group">
+                        
+                            <a href="/" class="menu-home btn btn-primary btn-large">
+                                <i class="icon-home icon-white"></i>
+                                首页
+                            </a>
+                        
+                            <a href="/archives" class="menu-archive btn btn-primary btn-large">
+                                <i class="icon-archive icon-white"></i>
+                                归档
+                            </a>
+                        
+                            <a href="javascript:void(0);" class="menu-category btn btn-primary btn-large">
+                                <i class="icon-archive icon-white"></i>
+                                分类
+                            </a>
+                        
+                            <a href="/reading" class="menu-reading btn btn-primary btn-large">
+                                <i class="icon-book icon-white"></i>
+                                读书
+                            </a>
+                        
+                            <a href="/about" class="menu-about btn btn-primary btn-large">
+                                <i class="icon-user icon-white"></i>
+                                关于
+                            </a>
+                        
+                    </div>
+                </nav>
+                <nav id="jPanelMenu-menu-side">
+    <ul class="nav main-menu">
+        <li><a class="brand" href="index.html">Cinlk&#39;s Blog</a></li>
+        
+            <li>
+                <a href="/" class="menu-home">
+                    <i class="icon-home icon-white"></i>
+                    首页
+                </a>
+            </li>
+        
+            <li>
+                <a href="/archives" class="menu-archive">
+                    <i class="icon-archive icon-white"></i>
+                    归档
+                </a>
+            </li>
+        
+            <li>
+                <a href="javascript:void(0);" class="menu-category">
+                    <i class="icon-archive icon-white"></i>
+                    分类
+                </a>
+            </li>
+        
+            <li>
+                <a href="/reading" class="menu-reading">
+                    <i class="icon-book icon-white"></i>
+                    读书
+                </a>
+            </li>
+        
+            <li>
+                <a href="/about" class="menu-about">
+                    <i class="icon-user icon-white"></i>
+                    关于
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="nav category-menu hide">
+        <li>
+            <span><a class="brand" href="javascript:void(0);">分类目录</a></span>
+            <span><a class="btn-back brand pull-right" href="javascript:void(0);">
+                <i class="icon-arrow-left"></i>
+            </a></span>
+        </li>
+
+        
+
+        
+
+            
+
+            <li collapse-level="0">
+                <a href="/categories/install/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    install(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/glance/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    glance(2)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/blog/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    blog(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/keystone/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    keystone(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/openstack/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    openstack(3)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/neutron/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    neutron(2)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/osd/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    osd(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/object/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    object(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/XACML/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    XACML(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/web/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    web(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/ABAC/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    ABAC(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+        
+    </ul>
+</nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </header>
+    <div id="content-wrapper">
+        <div class="container-center">
+        <article class="post">
+    <div class="article-title article-title-big">
+        
+    
+        <h1>glance后端存储store driver (二)</h1>
+    
+
+    </div>
+
+    <div class="date-row ">
+        <time datetime="2015-09-01T15:32:26.000Z">9月 1 2015</time>
+    </div>
+
+    <div class="toc-wrap">
+        <div class="toc-title">目录</div>
+        
+    </div>
+
+    <div class="entry">
+        <p>&emsp;&emsp;glance 可以使用多种后端存储，前端通过RESTFUL向客户端提供相关服务，支持Swift、S3、VMware、ceph、sheepdog、filesystem等存储方式。<a id="more"></a><br>glance-api.conf文件里面配置了store drivers，如下图所示：<br><img src="/images/glancestore.png" alt=""><br>默认使用的是filesystem来存储image。<br>&emsp;&emsp;这些不同的存储driver项目都在glance_store目录下drivers目录里。讲下glance_store目录下的几个主要的文件。其中backeng.py主要实现driver的加载及driver的调用。driver.py里定义了存储diver基类Store，子类driver继承的它。主要包含了delete,sec_acls,add,get,get_size,get_store_location_class,configure这些基本方法。location.py用于记录image的存储地址以及它具有的属性信息，这些信息存储在数据库中。因为支持多个存储driver，比如vmware的datastore或S3等，这些driver维护image的方式是不同的，image的存储地址也不同。因此glance需要知道image的location地址。backend.py通过create_store加载dirver</p>
+<figure class="highlight python"><pre><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_stores</span><span class="params">(conf=CONF)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    Registers all store modules and all schemes</div><div class="line">    from the given config. Duplicates are not re-registered.</div><div class="line">    """</div><div class="line">    store_count = <span class="number">0</span></div><div class="line"></div><div class="line">    <span class="keyword">for</span> (store_entry, store_instance) <span class="keyword">in</span> _load_stores(conf):</div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            schemes = store_instance.get_schemes()</div><div class="line">            store_instance.configure(re_raise_bsc=<span class="keyword">False</span>)</div><div class="line">        <span class="keyword">except</span> NotImplementedError:</div><div class="line">            <span class="keyword">continue</span></div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> schemes:</div><div class="line">            <span class="keyword">raise</span> exceptions.BackendException(<span class="string">'Unable to register store %s. '</span></div><div class="line">                                              <span class="string">'No schemes associated with it.'</span></div><div class="line">                                              % store_entry)</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            LOG.debug(<span class="string">"Registering store %s with schemes %s"</span>,</div><div class="line">                      store_entry, schemes)</div><div class="line"></div><div class="line">            scheme_map = {}</div><div class="line">            loc_cls = store_instance.get_store_location_class()</div><div class="line">            <span class="keyword">for</span> scheme <span class="keyword">in</span> schemes:</div><div class="line">                scheme_map[scheme] = {</div><div class="line">                    <span class="string">'store'</span>: store_instance,</div><div class="line">                    <span class="string">'location_class'</span>: loc_cls,</div><div class="line">                    <span class="string">'store_entry'</span>: store_entry</div><div class="line">                }</div><div class="line">            location.register_scheme_map(scheme_map)</div><div class="line">            store_count += <span class="number">1</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> store_count</div></pre></figure>
+
+<p>&emsp;&emsp;调用_load_stores(conf)从配置文件中加载driver程序，采用了stevedore模块动态加载程序。schema变量描述driver的类型，比如对于filesystem，它的shema是(‘file’,’filesystem’)。最后把store对应的driver实例和location实例注册到location.py文件里的全局字典变量SCHEME_TO_CLS_MAP内，且schema作为key。</p>
+<figure class="highlight python"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_known_schemes</span><span class="params">()</span>:</span></div><div class="line">    <span class="string">"""Returns list of known schemes."""</span></div><div class="line">    <span class="keyword">return</span> location.SCHEME_TO_CLS_MAP.keys()</div></pre></figure>
+
+<p>该方法获取所以有注册的driver类型。来看添加image的方法：</p>
+<figure class="highlight python"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_to_backend</span><span class="params">(conf, image_id, data, size, scheme=None, context=None)</span>:</span></div><div class="line">    <span class="keyword">if</span> scheme <span class="keyword">is</span> <span class="keyword">None</span>:</div><div class="line">        scheme = conf[<span class="string">'glance_store'</span>][<span class="string">'default_store'</span>]</div><div class="line">    store = get_store_from_scheme(scheme)</div><div class="line">    <span class="keyword">return</span> store_add_to_backend(image_id, data, size, store, context)</div></pre></figure>
+
+<p>&emsp;&emsp;如果给定的driver类型是None，则会选择默认的driver，配置文件默认是filesystem类型。get_store_from_scheme方法根据shema类型从SCHEME_TO_CLS_MAP找出对应的存储driver对象。store_add_to_backend方法中关键代码是:</p>
+<figure class="highlight python"><pre><div class="line">(location, size, checksum, metadata) = store.add(image_id,data,size,                          context=context)</div></pre></figure>
+
+<p>driver对象add数据后，返回镜像地址，镜像大小，校验和，镜像元数据显示给用户。以filesystem为例子了解该driver的代码逻辑，其他driver代码结构及实现逻辑大致与filesystem类似。</p>
+<figure class="highlight python"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">StoreLocation</span><span class="params">(glance_store.location.StoreLocation)</span>:</span></div><div class="line">    <span class="string">"""Class describing a Filesystem URI."""</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_specs</span><span class="params">(self)</span>:</span></div><div class="line">        self.scheme = self.specs.get(<span class="string">'scheme'</span>, <span class="string">'file'</span>)</div><div class="line">        self.path = self.specs.get(<span class="string">'path'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_uri</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> <span class="string">"file://%s"</span> % self.path</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse_uri</span><span class="params">(self, uri)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        Parse URLs. This method fixes an issue where credentials specified</div><div class="line">        in the URL are interpreted differently in Python 2.6.1+ than prior</div><div class="line">        versions of Python.</div><div class="line">        """</div><div class="line">        pieces = urlparse.urlparse(uri)</div><div class="line">        <span class="keyword">assert</span> pieces.scheme <span class="keyword">in</span> (<span class="string">'file'</span>, <span class="string">'filesystem'</span>)</div><div class="line">        self.scheme = pieces.scheme</div><div class="line">        path = (pieces.netloc + pieces.path).strip()</div><div class="line">        <span class="keyword">if</span> path == <span class="string">''</span>:</div><div class="line">            reason = _(<span class="string">"No path specified in URI"</span>)</div><div class="line">            LOG.info(reason)</div><div class="line">            <span class="keyword">raise</span> exceptions.BadStoreUri(message=reason)</div><div class="line">        self.path = path</div></pre></figure>
+
+<p>StoreLocation是一个子类维护镜像在filesystem的存储地址，glance数据库的image_locations表记录着地址与其他数据结构<br><img src="/images/imagelocation.png" alt=""><br>看下它的Store类。由于类代码量大，这里简化了代码只给出主要函数定义与说明。</p>
+<figure class="highlight python"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Store</span><span class="params">(glance_store.driver.Store)</span>:</span></div><div class="line"></div><div class="line">    _CAPABILITIES = (capabilities.BitMasks.READ_RANDOM |</div><div class="line">                     capabilities.BitMasks.WRITE_ACCESS |</div><div class="line">                     capabilities.BitMasks.DRIVER_REUSABLE)</div><div class="line">    OPTIONS = _FILESYSTEM_CONFIGS</div><div class="line">    READ_CHUNKSIZE = <span class="number">64</span> * units.Ki</div><div class="line">    WRITE_CHUNKSIZE = READ_CHUNKSIZE</div><div class="line">    FILESYSTEM_STORE_METADATA = <span class="keyword">None</span></div><div class="line">	  <span class="function"><span class="keyword">def</span> <span class="title">get_schemes</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> (<span class="string">'file'</span>, <span class="string">'filesystem'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_check_write_permission</span><span class="params">(self, datadir)</span>:</span></div><div class="line">	<span class="string">""" Checks if directory created to write image files has write permission."""</span></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">_create_image_directories</span><span class="params">(self, directory_paths)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        Create directories to write image files if</div><div class="line">        it does not exist."""</div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">_validate_metadata</span><span class="params">(self, metadata_file)</span>:</span></div><div class="line">        <span class="string">"""Validate metadata against json schema.</span></div><div class="line"></div><div class="line">        If metadata is valid then cache metadata and use it when</div><div class="line">        creating new image."""</div><div class="line">	 <span class="function"><span class="keyword">def</span> <span class="title">configure_add</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        Configure the Store to use the stored configuration options</div><div class="line">        Any store that needs special configuration should implement</div><div class="line">        this method. If the store was not able to successfully configure</div><div class="line">        itself, it should raise `exceptions.BadStoreConfiguration`</div><div class="line">        """</div><div class="line">	 <span class="decorator">@capabilities.check</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, location, offset=<span class="number">0</span>, chunk_size=None, context=None)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        Takes a `glance_store.location.Location` object that indicates</div><div class="line">        where to find the image file, and returns a tuple of generator</div><div class="line">        (for reading the image file) and image_size"""</div><div class="line">	  <span class="function"><span class="keyword">def</span> <span class="title">get_size</span><span class="params">(self, location, context=None)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        Takes a `glance_store.location.Location` object that indicates</div><div class="line">        where to find the image file and returns the image size"""</div><div class="line">	   <span class="decorator">@capabilities.check</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">delete</span><span class="params">(self, location, context=None)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        Takes a `glance_store.location.Location` object that indicates</div><div class="line">        where to find the image file to delete"""</div><div class="line">	</div><div class="line">     <span class="decorator">@capabilities.check</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(self, image_id, image_file, image_size, context=None)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        Stores an image file with supplied identifier to the backend</div><div class="line">        storage system and returns a tuple containing information</div><div class="line">        about the stored image."""</div></pre></figure>
+
+<p>&emsp;&emsp;该类主要对image的具体操作，另外在文件系统里存储image，应该判断磁盘空间大小够不够，用户的读写权限等条件检测。glance调用driver的流程大致是这样，自己也是边学边写当然分析还不够细致，但希望文章能做到抛砖引玉的作用。其实扩展drive也比较简单只需要实现好location功能和基础的镜像操作功能就行，对于nova，cinder的driver实现机制也大同小异。不过在扩展时主要根据driver特点与接口来恰当设计与glance提供接口的对接。不过neutron组件比较难以理解，自己也费劲的研究了一段时间，并在其基础上添加了限制floatingip出口入口流量，可以用于DVR的环境下。有空下次给出该功能实现的思路。</p>
+
+    </div>
+    
+    <footer >
+        
+            
+    
+    <div class="categories">
+        所属目录：
+    <a href="/categories/glance/">glance</a>
+    </div>
+
+            
+    
+    <div class="tags-row">
+        标签：<a class="btn btn-info" href="/tags/openstack/">openstack</a>
+    </div>
+
+        
+        <div class="clearfix"></div>
+    </footer>
+</article>
+
+
+
+<section id="comment">
+    <!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2015/09/01/glancedriver2/" data-title="glance后端存储store driver (二)" data-url="http://cinlk.com/2015/09/01/glancedriver2/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	 var duoshuoQuery = {short_name: 'cinlk' };
+	  (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';
+		ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
+
+
+        </div>
+    </div>
+    <footer id="page-footer"><div class="footer-content">
+    <div class="container-center">
+        <div class="footer-text pull-left">
+            <div class="copyright">
+                
+                Copyright &copy; 2015 <a href="/">cinlk</a>
+                
+            </div>
+            <div class="theme-copyright">
+                <span>Blog powered by <a href="https://hexo.io/">hexo</a></span>
+                Theme by <a href="https://github.com/raytaylorlin/hexo-theme-raytaylorism">raytaylorism</a> @<a href='cinlk.github.io/about'>cinlk
+            </div>
+        </div>
+        <div class="social-group pull-right">
+            
+            <a href="https://github.com/cinlk" target="_blank" title="github"><i class="icon-github"></i></a>
+            
+            
+            <a href="http://www.zhihu.com/people/kou-hu-10" target="_blank" title="知乎"><i class="icon-xing-sign"></i></a>
+            
+			
+			<a href="http://www.linkedin.com/profile/preview?locale=zh_CN&amp;trk=prof-0-sb-preview-primary-button" target="_blank" title="领英"><i class="icon-linkedin"></i></a>
+			
+            
+            <a href="https://plus.google.com/u/0/" target="_blank" title="Google+"><i class="icon-google-plus-sign"></i></a>
+            
+        </div>
+        <div class="clearfix"></div>
+		
+<script type="text/javascript">
+  var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+  document.write(unescape("%3Cspan id='cnzz_stat_icon_1255502307'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1255502307' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+	</div>
+</div>
+</footer>
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-43460643-1', 'raytaylorlin.com');
+    ga('send', 'pageview');
+
+</script>
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script>
+    (function($) {
+        //当内容区内容不够长时，设置内容区域的高度使footer沉底
+        var resizeContentWrapper = function() {
+            //HACK: 用延时的方法使计算高度时候更加准确，会有一闪的情况
+            setTimeout(function() {
+                var contentHeight = Math.floor($('#content-wrapper .container-center').height()),
+                headerHeight = Math.floor($('#page-header').height()),
+                footerHeight = Math.floor($('#page-footer').height()),
+                minHeight = Math.floor($(window).height() - headerHeight - footerHeight);
+                if(contentHeight < minHeight) {
+                    $('#content-wrapper').css({height: minHeight});                    
+                } else {
+                    $('#content-wrapper').css({height: 'auto'});
+                }
+            },500);
+        };
+
+        //响应式侧边栏
+        var initJPanelMenu = function() {
+            var jPM = $.jPanelMenu({
+                menu: '#jPanelMenu-menu-side',
+                duration: 500
+            });
+            jPM.on();
+        };
+
+        //初始化目录按钮事件绑定
+        var initCategory = function() {
+            function showMainMenu() {
+                var $jPanelMenu = $('#jPanelMenu-menu');
+                $jPanelMenu.find('ul.category-menu').hide();
+                $jPanelMenu.find('ul.main-menu').fadeIn();
+            }
+
+            function showCategoryMenu() {
+                var $jPanelMenu = $('#jPanelMenu-menu');
+                $jPanelMenu.find('ul.main-menu').hide();
+                $jPanelMenu.find('ul.category-menu').fadeIn();
+            }
+
+            $('.menu-category').click(function() {
+                var jPM = $.jPanelMenu({
+                    duration: 500,
+                    beforeOpen: function() {
+                        showCategoryMenu();
+                    },
+                    afterClose: function() {
+                        showMainMenu();
+                    }
+                });
+                if(jPM.isOpen()) {
+                    showCategoryMenu();
+                } else {
+                    jPM.open();
+                }
+            });
+
+            $('.category-menu').on('click', '.btn-back', function() {
+                showMainMenu();
+            });
+        };
+
+        $(document).ready(resizeContentWrapper);
+        $(document).ready(initJPanelMenu);
+        $(document).ready(initCategory);
+        
+        $(window).resize(resizeContentWrapper);
+    })(jQuery);
+</script>
+
+</body>
+</html>

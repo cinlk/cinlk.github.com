@@ -125,6 +125,45 @@
             
 
             <li collapse-level="0">
+                <a href="/categories/install/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    install(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/glance/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    glance(2)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/blog/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    blog(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
                 <a href="/categories/keystone/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
                     keystone(1)
@@ -151,35 +190,9 @@
         
 
             <li collapse-level="0">
-                <a href="/categories/blog/" class="collapse-level-0">
+                <a href="/categories/neutron/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    blog(1)
-                </a>
-            </li>
-
-            
-
-            
-
-        
-
-            <li collapse-level="0">
-                <a href="/categories/install/" class="collapse-level-0">
-                    <i class="icon-caret-right"></i>
-                    install(1)
-                </a>
-            </li>
-
-            
-
-            
-
-        
-
-            <li collapse-level="0">
-                <a href="/categories/XACML/" class="collapse-level-0">
-                    <i class="icon-caret-right"></i>
-                    XACML(1)
+                    neutron(2)
                 </a>
             </li>
 
@@ -216,9 +229,9 @@
         
 
             <li collapse-level="0">
-                <a href="/categories/web/" class="collapse-level-0">
+                <a href="/categories/XACML/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    web(1)
+                    XACML(1)
                 </a>
             </li>
 
@@ -229,9 +242,9 @@
         
 
             <li collapse-level="0">
-                <a href="/categories/neutron/" class="collapse-level-0">
+                <a href="/categories/web/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    neutron(2)
+                    web(1)
                 </a>
             </li>
 
@@ -266,6 +279,72 @@
     <div id="content-wrapper">
         <div class="container-center">
         <div id="article-list">
+    
+        <article>
+    <div class="row">
+        <div class="col-2 date-tags">
+            <div class="date-row">
+                <time datetime="2015-09-01T15:32:26.000Z">9月 1 2015</time>
+            </div>
+            
+                <div class="tags-row">
+                
+                    <a href="/tags/openstack/" class="btn btn-info">openstack</a>
+                
+                </div>
+            
+        </div>
+        <div class="col-10">
+            <div class="article-title simple-article-title">
+                
+    
+        <h1><a href="/2015/09/01/glancedriver2/">glance后端存储store driver (二)</a></h1>
+    
+
+            </div>
+            
+                <div class="entry">
+                    <p>&emsp;&emsp;glance 可以使用多种后端存储，前端通过RESTFUL向客户端提供相关服务，支持Swift、S3、VMware、ceph、sheepdog、filesystem等存储方式。
+                </div>
+            
+        </div>
+    </div>
+    <div class="split-line"></div>
+</article>
+
+    
+        <article>
+    <div class="row">
+        <div class="col-2 date-tags">
+            <div class="date-row">
+                <time datetime="2015-09-01T15:03:58.000Z">9月 1 2015</time>
+            </div>
+            
+                <div class="tags-row">
+                
+                    <a href="/tags/openstack/" class="btn btn-info">openstack</a>
+                
+                </div>
+            
+        </div>
+        <div class="col-10">
+            <div class="article-title simple-article-title">
+                
+    
+        <h1><a href="/2015/09/01/glancestore1/">glance后端存储store driver (一)</a></h1>
+    
+
+            </div>
+            
+                <div class="entry">
+                    <p>&emsp;&emsp;glance也是采用WSGI协议构建整体服务框架，每个访问image的请求通过router路由到目标应用，应用是controller由它内部并调用底层存储driver实例处理请求。查看glance工程下V2的目录内文件，其中router.py是实现请求转发到指定的controller，其中images_data.py           image_tags.py,images.py等文件里面都有各自的controller处理类，实现不同的处理逻辑。本文主要对
+                </div>
+            
+        </div>
+    </div>
+    <div class="split-line"></div>
+</article>
+
     
         <article>
     <div class="row">
