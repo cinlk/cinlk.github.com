@@ -1,0 +1,522 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    
+    <title>neutron使用metering服务监控内网流量 | Cinlk&#39;s Blog</title>
+    <meta name="author" content="cinlk">
+    
+    <meta name="description"   content="neutron内网流量监控">
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <meta property="og:title" content="neutron使用metering服务监控内网流量"/>
+    <meta property="og:site_name" content="Cinlk&#39;s Blog"/>
+
+    <link rel="alternate" href="/atom.xml" title="Cinlk&#39;s Blog" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href="/css/lib/normalize.css" type="text/css">
+    <link rel="stylesheet" href="/css/lib/furatto.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.10.2.min.js"></script>
+    <script src="/js/jquery.jpanelmenu.js"></script>
+</head>
+
+
+<body class="container-fluid">
+    <header id="page-header">
+        <div class="navbar inverse-navbar">
+    <div class="navbar-inner">
+        <div class="container-center">
+            <a href="/index.html" class="menu-trigger" data-meteocon="M">
+                <i class="icon-reorder"></i>
+            </a>
+            <div class="nav-collapse navbar-responsive-collapse collapse">
+                <nav id="menu">
+                    <ul class="nav">
+                        <li><a class="brand" id="blog-title" href="/index.html">Cinlk&#39;s Blog</a></li>
+                    </ul>
+                    <div class="pull-right nav" id="nav-button-group">
+                        
+                            <a href="/" class="menu-home btn btn-primary btn-large">
+                                <i class="icon-home icon-white"></i>
+                                首页
+                            </a>
+                        
+                            <a href="/archives" class="menu-archive btn btn-primary btn-large">
+                                <i class="icon-archive icon-white"></i>
+                                归档
+                            </a>
+                        
+                            <a href="javascript:void(0);" class="menu-category btn btn-primary btn-large">
+                                <i class="icon-archive icon-white"></i>
+                                分类
+                            </a>
+                        
+                            <a href="/reading" class="menu-reading btn btn-primary btn-large">
+                                <i class="icon-book icon-white"></i>
+                                读书
+                            </a>
+                        
+                            <a href="/about" class="menu-about btn btn-primary btn-large">
+                                <i class="icon-user icon-white"></i>
+                                关于
+                            </a>
+                        
+                    </div>
+                </nav>
+                <nav id="jPanelMenu-menu-side">
+    <ul class="nav main-menu">
+        <li><a class="brand" href="index.html">Cinlk&#39;s Blog</a></li>
+        
+            <li>
+                <a href="/" class="menu-home">
+                    <i class="icon-home icon-white"></i>
+                    首页
+                </a>
+            </li>
+        
+            <li>
+                <a href="/archives" class="menu-archive">
+                    <i class="icon-archive icon-white"></i>
+                    归档
+                </a>
+            </li>
+        
+            <li>
+                <a href="javascript:void(0);" class="menu-category">
+                    <i class="icon-archive icon-white"></i>
+                    分类
+                </a>
+            </li>
+        
+            <li>
+                <a href="/reading" class="menu-reading">
+                    <i class="icon-book icon-white"></i>
+                    读书
+                </a>
+            </li>
+        
+            <li>
+                <a href="/about" class="menu-about">
+                    <i class="icon-user icon-white"></i>
+                    关于
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="nav category-menu hide">
+        <li>
+            <span><a class="brand" href="javascript:void(0);">分类目录</a></span>
+            <span><a class="btn-back brand pull-right" href="javascript:void(0);">
+                <i class="icon-arrow-left"></i>
+            </a></span>
+        </li>
+
+        
+
+        
+
+            
+
+            <li collapse-level="0">
+                <a href="/categories/install/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    install(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/glance/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    glance(2)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/blog/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    blog(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/keystone/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    keystone(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/openstack/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    openstack(4)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/neutron/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    neutron(2)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/osd/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    osd(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/object/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    object(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/XACML/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    XACML(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/web/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    web(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/ABAC/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    ABAC(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+        
+    </ul>
+</nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </header>
+    <div id="content-wrapper">
+        <div class="container-center">
+        <article class="post">
+    <div class="article-title article-title-big">
+        
+    
+        <h1>neutron使用metering服务监控内网流量</h1>
+    
+
+    </div>
+
+    <div class="date-row ">
+        <time datetime="2015-09-02T09:30:15.000Z">9月 2 2015</time>
+    </div>
+
+    <div class="toc-wrap">
+        <div class="toc-title">目录</div>
+        
+    </div>
+
+    <div class="entry">
+        <p>&emsp;&emsp;网络bandwidth的采集是通过neutron-meter-agent收集，然后push到oslo-messaging，ceilometer-agent-notification通过监听消息队列来收取bandwidth信息。meter服务配置过程如下<a id="more"></a>：</p>
+<p><strong>配置</strong><br>修改/etc/neutron/neutron.conf</p>
+<figure class="highlight bash"><pre><div class="line">service_plugins = xxx,metering</div></pre></figure>
+
+<p>修改/etc/neutron/metering_agent.ini</p>
+<figure class="highlight bash"><pre><div class="line">[DEFAULT]</div><div class="line"><span class="comment"># Show debugging output in log (sets DEBUG log level output)</span></div><div class="line">debug = True</div><div class="line"></div><div class="line"><span class="comment"># Default driver:</span></div><div class="line"><span class="comment"># driver = neutron.services.metering.drivers.noop.noop_driver.NoopMeteringDriver</span></div><div class="line"><span class="comment"># Example of non-default driver</span></div><div class="line">driver = neutron.services.metering.drivers.iptables.iptables_driver.IptablesMeteringDriver</div><div class="line"></div><div class="line"><span class="comment"># Interval between two metering measures</span></div><div class="line">measure_interval = <span class="number">30</span></div><div class="line"></div><div class="line"><span class="comment"># Interval between two metering reports</span></div><div class="line">report_interval = <span class="number">60</span></div><div class="line"></div><div class="line">interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver</div><div class="line"></div><div class="line"><span class="comment"># This option is deprecated and will be removed in a future release,</span></div><div class="line"><span class="comment"># at which point the old behavior of use_namespaces = True will be enforced.</span></div><div class="line">use_namespaces = True</div></pre></figure>
+
+<p><strong>启动metering服务</strong></p>
+<figure class="highlight bash"><pre><div class="line">openstack@localhost:~$ python /usr/local/bin/neutron-metering-agent --config-file=etc/neutron/neutron.conf --config-file=/etc/neutron/metering_agent.ini --log-file=/var/log/openstack/neutron/neutron-metering_agent.log &</div></pre></figure>
+
+<p><strong>查看metering agent</strong><br>openstack@localhost:~$ neutron agent-list</p>
+<figure class="highlight bash"><pre><div class="line">+--------------------------------------+--------------------+---------+-------+----------------+---------------------------+</div><div class="line">| id                                   | agent_<span class="built_in">type</span>         | host    | alive | admin_state_up | binary                    |</div><div class="line">+--------------------------------------+--------------------+---------+-------+----------------+---------------------------+</div><div class="line">| <span class="number">04758331</span>-<span class="number">0</span>f16-<span class="number">4604</span>-ab5f-ace98542f084 | Metering agent     | cloud03 | :-)   | True           | neutron-metering-agent    |</div><div class="line">| <span class="number">05783078</span>-<span class="number">125</span>e-<span class="number">4</span>b9b-acbe-<span class="number">126</span>ac589fd27 | DHCP agent         | cloud03 | :-)   | True           | neutron-dhcp-agent        |</div><div class="line">| <span class="number">3</span>a58b43e-afdb-<span class="number">44</span>c9<span class="operator">-a</span>412-<span class="number">0</span>f27676e208c | L3 agent           | cloud03 | :-)   | True           | neutron<span class="operator">-l</span>3-agent          |</div><div class="line">| <span class="number">702</span>f605e-<span class="number">7</span>ac1-<span class="number">4288</span>-<span class="number">9929</span>-<span class="number">3</span>f060b3fbb42 | Open vSwitch agent | cloud01 | :-)   | True           | neutron-openvswitch-agent |</div><div class="line">| <span class="number">85</span>a0d78b-<span class="number">1</span>f7b-<span class="number">44</span>fb-b9c7-<span class="number">5</span>f5374d4c186 | Open vSwitch agent | cloud03 | :-)   | True           | neutron-openvswitch-agent |</div><div class="line">| <span class="number">9</span>ce3b38a-<span class="number">734</span>c-<span class="number">4</span>b51-b67d<span class="operator">-d</span>7268fa955f3 | Open vSwitch agent | cloud04 | :-)   | True           | neutron-openvswitch-agent |</div><div class="line">| c476f789-ec6f-<span class="number">4564</span><span class="operator">-a</span>8b9-<span class="number">1</span>fc8b59e39c2 | Metadata agent     | cloud03 | :-)   | True           | neutron-metadata-agent    |</div><div class="line">+--------------------------------------+--------------------+---------+-------+----------------+---------------------------+</div></pre></figure>
+
+<p><strong>meter测试</strong><br>meter是在namespace里的iptables中filter表里建立meter规则链，数据包会流过该链然后统计包流量。<br>第一步：创建lable，label对应一个规则链。<br>openstack@localhost:~$ neutron meter-label-create —shared bandwidth</p>
+<figure class="highlight bash"><pre><div class="line">Created a new metering_label:</div><div class="line">+-------------+--------------------------------------+</div><div class="line">| Field       | Value                                |</div><div class="line">+-------------+--------------------------------------+</div><div class="line">| description |                                      |</div><div class="line">| id          | <span class="number">5814</span>b182-<span class="number">67</span>a1-<span class="number">4</span>d63<span class="operator">-a</span>388-<span class="number">9</span>a9c3b2e0f6b |</div><div class="line">| name        | bandwidth                            |</div><div class="line">| shared      | True                                 |</div><div class="line">| tenant_id   | <span class="number">1</span>aed71e298fd460aa69be6b8ed539e5f     |</div><div class="line">+-------------+--------------------------------------+</div></pre></figure>
+
+<p>&emsp;&emsp;上面创建的共享label名字是bandwith。进入 namespace里查看iptables的filter表，会创建<strong>neutron-meter-r-5814b182-67a链和neutron-meter-l-5814b182-67a链，转发流量会导向neutron-meter-r-5814b182-67a链。</strong></p>
+<figure class="highlight bash"><pre><div class="line">-A neutron-meter-FORWARD -j neutron-meter-r-<span class="number">5814</span>b182-<span class="number">67</span>a</div><div class="line">-A neutron-meter<span class="operator">-l</span>-<span class="number">5814</span>b182-<span class="number">67</span>a</div></pre></figure>
+
+<p>第二步：为label添加ingress和egress子规则，对内网10.20.0.95/32的主机数据包进行流量统计。<br>openstack@localhost:~$ neutron meter-label-rule-create —direction ingress bandwidth 10.20.0.95/32</p>
+<figure class="highlight bash"><pre><div class="line">Created a new metering_label_rule:</div><div class="line">+-------------------+--------------------------------------+</div><div class="line">| Field             | Value                                |</div><div class="line">+-------------------+--------------------------------------+</div><div class="line">| direction         | ingress                              |</div><div class="line">| excluded          | False                                |</div><div class="line">| id                | a31c8278-<span class="number">2</span>f90-<span class="number">46</span>ff-<span class="number">92</span>f3-c77b0e3e8a03 |</div><div class="line">| metering_label_id | <span class="number">5814</span>b182-<span class="number">67</span>a1-<span class="number">4</span>d63<span class="operator">-a</span>388-<span class="number">9</span>a9c3b2e0f6b |</div><div class="line">| remote_ip_prefix  | <span class="number">10.20</span>.<span class="number">0.95</span>/<span class="number">32</span>                        |</div><div class="line">+-------------------+--------------------------------------+</div></pre></figure>
+
+<p>openstack@localshot:~$ neutron meter-label-rule-create —direction egress bandwidth 10.20.0.95/32</p>
+<figure class="highlight bash"><pre><div class="line">Created a new metering_label_rule:</div><div class="line">+-------------------+--------------------------------------+</div><div class="line">| Field             | Value                                |</div><div class="line">+-------------------+--------------------------------------+</div><div class="line">| direction         | egress                               |</div><div class="line">| excluded          | False                                |</div><div class="line">| id                | <span class="number">75721</span>e92-c280-<span class="number">4586</span>-<span class="number">8</span>d35-<span class="number">24</span>a46b639b70 |</div><div class="line">| metering_label_id | <span class="number">5814</span>b182-<span class="number">67</span>a1-<span class="number">4</span>d63<span class="operator">-a</span>388-<span class="number">9</span>a9c3b2e0f6b |</div><div class="line">| remote_ip_prefix  | <span class="number">10.20</span>.<span class="number">0.95</span>/<span class="number">32</span>                        |</div><div class="line">+-------------------+--------------------------------------+</div></pre></figure>
+
+<p>&emsp;&emsp;查看filter表新创建链的规则,把10.20.0.95/32主机的出口和入口流量导入neutron-meter-l-5814b182-67a；如果需要对某一网段流量监控，设置监控IP是其子网的CIDR即可（即子网掩码小于32位）。</p>
+<figure class="highlight bash"><pre><div class="line">-A neutron-meter-r-<span class="number">5814</span>b182-<span class="number">67</span>a <span class="operator">-d</span> <span class="number">10.20</span>.<span class="number">0.95</span>/<span class="number">32</span> -i qg-<span class="number">6547704</span>d-db -j neutron-meter<span class="operator">-l</span>-<span class="number">5814</span>b182-<span class="number">67</span>a</div><div class="line">-A neutron-meter-r-<span class="number">5814</span>b182-<span class="number">67</span>a <span class="operator">-s</span> <span class="number">10.20</span>.<span class="number">0.95</span>/<span class="number">32</span> -o qg-<span class="number">6547704</span>d-db -j neutron-meter<span class="operator">-l</span>-<span class="number">5814</span>b182-<span class="number">67</span>a</div></pre></figure>
+
+<p>第三步：查看流量<br>&emsp;&emsp;meter服务会定期统计neutron-meter-l-5814b182-67a上的数据流量(符合过滤规则且所有经过虚拟路由器的流量)。同一子网下虚拟机互相访问不会统计，但不同子网间经过虚拟路由器的流量会被统计，虚拟机与外部网络互访也会统计（有floatingip）。可以用命令查看流量：</p>
+<figure class="highlight bash"><pre><div class="line">openstack@cloud03:~$ <span class="built_in">sudo</span> ip netns <span class="keyword">exec</span> qrouter<span class="operator">-d</span>31150a1<span class="operator">-e</span>519-<span class="number">46</span>e5<span class="operator">-a</span>5bc<span class="operator">-a</span>5ab94c1dab1 iptables -t filter -L neutron-meter<span class="operator">-l</span>-<span class="number">5814</span>b182-<span class="number">67</span>a -v -n -x</div><div class="line">Chain neutron-meter<span class="operator">-l</span>-<span class="number">5814</span>b182-<span class="number">67</span>a (<span class="number">2</span> references)</div><div class="line">    pkts      bytes target     prot opt <span class="keyword">in</span>     out     <span class="built_in">source</span>               destination         </div><div class="line">      <span class="number">17</span>     <span class="number">1428</span>            all  --  *      *       <span class="number">0.0</span>.<span class="number">0.0</span>/<span class="number">0</span>            <span class="number">0.0</span>.<span class="number">0.0</span>/<span class="number">0</span></div></pre></figure>
+
+<p><strong>nat表规则</strong><br>&emsp;&emsp;metering服务启动后会在nat表里创建neutron-meter-snat链和neutron-meter-float-snat链。</p>
+<figure class="highlight bash"><pre><div class="line">-A neutron-meter-snat -j neutron-meter-float-snat</div><div class="line">-A neutron-postrouting-bottom -m comment --comment <span class="string">"Perform source NAT on </span></div><div class="line">outgoing traffic." -j neutron-meter-snat</div></pre></figure>
+
+<p>&emsp;&emsp;neutron-meter-snat链和neutron-meter-float-snat链是全局的唯一，无法对其进行修改操作。 该链可以统计所有非floatingip的SNAT流量。可以用命令查看流量：</p>
+<figure class="highlight bash"><pre><div class="line">openstack@cloud03:~$ <span class="built_in">sudo</span> ip netns <span class="keyword">exec</span> qrouter<span class="operator">-d</span>31150a1<span class="operator">-e</span>519-<span class="number">46</span>e5<span class="operator">-a</span>5bc<span class="operator">-a</span>5ab94c1dab1 iptables -t nat -L neutron-meter-snat -v -n -x</div><div class="line">Chain neutron-meter-snat (<span class="number">1</span> references)</div><div class="line">    pkts      bytes target     prot opt <span class="keyword">in</span>     out     <span class="built_in">source</span>               destination         </div><div class="line">    <span class="number">5543</span>   <span class="number">310611</span> neutron-meter-float-snat  all  --  *      *       <span class="number">0.0</span>.<span class="number">0.0</span>/<span class="number">0</span>            <span class="number">0.0</span>.<span class="number">0.0</span>/<span class="number">0</span></div></pre></figure>
+
+<p><strong>ceilometer监控metering的流量</strong><br>&emsp;&emsp;metering会将统计的流量通过neutron-meter-agent收集，然后push到oslo-messaging，ceilometer-agent-notification通过监听消息队列来rpc来收取bandwidth信息，因此需要在需要监控网络流量的节点启动ceilometer的ceilometer-agent-notification服务。同时修改neutron.conf的notification_driver。</p>
+<figure class="highlight bash"><pre><div class="line">notification_driver=neutron.openstack.common.notifier.rpc_notifier</div></pre></figure>
+
+<p><strong>meter原理</strong><br>&emsp;&emsp;metering是利用iptables的原理工作的，是在filter表中创建规则，将并流量导向neutron-meter-INPUT、neutron-meter-FORWARD和neutron-meter-OUTPUT，然后再将流量进一步导向针对IP过滤的更细的规则。<br>因iptables工作流程的限制，floating-ip是在PREROUTING被换掉目的IP，在OUTPUT被替换掉源IP，因此在走到filter规则之前，floating-ip已经被替换成fixed-ip，因此无法对floating-ip直接统计流量；规则链里ip值必须设置成为内网ip才有效，如果设置成floatingip则不会统计流量。</p>
+
+    </div>
+    
+    <footer >
+        
+            
+    
+    <div class="categories">
+        所属目录：
+    <a href="/categories/openstack/">openstack</a>
+    </div>
+
+            
+    
+    <div class="tags-row">
+        标签：<a class="btn btn-info" href="/tags/neutron/">neutron</a><a class="btn btn-info" href="/tags/metering/">metering</a>
+    </div>
+
+        
+        <div class="clearfix"></div>
+    </footer>
+</article>
+
+
+
+<section id="comment">
+    <!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2015/09/02/neutronmetering/" data-title="neutron使用metering服务监控内网流量" data-url="http://cinlk.com/2015/09/02/neutronmetering/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	 var duoshuoQuery = {short_name: 'cinlk' };
+	  (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';
+		ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
+
+
+        </div>
+    </div>
+    <footer id="page-footer"><div class="footer-content">
+    <div class="container-center">
+        <div class="footer-text pull-left">
+            <div class="copyright">
+                
+                Copyright &copy; 2015 <a href="/">cinlk</a>
+                
+            </div>
+            <div class="theme-copyright">
+                <span>Blog powered by <a href="https://hexo.io/">hexo</a></span>
+                Theme by <a href="https://github.com/raytaylorlin/hexo-theme-raytaylorism">raytaylorism</a> @<a href='cinlk.github.io/about'>cinlk
+            </div>
+        </div>
+        <div class="social-group pull-right">
+            
+            <a href="https://github.com/cinlk" target="_blank" title="github"><i class="icon-github"></i></a>
+            
+            
+            <a href="http://www.zhihu.com/people/kou-hu-10" target="_blank" title="知乎"><i class="icon-xing-sign"></i></a>
+            
+			
+			<a href="http://www.linkedin.com/profile/preview?locale=zh_CN&amp;trk=prof-0-sb-preview-primary-button" target="_blank" title="领英"><i class="icon-linkedin"></i></a>
+			
+            
+            <a href="https://plus.google.com/u/0/" target="_blank" title="Google+"><i class="icon-google-plus-sign"></i></a>
+            
+        </div>
+        <div class="clearfix"></div>
+		
+<script type="text/javascript">
+  var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+  document.write(unescape("%3Cspan id='cnzz_stat_icon_1255502307'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1255502307' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+	</div>
+</div>
+</footer>
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-43460643-1', 'raytaylorlin.com');
+    ga('send', 'pageview');
+
+</script>
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script>
+    (function($) {
+        //当内容区内容不够长时，设置内容区域的高度使footer沉底
+        var resizeContentWrapper = function() {
+            //HACK: 用延时的方法使计算高度时候更加准确，会有一闪的情况
+            setTimeout(function() {
+                var contentHeight = Math.floor($('#content-wrapper .container-center').height()),
+                headerHeight = Math.floor($('#page-header').height()),
+                footerHeight = Math.floor($('#page-footer').height()),
+                minHeight = Math.floor($(window).height() - headerHeight - footerHeight);
+                if(contentHeight < minHeight) {
+                    $('#content-wrapper').css({height: minHeight});                    
+                } else {
+                    $('#content-wrapper').css({height: 'auto'});
+                }
+            },500);
+        };
+
+        //响应式侧边栏
+        var initJPanelMenu = function() {
+            var jPM = $.jPanelMenu({
+                menu: '#jPanelMenu-menu-side',
+                duration: 500
+            });
+            jPM.on();
+        };
+
+        //初始化目录按钮事件绑定
+        var initCategory = function() {
+            function showMainMenu() {
+                var $jPanelMenu = $('#jPanelMenu-menu');
+                $jPanelMenu.find('ul.category-menu').hide();
+                $jPanelMenu.find('ul.main-menu').fadeIn();
+            }
+
+            function showCategoryMenu() {
+                var $jPanelMenu = $('#jPanelMenu-menu');
+                $jPanelMenu.find('ul.main-menu').hide();
+                $jPanelMenu.find('ul.category-menu').fadeIn();
+            }
+
+            $('.menu-category').click(function() {
+                var jPM = $.jPanelMenu({
+                    duration: 500,
+                    beforeOpen: function() {
+                        showCategoryMenu();
+                    },
+                    afterClose: function() {
+                        showMainMenu();
+                    }
+                });
+                if(jPM.isOpen()) {
+                    showCategoryMenu();
+                } else {
+                    jPM.open();
+                }
+            });
+
+            $('.category-menu').on('click', '.btn-back', function() {
+                showMainMenu();
+            });
+        };
+
+        $(document).ready(resizeContentWrapper);
+        $(document).ready(initJPanelMenu);
+        $(document).ready(initCategory);
+        
+        $(window).resize(resizeContentWrapper);
+    })(jQuery);
+</script>
+
+</body>
+</html>

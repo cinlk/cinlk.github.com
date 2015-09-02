@@ -125,19 +125,6 @@
             
 
             <li collapse-level="0">
-                <a href="/categories/glance/" class="collapse-level-0">
-                    <i class="icon-caret-right"></i>
-                    glance(2)
-                </a>
-            </li>
-
-            
-
-            
-
-        
-
-            <li collapse-level="0">
                 <a href="/categories/install/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
                     install(1)
@@ -151,9 +138,9 @@
         
 
             <li collapse-level="0">
-                <a href="/categories/keystone/" class="collapse-level-0">
+                <a href="/categories/glance/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    keystone(1)
+                    glance(2)
                 </a>
             </li>
 
@@ -177,9 +164,22 @@
         
 
             <li collapse-level="0">
+                <a href="/categories/keystone/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    keystone(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
                 <a href="/categories/openstack/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    openstack(3)
+                    openstack(4)
                 </a>
             </li>
 
@@ -193,19 +193,6 @@
                 <a href="/categories/neutron/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
                     neutron(2)
-                </a>
-            </li>
-
-            
-
-            
-
-        
-
-            <li collapse-level="0">
-                <a href="/categories/XACML/" class="collapse-level-0">
-                    <i class="icon-caret-right"></i>
-                    XACML(1)
                 </a>
             </li>
 
@@ -242,9 +229,9 @@
         
 
             <li collapse-level="0">
-                <a href="/categories/ABAC/" class="collapse-level-0">
+                <a href="/categories/XACML/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    ABAC(1)
+                    XACML(1)
                 </a>
             </li>
 
@@ -267,6 +254,19 @@
 
         
 
+            <li collapse-level="0">
+                <a href="/categories/ABAC/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    ABAC(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
         
     </ul>
 </nav>
@@ -279,6 +279,41 @@
     <div id="content-wrapper">
         <div class="container-center">
         <div id="article-list">
+    
+        <article>
+    <div class="row">
+        <div class="col-2 date-tags">
+            <div class="date-row">
+                <time datetime="2015-09-02T09:30:15.000Z">9月 2 2015</time>
+            </div>
+            
+                <div class="tags-row">
+                
+                    <a href="/tags/neutron/" class="btn btn-info">neutron</a>
+                
+                    <a href="/tags/metering/" class="btn btn-info">metering</a>
+                
+                </div>
+            
+        </div>
+        <div class="col-10">
+            <div class="article-title simple-article-title">
+                
+    
+        <h1><a href="/2015/09/02/neutronmetering/">neutron使用metering服务监控内网流量</a></h1>
+    
+
+            </div>
+            
+                <div class="entry">
+                    <p>&emsp;&emsp;网络bandwidth的采集是通过neutron-meter-agent收集，然后push到oslo-messaging，ceilometer-agent-notification通过监听消息队列来收取bandwidth信息。meter服务配置过程如下
+                </div>
+            
+        </div>
+    </div>
+    <div class="split-line"></div>
+</article>
+
     
         <article>
     <div class="row">
