@@ -305,7 +305,7 @@
 <p>   开启ipv4转发功能，用vim编辑/etc/sysctl.conf文件，这行的注释去掉</p>
 <figure class="highlight bash"><pre><div class="line">net.ipv4.ip_forward=<span class="number">1</span>（保存退出）</div><div class="line"><span class="built_in">sudo</span> sysctl -p</div></pre></figure>
 
-<p>&emsp;&emsp;==完成后最好关闭虚拟机做一个备份，备份时MAC地址选择重新初始化。==<br>   虚拟机设置端口转发，在虚拟机配置中打开网络菜单，网卡1高级内打开端口转发，设置转发端口规则，如下所示：<br>   <img src="/images/natport.png" alt="port"><br>&emsp;&emsp;主机访问2222端口会映射到虚拟机的22端口，就可以ssh登陆虚拟机。80是虚拟机的aweb服务端口被映射为9090，主机端口可以随意设置只要不发生冲突。</p>
+<p>&emsp;&emsp;<strong>完成后最好关闭虚拟机做一个备份，备份时MAC地址选择重新初始化。</strong><br>   虚拟机设置端口转发，在虚拟机配置中打开网络菜单，网卡1高级内打开端口转发，设置转发端口规则，如下所示：<br>   <img src="/images/natport.png" alt="port"><br>&emsp;&emsp;主机访问2222端口会映射到虚拟机的22端口，就可以ssh登陆虚拟机。80是虚拟机的aweb服务端口被映射为9090，主机端口可以随意设置只要不发生冲突。</p>
 <figure class="highlight bash"><pre><div class="line">ssh -p <span class="number">2222</span> stack@<span class="number">127.0</span>.<span class="number">0.1</span></div></pre></figure>
 
 <p>&emsp;&emsp;选择yes输入stack用户的密码就可以登陆虚拟机。接下来配置openstack的服务，进入devstack目录，创建localrc文件并写入配置信息内容如下：</p>
