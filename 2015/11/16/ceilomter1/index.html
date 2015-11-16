@@ -1,0 +1,535 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    
+    <title>ceilomter基础以及添加监控项 | Cinlk&#39;s Blog</title>
+    <meta name="author" content="cinlk">
+    
+    <meta name="description" content="&amp;emsp;&amp;emsp;ceilometer是openstack中的资源监控审计项目，从2012年开始成为社区的核心项目。受到广泛开发者的关注。它为计费提供了监控项数据，计费功能社区没有，需要自己在开发计费系统。经过几年的发展ceilometer功能越来越完善，能够统计许多资源的使用情况，功能易于扩展支持第三方的plugin。">
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <meta property="og:title" content="ceilomter基础以及添加监控项"/>
+    <meta property="og:site_name" content="Cinlk&#39;s Blog"/>
+
+    <link rel="alternate" href="/atom.xml" title="Cinlk&#39;s Blog" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/lib/font-awesome.css" type="text/css">
+    <link rel="stylesheet" href="/css/lib/normalize.css" type="text/css">
+    <link rel="stylesheet" href="/css/lib/furatto.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <script src="/js/jquery-1.10.2.min.js"></script>
+    <script src="/js/jquery.jpanelmenu.js"></script>
+</head>
+
+
+<body class="container-fluid">
+    <header id="page-header">
+        <div class="navbar inverse-navbar">
+    <div class="navbar-inner">
+        <div class="container-center">
+            <a href="/index.html" class="menu-trigger" data-meteocon="M">
+                <i class="icon-reorder"></i>
+            </a>
+            <div class="nav-collapse navbar-responsive-collapse collapse">
+                <nav id="menu">
+                    <ul class="nav">
+                        <li><a class="brand" id="blog-title" href="/index.html">Cinlk&#39;s Blog</a></li>
+                    </ul>
+                    <div class="pull-right nav" id="nav-button-group">
+                        
+                            <a href="/" class="menu-home btn btn-primary btn-large">
+                                <i class="icon-home icon-white"></i>
+                                首页
+                            </a>
+                        
+                            <a href="/archives" class="menu-archive btn btn-primary btn-large">
+                                <i class="icon-archive icon-white"></i>
+                                归档
+                            </a>
+                        
+                            <a href="javascript:void(0);" class="menu-category btn btn-primary btn-large">
+                                <i class="icon-archive icon-white"></i>
+                                分类
+                            </a>
+                        
+                            <a href="/reading" class="menu-reading btn btn-primary btn-large">
+                                <i class="icon-book icon-white"></i>
+                                读书
+                            </a>
+                        
+                            <a href="/about" class="menu-about btn btn-primary btn-large">
+                                <i class="icon-user icon-white"></i>
+                                关于
+                            </a>
+                        
+                    </div>
+                </nav>
+                <nav id="jPanelMenu-menu-side">
+    <ul class="nav main-menu">
+        <li><a class="brand" href="index.html">Cinlk&#39;s Blog</a></li>
+        
+            <li>
+                <a href="/" class="menu-home">
+                    <i class="icon-home icon-white"></i>
+                    首页
+                </a>
+            </li>
+        
+            <li>
+                <a href="/archives" class="menu-archive">
+                    <i class="icon-archive icon-white"></i>
+                    归档
+                </a>
+            </li>
+        
+            <li>
+                <a href="javascript:void(0);" class="menu-category">
+                    <i class="icon-archive icon-white"></i>
+                    分类
+                </a>
+            </li>
+        
+            <li>
+                <a href="/reading" class="menu-reading">
+                    <i class="icon-book icon-white"></i>
+                    读书
+                </a>
+            </li>
+        
+            <li>
+                <a href="/about" class="menu-about">
+                    <i class="icon-user icon-white"></i>
+                    关于
+                </a>
+            </li>
+        
+    </ul>
+
+    <ul class="nav category-menu hide">
+        <li>
+            <span><a class="brand" href="javascript:void(0);">分类目录</a></span>
+            <span><a class="btn-back brand pull-right" href="javascript:void(0);">
+                <i class="icon-arrow-left"></i>
+            </a></span>
+        </li>
+
+        
+
+        
+
+            
+
+            <li collapse-level="0">
+                <a href="/categories/ceilometer/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    ceilometer(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/install/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    install(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/openstack/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    openstack(5)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/glance/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    glance(2)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/blog/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    blog(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/keystone/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    keystone(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/neutron/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    neutron(2)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/osd/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    osd(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/object/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    object(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/XACML/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    XACML(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/web/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    web(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+            <li collapse-level="0">
+                <a href="/categories/ABAC/" class="collapse-level-0">
+                    <i class="icon-caret-right"></i>
+                    ABAC(1)
+                </a>
+            </li>
+
+            
+
+            
+
+        
+
+        
+    </ul>
+</nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </header>
+    <div id="content-wrapper">
+        <div class="container-center">
+        <article class="post">
+    <div class="article-title article-title-big">
+        
+    
+        <h1>ceilomter基础以及添加监控项</h1>
+    
+
+    </div>
+
+    <div class="date-row ">
+        <time datetime="2015-11-16T14:30:38.000Z">11月 16 2015</time>
+    </div>
+
+    <div class="toc-wrap">
+        <div class="toc-title">目录</div>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#ceilomter基本组件"><span class="toc-number">1.</span> <span class="toc-text">ceilomter基本组件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为agent-compute添加新的监控项"><span class="toc-number">2.</span> <span class="toc-text">为agent-compute添加新的监控项</span></a></li></ol>
+    </div>
+
+    <div class="entry">
+        <p>&emsp;&emsp;ceilometer是openstack中的资源监控审计项目，从2012年开始成为社区的核心项目。受到广泛开发者的关注。它为计费提供了监控项数据，计费功能社区没有，需要自己在开发计费系统。经过几年的发展ceilometer功能越来越完善，能够统计许多资源的使用情况，功能易于扩展支持第三方的plugin。<a id="more"></a>唯一的缺点是实时统计的数据随时间增长巨大，对系统整体性能有严重影响。好消息时Liberty版本对ceilometer之前存在的性能问题有所改进，维持社区提出了adoh和gnocchi项目。本文中对ceilometer基本组件、功能进行分析，暂不涉及aodh和gnocchi。</p>
+<p>监控的数据分为meter和event，meter代表被监控的资源测量。测量分为三种类型：<br>cumulative：累计的测量，比如disk.device.write.bytes随时间而增加。<br>gauge：离散的测量，比如disk.root.size<br>delta：时间段内改变的量。比如image.download</p>
+<p>ceilometer通过三个agent进程来采集数据，每个agent进程负责不同类型资源数据的采集任务poller，数据是sample格式。然后把sample传入管道进一步加工处理后变成最终的meter数据，可以通过udp和message队列发布到collector，或者直接存储在file中。如果给了collector，collector可以把meter数据存储在数据库中或file里。ceilometer架构图如下所示<img src="/images/ceilometerArc.png" alt=""></p>
+<h3 id="ceilomter基本组件">ceilomter基本组件</h3>
+<p><strong>agent-compute进程：</strong>它是负责收集虚拟机的cpu，disk，memery，network资源使用情况信息。在每个host节点上都需要部署agent-compute进程，负责收集该host上所有虚拟机的信息。可以在setup.cfg文件中查看agent-compute采集的数据项任务pollers。它是如何从拿到虚拟机内部的数据呢？大部分openstack管理虚拟机是使用libvirt，libvirt支持qemu、kvm等虚拟化技术。使用libvirt来获取虚拟机信息。host使用的虚拟机技术不同获取虚拟机信息方式也不同，目前compute-agent支持的virt如下所示。</p>
+<figure class="highlight bash"><pre><div class="line">ceilometer.compute.virt =</div><div class="line">    libvirt = ceilometer.compute.virt.libvirt.inspector:LibvirtInspector</div><div class="line">    hyperv = ceilometer.compute.virt.hyperv.inspector:HyperVInspector</div><div class="line">    vsphere = ceilometer.compute.virt.vmware.inspector:VsphereInspector</div><div class="line">    xenapi = ceilometer.compute.virt.xenapi.inspector:XenapiInspector</div></pre></figure>
+
+<p>ceilometer配置文件默认采用libvirt，会通过stevedore动态加载LibvirtInspector类来连接domain可以查询虚拟机。</p>
+<p><strong>agent-central进程</strong>：它是通过调用openstack中各个组件的client-api收集数据，还能够使用snmpd来获取host物理机的disk,cpu等资源使用情况。一个central进程负责全部组件资源的采集任务pollers，压力比较大。在juno版后加入了tooz库一种分布式协议实现库，使用tooz可以部署多个central来分担数据收集项任务。采用了一致性hash算法来均匀分配任务。可以在setup.cfg中查看它采集的数据项任务。</p>
+<p><strong>agent-notification进程：</strong>绑定到notification消息队列，从队列中获取服务发送到队列里的资源信息。notification默认会fork一个子进程与主进程共同监听消息队列，应该存在进程锁得到消息后只有一个进程处理。<img src="/images/notificationagent.png" alt=""></p>
+<p>&emsp;&emsp;该进程分别连接到cinder,nova,neutron,swift，glance的exchange，且exchang类型是topic，routing_key是notification。绑定的队列是notification，作为消息的consumer。消息的producter是各个组件，创建的exchange为组件名，比如nova创建了nova名字的exchange，类型是topic。队列是notification。组件收集的资源信息会通过exchange发送到notification队列，被agent接受。一个agent会监听消息队列所有数据，把数据发送到pipeline中，pipeline处理与他关联的数据。用tooz也可部署多个notification，notification是根据pipeline来划分数据处理任务。因为pipeline与pollers的对应关系是笛卡尔积。<img src="/images/notificationqueues.png" alt=""></p>
+<p><strong>pipeline：</strong>  闻如其名，对sample数据进一步加工，定义数据转化的格式，以及发布方式。一下是pipeline配置的yaml文件。</p>
+<figure class="highlight xml"><pre><div class="line">---</div><div class="line">sources:</div><div class="line">    - name: meter_source</div><div class="line">      interval: 600</div><div class="line">      meters:</div><div class="line">          - "*"</div><div class="line">      sinks:</div><div class="line">          - meter_sink</div><div class="line">    - name: cpu_source</div><div class="line">      interval: 600</div><div class="line">      meters:</div><div class="line">          - "cpu"</div><div class="line">      sinks:</div><div class="line">          - cpu_sink</div><div class="line">    - name: disk_source</div><div class="line">      interval: 600</div><div class="line">      meters:</div><div class="line">          - "disk.read.bytes"</div><div class="line">          - "disk.read.requests"</div><div class="line">          - "disk.write.bytes"</div><div class="line">          - "disk.write.requests"</div><div class="line">      sinks:</div><div class="line">          - disk_sink</div><div class="line">    - name: network_source</div><div class="line">      interval: 600</div><div class="line">      meters:</div><div class="line">          - "network.incoming.bytes"</div><div class="line">          - "network.incoming.packets"</div><div class="line">          - "network.outgoing.bytes"</div><div class="line">          - "network.outgoing.packets"</div><div class="line">      sinks:</div><div class="line">          - network_sink</div><div class="line">sinks:</div><div class="line">    - name: meter_sink</div><div class="line">      transformers:</div><div class="line">      publishers:</div><div class="line">          - notifier://</div><div class="line">    - name: cpu_sink</div><div class="line">      transformers:</div><div class="line">          - name: "rate_of_change"</div><div class="line">            parameters:</div><div class="line">                target:</div><div class="line">                    name: "cpu_util"</div><div class="line">                    unit: "%"</div><div class="line">                    type: "gauge"</div><div class="line">                    scale: "100.0 / (10**9 * (resource_metadata.cpu_number or 1))"</div><div class="line">      publishers:</div><div class="line">          - notifier://</div><div class="line">    - name: disk_sink</div><div class="line">      transformers:</div><div class="line">          - name: "rate_of_change"</div><div class="line">            parameters:</div><div class="line">                source:</div><div class="line">                    map_from:</div><div class="line">                        name: "disk\\.(read|write)\\.(bytes|requests)"</div><div class="line">                        unit: "(B|request)"</div><div class="line">                target:</div><div class="line">                    map_to:</div><div class="line">                        name: "disk.\\1.\\2.rate"</div><div class="line">                        unit: "\\1/s"</div><div class="line">                    type: "gauge"</div><div class="line">      publishers:</div><div class="line">          - notifier://</div><div class="line">    - name: network_sink</div><div class="line">      transformers:</div><div class="line">          - name: "rate_of_change"</div><div class="line">            parameters:</div><div class="line">                source:</div><div class="line">                   map_from:</div><div class="line">                       name: "network\\.(incoming|outgoing)\\.(bytes|packets)"</div><div class="line">                       unit: "(B|packet)"</div><div class="line">                target:</div><div class="line">                    map_to:</div><div class="line">                        name: "network.\\1.\\2.rate"</div><div class="line">                        unit: "\\1/s"</div><div class="line">                    type: "gauge"</div><div class="line">      publishers:</div><div class="line">          - notifier://**</div></pre></figure>
+
+<p>&emsp;&emsp;首先Source 定义多个pipelines，对于每个pipeline其中name是该pipeline的名字，interval是监控任务pollers循环执行时间间隔，meters是负责监控的pollers类型。sinks是对收集的sample进行处理。第一个pipeline的meter是*，表示默认接受所有任务收集的数据。第二个pipeline处理的为disk的meter。第三个pipeline处理的数据为network的meter。来看下sink第一个pipeline对应meter_sink,它不做任何处理直接把数据publisher到消息队列中。第二个pipeline对应disk_sink，计算了disk每10分钟的读写频率和字节大小。把处理后的数据发送到消息队列中。发送到消息队列后有collector接受。以下是pipeline的publisher和transformer。</p>
+<figure class="highlight xml"><pre><div class="line">ceilometer.publisher =</div><div class="line">    test = ceilometer.publisher.test:TestPublisher</div><div class="line">    meter_publisher = ceilometer.publisher.messaging:RPCPublisher</div><div class="line">    meter = ceilometer.publisher.messaging:RPCPublisher</div><div class="line">    rpc = ceilometer.publisher.messaging:RPCPublisher</div><div class="line">    notifier = ceilometer.publisher.messaging:NotifierPublisher</div><div class="line">    udp = ceilometer.publisher.udp:UDPPublisher</div><div class="line">    file = ceilometer.publisher.file:FilePublisher</div></pre></figure>
+
+<p>transformer类有</p>
+<figure class="highlight bash"><pre><div class="line">ceilometer.transformer =</div><div class="line">    accumulator = ceilometer.transformer.accumulator:TransformerAccumulator</div><div class="line">    unit_conversion = ceilometer.transformer.conversions:ScalingTransformer</div><div class="line">    rate_of_change = ceilometer.transformer.conversions:RateOfChangeTransformer</div><div class="line">    aggregator = ceilometer.transformer.conversions:AggregatorTransformer</div><div class="line">    arithmetic = ceilometer.transformer.arithmetic:ArithmeticTransformer</div></pre></figure>
+
+<p><strong>collector进程：</strong>负责收集经过pipeline处理后的meter数据，从message队列和udp连接中获取meter。最后把数据写入文件或存储在数据库中。一般存在数据库中方便查询与计费使用。目前采用mongodb数据库存储数据性能比较好。collector绑定到meter队列，pipeline处理消息后通过名为”ceilometer”的exchange把消息发送到meter队列。<img src="/images/collector.png" alt=""></p>
+<p>存储meter的类有</p>
+<figure class="highlight bash"><pre><div class="line">ceilometer.metering.storage =</div><div class="line">    log = ceilometer.storage.impl_log:Connection</div><div class="line">    mongodb = ceilometer.storage.impl_mongodb:Connection</div><div class="line">    mysql = ceilometer.storage.impl_sqlalchemy:Connection</div><div class="line">    postgresql = ceilometer.storage.impl_sqlalchemy:Connection</div><div class="line">    sqlite = ceilometer.storage.impl_sqlalchemy:Connection</div><div class="line">    hbase = ceilometer.storage.impl_hbase:Connection</div><div class="line">    db2 = ceilometer.storage.impl_db2:Connection</div></pre></figure>
+
+<h3 id="为agent-compute添加新的监控项">为agent-compute添加新的监控项</h3>
+<p>&emsp;&emsp;为instance添加新的监控项，meter名字为instance.image_name。这个监控项没啥实际用途，只是来举个简单的例子说明如何实现自定义的监控功能。</p>
+<p>第一步 在/compute/pollsers/instance.py文件中添加新的监控任务poller类。</p>
+<figure class="highlight python"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">InstanceImagePollster</span><span class="params">(plugin.ComputePollster)</span>:</span></div><div class="line"></div><div class="line">    <span class="decorator">@staticmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_samples</span><span class="params">(manager, cache, resources)</span>:</span></div><div class="line">        <span class="keyword">for</span> instance <span class="keyword">in</span> resources:</div><div class="line">            <span class="keyword">yield</span>  util.make_sample_from_instance(</div><div class="line">                instance,</div><div class="line">                name=<span class="string">'instance:%s'</span>%instance.image[<span class="string">'name'</span>],</div><div class="line">                type=sample.TYPE_GAUGE,</div><div class="line">                unit=<span class="string">'instance'</span>,</div><div class="line">                volume=<span class="number">1</span>,</div><div class="line">            )</div></pre></figure>
+
+<p>第二步  InstanceImagePollster类注册到setup.cfg文件中,写在ceilometer.poll.compute这个namespace里面。注册名是instance.image</p>
+<figure class="highlight bash"><pre><div class="line">compute.agent.poll=</div><div class="line">	<span class="string">''</span><span class="string">''</span><span class="string">''</span><span class="string">''</span><span class="string">''</span><span class="string">''</span><span class="string">'</span></div><div class="line">    '<span class="string">''</span><span class="string">''</span><span class="string">''</span><span class="string">''</span><span class="string">''</span><span class="string">''</span></div><div class="line">	instance.image = ceilometer.compute.pollsters.instance:InstanceImagePollster</div></pre></figure>
+
+<p>第三步  修改pipeline文件，在sources内添加新的mytest_image,它负责的meter是instance.image任务数据的处理。当然不添加也会处理数据，meter_soucre这个pipeline默认处理所有数据。</p>
+<figure class="highlight python"><pre><div class="line">- name: mytest_image</div><div class="line">        interval: <span class="number">60</span></div><div class="line">        meters:</div><div class="line">            - <span class="string">"instance.image"</span></div><div class="line">        sinks:</div><div class="line">            - meter_sink</div></pre></figure>
+
+<p>第四步  ceilometer采用stevedore加载类，需要从新build项目在install项目。进入ceilometer根目录执行以下命令。</p>
+<figure class="highlight bash"><pre><div class="line">python setup.py build</div><div class="line">python setup.py install</div></pre></figure>
+
+<p>`</p>
+<p>第五步  应为是对compute-agent添加新的功能，只需要重启ceilomter-agent-compute服务。<br>第六步 最后用ceilometer meter-list查看新加的数据项。<br><img src="/images/newmeter.png" alt=""></p>
+<p>&emsp;&emsp;notification和central的采集功能扩展也类似，先集成自己的pollers基类，实现get_sample方法，采集的数据是有固定格式的，需要知道它的数据表示结构。从中得到自己需要的数据。在把新的功能注册到setup.cfg中，build和install项目，重启相关ceilometer服务。ceilometer只要收到某种类型的数据，就会存储对应的meter数据。可以用meter-list查看。</p>
+
+    </div>
+    
+    <footer >
+        
+            
+    
+    <div class="categories">
+        所属目录：
+    <a href="/categories/ceilometer/">ceilometer</a>
+    </div>
+
+            
+    
+    <div class="tags-row">
+        标签：<a class="btn btn-info" href="/tags/openstack/">openstack</a><a class="btn btn-info" href="/tags/develop/">develop</a>
+    </div>
+
+        
+        <div class="clearfix"></div>
+    </footer>
+</article>
+
+
+
+<section id="comment">
+    <!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2015/11/16/ceilomter1/" data-title="ceilomter基础以及添加监控项" data-url="http://cinlk.com/2015/11/16/ceilomter1/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	 var duoshuoQuery = {short_name: 'cinlk' };
+	  (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';
+		ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
+
+
+        </div>
+    </div>
+    <footer id="page-footer"><div class="footer-content">
+    <div class="container-center">
+        <div class="footer-text pull-left">
+            <div class="copyright">
+                
+                Copyright &copy; 2015 <a href="/">cinlk</a>
+                
+            </div>
+            <div class="theme-copyright">
+                <span>Blog powered by <a href="https://hexo.io/">hexo</a></span>
+                Theme by <a href="https://github.com/raytaylorlin/hexo-theme-raytaylorism">raytaylorism</a> @<a href='cinlk.github.io/about'>cinlk
+            </div>
+        </div>
+        <div class="social-group pull-right">
+            
+            <a href="https://github.com/cinlk" target="_blank" title="github"><i class="icon-github"></i></a>
+            
+            
+            <a href="http://www.zhihu.com/people/kou-hu-10" target="_blank" title="知乎"><i class="icon-xing-sign"></i></a>
+            
+			
+			<a href="http://www.linkedin.com/profile/preview?locale=zh_CN&amp;trk=prof-0-sb-preview-primary-button" target="_blank" title="领英"><i class="icon-linkedin"></i></a>
+			
+            
+            <a href="https://plus.google.com/u/0/" target="_blank" title="Google+"><i class="icon-google-plus-sign"></i></a>
+            
+        </div>
+        <div class="clearfix"></div>
+		
+<script type="text/javascript">
+  var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+  document.write(unescape("%3Cspan id='cnzz_stat_icon_1255502307'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1255502307' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+	</div>
+</div>
+</footer>
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-43460643-1', 'raytaylorlin.com');
+    ga('send', 'pageview');
+
+</script>
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script>
+    (function($) {
+        //当内容区内容不够长时，设置内容区域的高度使footer沉底
+        var resizeContentWrapper = function() {
+            //HACK: 用延时的方法使计算高度时候更加准确，会有一闪的情况
+            setTimeout(function() {
+                var contentHeight = Math.floor($('#content-wrapper .container-center').height()),
+                headerHeight = Math.floor($('#page-header').height()),
+                footerHeight = Math.floor($('#page-footer').height()),
+                minHeight = Math.floor($(window).height() - headerHeight - footerHeight);
+                if(contentHeight < minHeight) {
+                    $('#content-wrapper').css({height: minHeight});                    
+                } else {
+                    $('#content-wrapper').css({height: 'auto'});
+                }
+            },500);
+        };
+
+        //响应式侧边栏
+        var initJPanelMenu = function() {
+            var jPM = $.jPanelMenu({
+                menu: '#jPanelMenu-menu-side',
+                duration: 500
+            });
+            jPM.on();
+        };
+
+        //初始化目录按钮事件绑定
+        var initCategory = function() {
+            function showMainMenu() {
+                var $jPanelMenu = $('#jPanelMenu-menu');
+                $jPanelMenu.find('ul.category-menu').hide();
+                $jPanelMenu.find('ul.main-menu').fadeIn();
+            }
+
+            function showCategoryMenu() {
+                var $jPanelMenu = $('#jPanelMenu-menu');
+                $jPanelMenu.find('ul.main-menu').hide();
+                $jPanelMenu.find('ul.category-menu').fadeIn();
+            }
+
+            $('.menu-category').click(function() {
+                var jPM = $.jPanelMenu({
+                    duration: 500,
+                    beforeOpen: function() {
+                        showCategoryMenu();
+                    },
+                    afterClose: function() {
+                        showMainMenu();
+                    }
+                });
+                if(jPM.isOpen()) {
+                    showCategoryMenu();
+                } else {
+                    jPM.open();
+                }
+            });
+
+            $('.category-menu').on('click', '.btn-back', function() {
+                showMainMenu();
+            });
+        };
+
+        $(document).ready(resizeContentWrapper);
+        $(document).ready(initJPanelMenu);
+        $(document).ready(initCategory);
+        
+        $(window).resize(resizeContentWrapper);
+    })(jQuery);
+</script>
+
+</body>
+</html>
