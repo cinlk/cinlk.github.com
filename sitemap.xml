@@ -2,108 +2,113 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://cinlk.com/2016/05/03/post/</loc>
+    <lastmod>2016-05-03T09:09:14.888Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://cinlk.com/2015/12/04/rabbitmq/</loc>
-    <lastmod>2015-12-04T15:34:58.688Z</lastmod>
+    <lastmod>2015-12-04T15:35:00.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/2015/11/16/ceilomter1/</loc>
-    <lastmod>2015-11-16T15:08:01.672Z</lastmod>
+    <lastmod>2015-11-16T15:08:02.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/2015/10/13/gerrit/</loc>
-    <lastmod>2015-10-13T16:04:20.208Z</lastmod>
+    <lastmod>2015-10-13T16:04:22.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/2015/09/02/neutronmetering/</loc>
-    <lastmod>2015-09-02T09:58:22.103Z</lastmod>
+    <lastmod>2015-09-02T09:58:24.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/2015/07/04/devstack/</loc>
-    <lastmod>2015-09-02T09:16:47.706Z</lastmod>
+    <lastmod>2015-09-02T09:16:48.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/2015/06/22/hexo-install/</loc>
-    <lastmod>2015-09-02T09:15:44.378Z</lastmod>
+    <lastmod>2015-09-02T09:15:46.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/google5141418a17582ea9.html</loc>
-    <lastmod>2015-09-02T08:05:59.164Z</lastmod>
+    <lastmod>2015-09-02T08:06:00.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/2015/09/01/glancedriver2/</loc>
-    <lastmod>2015-09-01T16:17:10.004Z</lastmod>
+    <lastmod>2015-09-01T16:17:12.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/2015/09/01/glancestore1/</loc>
-    <lastmod>2015-09-01T16:16:33.178Z</lastmod>
+    <lastmod>2015-09-01T16:16:34.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/2015/08/22/swiftabac/</loc>
-    <lastmod>2015-08-21T17:14:02.783Z</lastmod>
+    <lastmod>2015-08-21T17:14:04.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/2015/07/22/kdbext/</loc>
-    <lastmod>2015-08-21T16:44:44.321Z</lastmod>
+    <lastmod>2015-08-21T16:44:46.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/2015/07/26/keystoneclient/</loc>
-    <lastmod>2015-08-21T16:43:55.972Z</lastmod>
+    <lastmod>2015-08-21T16:43:56.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/2015/07/26/ksclientExt/</loc>
-    <lastmod>2015-08-21T16:43:15.933Z</lastmod>
+    <lastmod>2015-08-21T16:43:16.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/2015/07/11/neutron1/</loc>
-    <lastmod>2015-08-21T16:42:36.951Z</lastmod>
+    <lastmod>2015-08-21T16:42:38.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/2015/07/11/neutron2/</loc>
-    <lastmod>2015-08-21T16:40:55.774Z</lastmod>
+    <lastmod>2015-08-21T16:40:56.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/2015/07/26/swiftmiddlware/</loc>
-    <lastmod>2015-08-21T16:38:45.189Z</lastmod>
+    <lastmod>2015-08-21T16:38:46.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/2015/07/19/wsgi/</loc>
-    <lastmod>2015-08-21T16:38:08.532Z</lastmod>
+    <lastmod>2015-08-21T16:38:10.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/2015/07/27/xacml/</loc>
-    <lastmod>2015-08-21T16:37:11.208Z</lastmod>
+    <lastmod>2015-08-21T16:37:12.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/2015/06/26/osd/</loc>
-    <lastmod>2015-07-04T06:36:10.148Z</lastmod>
+    <lastmod>2015-07-04T06:36:12.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/404.html</loc>
-    <lastmod>2015-06-23T08:01:11.657Z</lastmod>
+    <lastmod>2015-06-23T08:01:12.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://cinlk.com/about/index.html</loc>
-    <lastmod>2015-06-21T15:31:03.891Z</lastmod>
+    <lastmod>2015-06-21T15:31:04.000Z</lastmod>
   </url>
   
 </urlset>

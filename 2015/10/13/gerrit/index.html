@@ -306,84 +306,6 @@
     </header>
     <div id="content-wrapper">
         <div class="container-center">
-        <article class="post">
-    <div class="article-title article-title-big">
-        
-    
-        <h1>注册openstack社区开发者账户</h1>
-    
-
-    </div>
-
-    <div class="date-row ">
-        <time datetime="2015-10-13T15:38:54.000Z">10月 13 2015</time>
-    </div>
-
-    <div class="toc-wrap">
-        <div class="toc-title">目录</div>
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#代码提交流程"><span class="toc-number">1.</span> <span class="toc-text">代码提交流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注册账号"><span class="toc-number">2.</span> <span class="toc-text">注册账号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gerrit测试"><span class="toc-number">3.</span> <span class="toc-text">gerrit测试</span></a></li></ol>
-    </div>
-
-    <div class="entry">
-        <p>&emsp;&emsp;套用一句话 “从战场中学会战斗”，热爱openstack的开发者应该参与社区代码贡献，相信会不只技能上有所提升还能获得其他有用的成就。本文简单介绍注册开发者账户，为参与战斗做好准备。<a id="more"></a></p>
-<h3 id="代码提交流程">代码提交流程</h3>
-<p>&emsp;&emsp;其中OpenStack使用Gerrit作为代码review系统，使用Jenkins系统对代码进行自动测试，使用tox工具可以在本地进行相同的代码测试。<br><img src="/images/gerrit.png" alt=""><br>1 配置Git与Gerrit环境<br>2 克隆目标项目的代码并在新branch上进行更改<br>3 commit到本地的repo后推送给远端Gerrit，然后由reviewer给出意见<br>4 根据reviewer的修改意见不断更新patch</p>
-<h3 id="注册账号">注册账号</h3>
-<p>&emsp;&emsp;注册launchpad 账号，也可以用ubuntu one账号授权登录，launchpad是openstack项目管理网站，管理着项目源码，bugs列表，文档资料，最新feutture等。总之launchpad像一个图书馆包含了openstack重要的文献资料，其中由gerrit对贡献的代码进行审查。注册账号后，还需要设置email，添加ssh key和OpenPGP key。前面2项设置一般都会，那为什么需要OpenPGP key，它是给社区发送邮件对邮件内容加密解密用的。设置过程比较繁琐，参考这篇文章<a href="www.cnblogs.com/biangbiang/archive/2013/05/18/3085145.html">PGP key配置</a>。账号注册后访问<a href="https://review.openstack.org/" target="_blank" rel="external">https://review.openstack.org/</a> 用你的luanchpad账号登陆，进入gerrit账户。然后设置账户名字，名字取个好记得以后不能改。email地址和launchpd账户的email保持一致。最好设置HTTP密码，国内ssh的端口似乎被墙了，但是可以用https访问gerrit。作为个人开发者签署一份 Individual Contributor License Agreement（CLA）协议。最后需要注意的Contact information占时先留着不用填写。等先注册openstack账户后在来写，不然会出错。原因我也不清楚，按顺序来就不会有错。<br>&emsp;&emsp;注册openstack账户，访问www.openstack.org 注册账户，会然你填写一些基本信息如实填写。进入自己的账户页面，选择Foundation Member，注意email地址和gerrit保持一样。<br>最后回到gerrit的contact information选项，如实填写基本信息就ok了。<br>注册过程中会发邮件到你填写的邮箱，要求激活账户。</p>
-<h3 id="gerrit测试">gerrit测试</h3>
-<p>&emsp;&emsp;我在ubuntu系统中进行测试的，首先系统要有git，没有就安装git。然后安装git-review直接apt-get安装。苦逼的是国内把ssh端口墙了，弄个VPN也行的。以前有个红杏便宜还好用，现在被强制关闭了可惜我的会员费啊。使用https进行连接需要配置git全局环境变量，也可以设置局部环境变量</p>
-<figure class="highlight"><pre><div class="line">git config --<span class="keyword">global</span> user.name = gerrit use<span class="string">r's name</span></div><div class="line">git config --global user.email = gerrit user's email</div><div class="line">git config --<span class="keyword">global</span> gitreview.username = gerrit use<span class="string">r's name</span></div><div class="line">git config --global gitreview.port=443</div><div class="line">git config --global gitreview.scheme=https</div></pre></figure>
-
-<p>然后在githun上下载openstack库下项目源码，比如下载nova。</p>
-<figure class="highlight"><pre><div class="line">git clone https://git.openstack.org/openstack/nova.git</div><div class="line"><span class="built_in">cd</span> nova</div><div class="line">git review <span class="operator">-s</span></div></pre></figure>
-
-<p>&emsp;&emsp;执行最后一行命令需要你输入gerrit的用户名和密码，之前设置的http密码。如果不出什么错误后，新建一个分支，开发修改代码后进行提交。注意不能直接在master分支上开发。然而对新手来说需要对gerrit不熟悉，然而不能直接拿openstack项目练习，社区也考虑得周全，有个沙箱环境提供熟悉开发流程。请参照这篇文章<a href="http://docs.openstack.org/infra/manual/sandbox.html" target="_blank" rel="external">代码提交练习</a>，好好练习理解gerrit工作流程。</p>
-
-    </div>
-    
-    <footer >
-        
-            
-    
-    <div class="categories">
-        所属目录：
-    <a href="/categories/openstack/">openstack</a>
-    </div>
-
-            
-    
-    <div class="tags-row">
-        标签：<a class="btn btn-info" href="/tags/gerrit/">gerrit</a>
-    </div>
-
-        
-        <div class="clearfix"></div>
-    </footer>
-</article>
-
-
-
-<section id="comment">
-    <!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="2015/10/13/gerrit/" data-title="注册openstack社区开发者账户" data-url="http://cinlk.com/2015/10/13/gerrit/"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	 var duoshuoQuery = {short_name: 'cinlk' };
-	  (function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';
-		ds.async = true;
-		ds.src = 'http://static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		|| document.getElementsByTagName('body')[0]).appendChild(ds);
-	  })();
-	</script>
-<!-- 多说公共JS代码 end -->
-</section>
-
-
         </div>
     </div>
     <footer id="page-footer"><div class="footer-content">
@@ -391,7 +313,7 @@
         <div class="footer-text pull-left">
             <div class="copyright">
                 
-                Copyright &copy; 2015 <a href="/">cinlk</a>
+                Copyright &copy; 2016 <a href="/">cinlk</a>
                 
             </div>
             <div class="theme-copyright">

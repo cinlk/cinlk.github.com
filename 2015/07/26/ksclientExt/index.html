@@ -306,86 +306,6 @@
     </header>
     <div id="content-wrapper">
         <div class="container-center">
-        <article class="post">
-    <div class="article-title article-title-big">
-        
-    
-        <h1>keystoneclient 接口扩展</h1>
-    
-
-    </div>
-
-    <div class="date-row ">
-        <time datetime="2015-07-26T07:21:24.000Z">7月 26 2015</time>
-    </div>
-
-    <div class="toc-wrap">
-        <div class="toc-title">目录</div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#shell扩展"><span class="toc-number">1.</span> <span class="toc-text">shell扩展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试"><span class="toc-number">2.</span> <span class="toc-text">测试</span></a></li></ol>
-    </div>
-
-    <div class="entry">
-        <p>&emsp;&emsp;之前在keystone数据库中新添加了teacherAttribute数据表，同时实现了通过发送HTTP请求来访问数据表的方法，也可以通过命令行来调用keystone的服务，实现命令方式相对来说比较简单，keystone通过命令行访问原理可以参考<a href="http://www.cinlk.com/2015/07/26/keystoneclient/" target="_blank" rel="external">这篇文章</a>。本文给出用命令行来操作tA数据表的代码逻辑。<br><a id="more"></a></p>
-<h2 id="shell扩展">shell扩展</h2>
-<p>第一步：实现tA资源管理类<br>在V2_0目录下创建teacherAttribute.py文件，文件代码如下：</p>
-<figure class="highlight python"><pre><div class="line"><span class="keyword">from</span> keystoneclient <span class="keyword">import</span> base</div><div class="line"></div><div class="line"><span class="comment">#给出资源标识</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">teacherAtribute</span><span class="params">(base.Resource)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__repr__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span>  <span class="string">' teacher\'s  attribute %s'</span> %self._info</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">delete</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span>  self.manager.delete(self)</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">AttributeManager</span><span class="params">(base.ManagerWithFind)</span>:</span></div><div class="line">        </div><div class="line">		resource_class = teacherAtribute</div><div class="line">     </div><div class="line">		<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,client,user_manager)</span>:</span></div><div class="line"></div><div class="line">            super(AttributeManager,self).__init__(client)</div><div class="line">            self.user=user_manager</div><div class="line">		<span class="comment">#查看全部老师用户的属性</span></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">list</span><span class="params">(self)</span>:</span></div><div class="line"></div><div class="line">            result = self._list(<span class="string">'/TEACHER-ATTRIBUTE/attribute'</span>,<span class="string">'teacherAttribute'</span>,endpoint_override=<span class="string">'http://127.0.0.1:5000/v2.0'</span>)</div><div class="line">            <span class="keyword">return</span>  result</div><div class="line"></div><div class="line">		<span class="comment">#获取某个老师用户的属性</span></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, user)</span>:</span></div><div class="line"></div><div class="line">            result= self._get(<span class="string">'/TEACHER-ATTRIBUTE/attribute/%s'</span>%user ,<span class="string">'teacherAttribute'</span>,endpoint_override=<span class="string">'http://127.0.0.1:5000/v2.0'</span>)</div><div class="line">            <span class="keyword">return</span>  result</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">create</span><span class="params">(self, url, **body)</span>:</span></div><div class="line">            <span class="keyword">pass</span></div></pre></figure>
-
-<p>&emsp;&emsp;其中”/TEACHER-ATTRIBUTE/attribute”是在keystone后端定义的url后缀，endpoint_overrride是可选的参数，值为<code>http://127.0.0.1:5000/v2.0</code>是限制只能通过5000端口来访问数据。</p>
-<p>第二步：在client类中实现tA的实例<br>V2_0目录下的client.py文件中，在Client类的初始化方法里实现tA的实例。</p>
-<figure class="highlight python"><pre><div class="line">ef __init__(self, **kwargs):</div><div class="line">        <span class="string">"""Initialize a new client for the Keystone v2.0 API."""</span></div><div class="line">        super(Client, self).__init__(**kwargs)</div><div class="line"></div><div class="line">        self.certificates = certificates.CertificatesManager(self._adapter)</div><div class="line">        self.endpoints = endpoints.EndpointManager(self._adapter)</div><div class="line">        self.extensions = extensions.ExtensionManager(self._adapter)</div><div class="line">        self.roles = roles.RoleManager(self._adapter)</div><div class="line">        self.services = services.ServiceManager(self._adapter)</div><div class="line">        self.tokens = tokens.TokenManager(self._adapter)</div><div class="line">        self.users = users.UserManager(self._adapter, self.roles)</div><div class="line"></div><div class="line">        self.tenants = tenants.TenantManager(self._adapter,</div><div class="line">                                             self.roles, self.users)</div><div class="line"></div><div class="line">        <span class="comment"># extentions</span></div><div class="line">        self.ec2 = ec2.CredentialsManager(self._adapter)</div><div class="line">        <span class="comment">#self.attribute=attribute.AttributeManager(self._adapter,self.users)</span></div><div class="line">        self.teacherAttribute=teacherAttribute.AttributeManager(self._adapter,self.users)</div><div class="line"></div><div class="line">        <span class="comment"># DEPRECATED: if session is passed then we go to the new behaviour of</span></div><div class="line">        <span class="comment"># authenticating on the first required call.</span></div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> kwargs.get(<span class="string">'session'</span>) <span class="keyword">and</span> self.management_url <span class="keyword">is</span> <span class="keyword">None</span>:</div><div class="line">            self.authenticate()</div></pre></figure>
-
-<p>第三步：实现命令函数<br>在V2_0文件里的shell.py文件中实现命令函数</p>
-<figure class="highlight python"><pre><div class="line"><span class="comment">#@utils.arg()</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">do_teacher_attribute_list</span><span class="params">(kc,args)</span>:</span></div><div class="line">    attributes=kc.teacherAttribute.list()</div><div class="line">    utils.print_list(attributes,</div><div class="line">                     [<span class="string">'id'</span>,<span class="string">'userid'</span>, <span class="string">'department'</span>, <span class="string">'class'</span>,</div><div class="line">                      <span class="string">'title'</span>, <span class="string">'lab'</span>])</div><div class="line"></div><div class="line"></div><div class="line"><span class="decorator">@utils.arg('name',metavar='&lt;name&gt;',help='get attribute of the teacher')</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">do_teacher_attribute_get</span><span class="params">(kc,args)</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        <span class="keyword">print</span> args.name</div><div class="line">        attribute=kc.teacherAttribute.get(args.name)</div><div class="line">        <span class="comment">#print attribute</span></div><div class="line">        utils.print_dict(attribute._info)</div><div class="line">    <span class="keyword">except</span> Exception:</div><div class="line">        <span class="keyword">print</span> (_(<span class="string">'get  %s attribute Errot'</span> %args.name))</div></pre></figure>
-
-<p>&emsp;&emsp;utils.arg是参数提示，在执行命令时需要给出需要的参数。kc.teacherAttribute就是之前的实例。do_xxx_xxx是规定的语法格式，keystone执行的命令会转化成do_xxx_xxx的函数形式，比如keystone teacher-atrribute-list，会调用do_teacher_attribute_list函数。</p>
-<h2 id="测试">测试</h2>
-<p>获取所有教师用户的属性<br><img src="/images/ktAttr.png" alt=""></p>
-
-    </div>
-    
-    <footer >
-        
-            
-    
-    <div class="categories">
-        所属目录：
-    <a href="/categories/openstack/">openstack</a>
-    </div>
-
-            
-    
-    <div class="tags-row">
-        标签：<a class="btn btn-info" href="/tags/api/">api</a><a class="btn btn-info" href="/tags/keystone/">keystone</a>
-    </div>
-
-        
-        <div class="clearfix"></div>
-    </footer>
-</article>
-
-
-
-<section id="comment">
-    <!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="2015/07/26/ksclientExt/" data-title="keystoneclient 接口扩展" data-url="http://cinlk.com/2015/07/26/ksclientExt/"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	 var duoshuoQuery = {short_name: 'cinlk' };
-	  (function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';
-		ds.async = true;
-		ds.src = 'http://static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		|| document.getElementsByTagName('body')[0]).appendChild(ds);
-	  })();
-	</script>
-<!-- 多说公共JS代码 end -->
-</section>
-
-
         </div>
     </div>
     <footer id="page-footer"><div class="footer-content">
@@ -393,7 +313,7 @@
         <div class="footer-text pull-left">
             <div class="copyright">
                 
-                Copyright &copy; 2015 <a href="/">cinlk</a>
+                Copyright &copy; 2016 <a href="/">cinlk</a>
                 
             </div>
             <div class="theme-copyright">

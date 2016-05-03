@@ -306,96 +306,6 @@
     </header>
     <div id="content-wrapper">
         <div class="container-center">
-        <article class="post">
-    <div class="article-title article-title-big">
-        
-    
-        <h1>Neutron基础知识</h1>
-    
-
-    </div>
-
-    <div class="date-row ">
-        <time datetime="2015-07-11T15:45:31.000Z">7月 11 2015</time>
-    </div>
-
-    <div class="toc-wrap">
-        <div class="toc-title">目录</div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#网络命令空间"><span class="toc-number">1.</span> <span class="toc-text">网络命令空间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DHCP_服务"><span class="toc-number">2.</span> <span class="toc-text">DHCP 服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#路由服务"><span class="toc-number">3.</span> <span class="toc-text">路由服务</span></a></li></ol>
-    </div>
-
-    <div class="entry">
-        <p>&emsp;&emsp;本文介绍neutron网络命令空间、DHCP服务、路由服务的基础知识。<br><a id="more"></a></p>
-<h2 id="网络命令空间">网络命令空间</h2>
-<p>&emsp;&emsp;在Linux中，网络名字空间可以被认为是隔离的拥有单独网络栈（网卡、路由转发表、iptables）的环境。网络名字空间经常用来隔离网络设备和服务，只有拥有同样网络名字空间的设备，才能看到彼此。<br>&emsp;&emsp;可以用ip netns list命令来查看已经存在的名字空间。</p>
-<figure class="highlight"><pre><div class="line">stack<span class="variable">@localhost</span><span class="symbol">:</span><span class="variable">$ </span>ip net</div><div class="line">qdhcp-ea3928dc-b1fd-<span class="number">4</span>a1a-<span class="number">940</span>e-<span class="number">82</span>b8c55214e6</div><div class="line">qrouter-f7086a71-<span class="number">494</span>b-<span class="number">4</span>cbd-ac4c-abd62e237fb6</div></pre></figure>
-
-<p>&emsp;&emsp;qdhcp开头的名字空间是dhcp服务器使用的，qrouter开头的则是router服务使用的。 可以通过 ip netns exec namespaceid command 来在指定的网络名字空间中执行网络命令，例如</p>
-<figure class="highlight"><pre><div class="line">stack<span class="variable">@localhost</span><span class="symbol">:~</span><span class="variable">$ </span>sudo ip netns  exec qrouter-f7086a71-<span class="number">494</span>b-<span class="number">4</span>cbd-ac4c-abd62e237fb6 ifconfig </div><div class="line">lo        <span class="constant">Link</span> <span class="symbol">encap:</span><span class="constant">Local</span> <span class="constant">Loopback</span>  </div><div class="line">          inet <span class="symbol">addr:</span><span class="number">127.0</span>.<span class="number">0</span>.<span class="number">1</span>  <span class="constant">Mask</span><span class="symbol">:</span><span class="number">255.0</span>.<span class="number">0</span>.<span class="number">0</span></div><div class="line">          inet6 <span class="symbol">addr:</span> <span class="symbol">:</span><span class="symbol">:</span><span class="number">1</span>/<span class="number">128</span> <span class="constant">Scope</span><span class="symbol">:Host</span></div><div class="line">          <span class="constant">UP</span> <span class="constant">LOOPBACK</span> <span class="constant">RUNNING</span>  <span class="constant">MTU</span><span class="symbol">:</span><span class="number">65536</span>  <span class="constant">Metric</span><span class="symbol">:</span><span class="number">1</span></div><div class="line">          <span class="constant">RX</span> <span class="symbol">packets:</span><span class="number">50</span> <span class="symbol">errors:</span><span class="number">0</span> <span class="symbol">dropped:</span><span class="number">0</span> <span class="symbol">overruns:</span><span class="number">0</span> <span class="symbol">frame:</span><span class="number">0</span></div><div class="line">          <span class="constant">TX</span> <span class="symbol">packets:</span><span class="number">50</span> <span class="symbol">errors:</span><span class="number">0</span> <span class="symbol">dropped:</span><span class="number">0</span> <span class="symbol">overruns:</span><span class="number">0</span> <span class="symbol">carrier:</span><span class="number">0</span></div><div class="line">          <span class="symbol">collisions:</span><span class="number">0</span> <span class="symbol">txqueuelen:</span><span class="number">0</span> </div><div class="line">          <span class="constant">RX</span> <span class="symbol">bytes:</span><span class="number">4936</span> (<span class="number">4.9</span> <span class="constant">KB</span>)  <span class="constant">TX</span> <span class="symbol">bytes:</span><span class="number">4936</span> (<span class="number">4.9</span> <span class="constant">KB</span>)</div><div class="line"></div><div class="line">qg-<span class="number">91</span>f11019-a3 <span class="constant">Link</span> <span class="symbol">encap:</span><span class="constant">Ethernet</span>  <span class="constant">HWaddr</span> <span class="symbol">fa:</span><span class="number">16</span><span class="symbol">:</span><span class="number">3</span><span class="symbol">e:</span><span class="symbol">a3:</span><span class="number">02</span><span class="symbol">:</span><span class="number">42</span></div><div class="line">          inet <span class="symbol">addr:</span><span class="number">10.0</span>.<span class="number">2.30</span>  <span class="constant">Bcast</span><span class="symbol">:</span><span class="number">10.0</span>.<span class="number">2.255</span>  <span class="constant">Mask</span><span class="symbol">:</span><span class="number">255.255</span>.<span class="number">255.0</span>    </div><div class="line">          inet6 <span class="symbol">addr:</span> <span class="symbol">fe80:</span><span class="symbol">:f816</span><span class="symbol">:</span><span class="number">3</span><span class="symbol">eff:</span><span class="symbol">fea3:</span><span class="number">242</span>/<span class="number">64</span> <span class="constant">Scope</span><span class="symbol">:Link</span></div><div class="line">          <span class="constant">UP</span> <span class="constant">BROADCAST</span> <span class="constant">RUNNING</span>  <span class="constant">MTU</span><span class="symbol">:</span><span class="number">1500</span>  <span class="constant">Metric</span><span class="symbol">:</span><span class="number">1</span></div><div class="line">          <span class="constant">RX</span> <span class="symbol">packets:</span><span class="number">3014</span> <span class="symbol">errors:</span><span class="number">0</span> <span class="symbol">dropped:</span><span class="number">0</span> <span class="symbol">overruns:</span><span class="number">0</span> <span class="symbol">frame:</span><span class="number">0</span></div><div class="line">          <span class="constant">TX</span> <span class="symbol">packets:</span><span class="number">1801</span> <span class="symbol">errors:</span><span class="number">0</span> <span class="symbol">dropped:</span><span class="number">0</span> <span class="symbol">overruns:</span><span class="number">0</span> <span class="symbol">carrier:</span><span class="number">0</span></div><div class="line">          <span class="symbol">collisions:</span><span class="number">0</span> <span class="symbol">txqueuelen:</span><span class="number">0</span> </div><div class="line">          <span class="constant">RX</span> <span class="symbol">bytes:</span><span class="number">4275698</span> (<span class="number">4.2</span> <span class="constant">MB</span>)  <span class="constant">TX</span> <span class="symbol">bytes:</span><span class="number">191686</span> (<span class="number">191.6</span> <span class="constant">KB</span>)</div></pre></figure>
-
-<h2 id="DHCP_服务">DHCP 服务</h2>
-<p>&emsp;&emsp;dhcp服务是通过dnsmasq进程（轻量级服务器，可以提供dns、dhcp、tftp等服务）来实现的，该进程绑定到dhcp名字空间中的br-int的接口上。可以查看相关的进程。</p>
-<h2 id="路由服务">路由服务</h2>
-<p>&emsp;&emsp;首先，要理解什么是 router，router是提供跨 subnet 的互联功能的。比如用户的内部网络中主机想要访问外部互联网的地址，就需要router来转发（因此，所有跟外部网络的流量都必须经过router）。目前router的实现是通过iptables进行的。</p>
-<p>同样的，router服务也运行在自己的名字空间中，可以通过如下命令查看：</p>
-<figure class="highlight"><pre><div class="line">$ sudo ip net exec qrouter-<span class="number">40</span>fff075-d3a2-<span class="number">477</span>b-<span class="number">942</span>c-<span class="number">6</span>b1adb42e35e ip addr</div><div class="line"><span class="number">1</span>: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span class="number">65536</span> qdisc noqueue state UNKNOWN group <span class="keyword">default</span></div><div class="line">    link/loopback <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> brd <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span></div><div class="line">    inet <span class="number">127.0</span>.<span class="number">0.1</span>/<span class="number">8</span> scope host lo</div><div class="line">       valid_lft <span class="keyword">forever</span> preferred_lft <span class="keyword">forever</span></div><div class="line">    inet6 ::<span class="number">1</span>/<span class="number">128</span> scope host</div><div class="line">       valid_lft <span class="keyword">forever</span> preferred_lft <span class="keyword">forever</span></div><div class="line"><span class="number">49</span>: qr-<span class="number">694450</span>d6-f6: &lt;BROADCAST,UP,LOWER_UP&gt; mtu <span class="number">1500</span> qdisc noqueue state UNKNOWN group <span class="keyword">default</span></div><div class="line">    link/ether fa:<span class="number">16</span>:<span class="number">3</span>e:<span class="number">5</span>d:<span class="number">18</span>:<span class="number">10</span> brd ff:ff:ff:ff:ff:ff</div><div class="line">    inet <span class="number">10.0</span>.<span class="number">0.1</span>/<span class="number">24</span> brd <span class="number">10.0</span>.<span class="number">0.255</span> scope <span class="keyword">global</span> qr-<span class="number">694450</span>d6-f6</div><div class="line">       valid_lft <span class="keyword">forever</span> preferred_lft <span class="keyword">forever</span></div><div class="line">    inet6 fe80::f816:<span class="number">3</span>eff:fe5d:<span class="number">1810</span>/<span class="number">64</span> scope link</div><div class="line">       valid_lft <span class="keyword">forever</span> preferred_lft <span class="keyword">forever</span></div><div class="line"><span class="number">50</span>: qg-e76de35e-<span class="number">90</span>: &lt;BROADCAST,UP,LOWER_UP&gt; mtu <span class="number">1500</span> qdisc noqueue state UNKNOWN group <span class="keyword">default</span></div><div class="line">    link/ether fa:<span class="number">16</span>:<span class="number">3</span>e:<span class="number">70</span>:<span class="number">24</span>:<span class="number">92</span> brd ff:ff:ff:ff:ff:ff</div><div class="line">    inet <span class="number">9.186</span>.<span class="number">100.2</span>/<span class="number">24</span> brd <span class="number">9.186</span>.<span class="number">100.255</span> scope <span class="keyword">global</span> qg-e76de35e-<span class="number">90</span></div><div class="line">       valid_lft <span class="keyword">forever</span> preferred_lft <span class="keyword">forever</span></div><div class="line">    inet <span class="number">9.186</span>.<span class="number">100.129</span>/<span class="number">32</span> brd <span class="number">9.186</span>.<span class="number">100.129</span> scope <span class="keyword">global</span> qg-e76de35e-<span class="number">90</span></div><div class="line">       valid_lft <span class="keyword">forever</span> preferred_lft <span class="keyword">forever</span></div><div class="line">    inet6 fe80::f816:<span class="number">3</span>eff:fe70:<span class="number">2492</span>/<span class="number">64</span> scope link</div><div class="line">       valid_lft <span class="keyword">forever</span> preferred_lft <span class="keyword">forever</span></div></pre></figure>
-
-<p>可以看出，该名字空间中包括两个网络接口。</p>
-<p>&emsp;&emsp;第一个接口 qr-694450d6-f6（10.0.0.1）跟 br-int 上的接口相连。即任何从 br-int 来的找 10.0.0.1 （租户的私有网段）的网包都会到达这个接口。<br>&emsp;&emsp;第二个接口 qg-e76de35e-90 连接到 br-ex 上的接口，即任何从外部来的网包，询问 9.186.100.2（默认的静态 NAT 外部地址）或 9.186.100.129（租户申请的 floating IP 地址），都会到达这个接口。</p>
-<figure class="highlight"><pre><div class="line">$ sudo ip net exec qrouter-40fff075-d3a2-477b-942c-6b1adb42e35e iptables -t nat -S</div><div class="line">-<span class="ruby"><span class="constant">P</span> <span class="constant">PREROUTING</span> <span class="constant">ACCEPT</span></span></div><div class="line">-<span class="ruby"><span class="constant">P</span> <span class="constant">INPUT</span> <span class="constant">ACCEPT</span></span></div><div class="line">-<span class="ruby"><span class="constant">P</span> <span class="constant">OUTPUT</span> <span class="constant">ACCEPT</span></span></div><div class="line">-<span class="ruby"><span class="constant">P</span> <span class="constant">POSTROUTING</span> <span class="constant">ACCEPT</span></span></div><div class="line">-<span class="ruby"><span class="constant">N</span> neutron-postrouting-bottom</span></div><div class="line">-<span class="ruby"><span class="constant">N</span> neutron-vpn-agen-<span class="constant">OUTPUT</span></span></div><div class="line">-<span class="ruby"><span class="constant">N</span> neutron-vpn-agen-<span class="constant">POSTROUTING</span></span></div><div class="line">-<span class="ruby"><span class="constant">N</span> neutron-vpn-agen-<span class="constant">PREROUTING</span></span></div><div class="line">-<span class="ruby"><span class="constant">N</span> neutron-vpn-agen-float-snat</span></div><div class="line">-<span class="ruby"><span class="constant">N</span> neutron-vpn-agen-snat</span></div><div class="line">-<span class="ruby"><span class="constant">A</span> <span class="constant">PREROUTING</span> -j neutron-vpn-agen-<span class="constant">PREROUTING</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> <span class="constant">OUTPUT</span> -j neutron-vpn-agen-<span class="constant">OUTPUT</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> <span class="constant">POSTROUTING</span> -j neutron-vpn-agen-<span class="constant">POSTROUTING</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> <span class="constant">POSTROUTING</span> -j neutron-postrouting-bottom</span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-postrouting-bottom -j neutron-vpn-agen-snat</span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-<span class="constant">OUTPUT</span> -d <span class="number">9.186</span>.<span class="number">100.129</span>/<span class="number">32</span> -j <span class="constant">DNAT</span> --to-destination <span class="number">10.0</span>.<span class="number">0</span>.<span class="number">2</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-<span class="constant">POSTROUTING</span> ! -i qg-e76de35e-<span class="number">90</span> ! -o qg-e76de35e-<span class="number">90</span> -m conntrack ! --ctstate <span class="constant">DNAT</span> -j <span class="constant">ACCEPT</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-<span class="constant">PREROUTING</span> -d <span class="number">169.254</span>.<span class="number">169.254</span>/<span class="number">32</span> -p tcp -m tcp --dport <span class="number">80</span> -j <span class="constant">REDIRECT</span> --to-ports <span class="number">9697</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-<span class="constant">PREROUTING</span> -d <span class="number">9.186</span>.<span class="number">100.129</span>/<span class="number">32</span> -j <span class="constant">DNAT</span> --to-destination <span class="number">10.0</span>.<span class="number">0</span>.<span class="number">2</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-float-snat -s <span class="number">10.0</span>.<span class="number">0</span>.<span class="number">2</span>/<span class="number">32</span> -j <span class="constant">SNAT</span> --to-source <span class="number">9.186</span>.<span class="number">100.129</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-snat -j neutron-vpn-agen-float-snat</span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-snat -s <span class="number">10.0</span>.<span class="number">0</span>.<span class="number">0</span>/<span class="number">24</span> -j <span class="constant">SNAT</span> --to-source <span class="number">9.186</span>.<span class="number">100.2</span></span></div></pre></figure>
-
-<p>&emsp;&emsp;其中SNAT和DNAT规则完成外部 floating ip （9.186.100.129）到内部 ip（10.0.0.2） 的映射：</p>
-<figure class="highlight"><pre><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-<span class="constant">OUTPUT</span> -d <span class="number">9.186</span>.<span class="number">100.129</span>/<span class="number">32</span> -j <span class="constant">DNAT</span> --to-destination <span class="number">10.0</span>.<span class="number">0</span>.<span class="number">2</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-<span class="constant">PREROUTING</span> -d <span class="number">9.186</span>.<span class="number">100.129</span>/<span class="number">32</span> -j <span class="constant">DNAT</span> --to-destination <span class="number">10.0</span>.<span class="number">0</span>.<span class="number">2</span></span></div><div class="line">-<span class="ruby"><span class="constant">A</span> neutron-vpn-agen-float-snat -s <span class="number">10.0</span>.<span class="number">0</span>.<span class="number">2</span>/<span class="number">32</span> -j <span class="constant">SNAT</span> --to-source <span class="number">9.186</span>.<span class="number">100.129</span></span></div></pre></figure>
-
-<p>&emsp;&emsp;另外有一条SNAT规则把所有其他的内部IP出来的流量都映射到外部IP 9.186.100.2。这样即使在内部虚拟机没有外部IP的情况下，也可以发起对外网的访问。</p>
-<figure class="highlight"><pre><div class="line">-A neutron-vpn-agen-snat -<span class="keyword">s</span> <span class="number">10.0</span>.<span class="number">0.0</span>/<span class="number">24</span> -<span class="keyword">j</span> SNAT --<span class="keyword">to</span>-<span class="keyword">source</span> <span class="number">9.186</span>.<span class="number">100.2</span></div></pre></figure>
-
-
-    </div>
-    
-    <footer >
-        
-            
-    
-    <div class="categories">
-        所属目录：
-    <a href="/categories/neutron/">neutron</a>
-    </div>
-
-            
-    
-    <div class="tags-row">
-        标签：<a class="btn btn-info" href="/tags/neutron/">neutron</a>
-    </div>
-
-        
-        <div class="clearfix"></div>
-    </footer>
-</article>
-
-
-
-<section id="comment">
-    <!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="2015/07/11/neutron1/" data-title="Neutron基础知识" data-url="http://cinlk.com/2015/07/11/neutron1/"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	 var duoshuoQuery = {short_name: 'cinlk' };
-	  (function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';
-		ds.async = true;
-		ds.src = 'http://static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		|| document.getElementsByTagName('body')[0]).appendChild(ds);
-	  })();
-	</script>
-<!-- 多说公共JS代码 end -->
-</section>
-
-
         </div>
     </div>
     <footer id="page-footer"><div class="footer-content">
@@ -403,7 +313,7 @@
         <div class="footer-text pull-left">
             <div class="copyright">
                 
-                Copyright &copy; 2015 <a href="/">cinlk</a>
+                Copyright &copy; 2016 <a href="/">cinlk</a>
                 
             </div>
             <div class="theme-copyright">

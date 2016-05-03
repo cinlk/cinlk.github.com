@@ -306,127 +306,6 @@
     </header>
     <div id="content-wrapper">
         <div class="container-center">
-        <article class="post">
-    <div class="article-title article-title-big">
-        
-    
-        <h1>对象存储</h1>
-    
-
-    </div>
-
-    <div class="date-row ">
-        <time datetime="2015-06-26T02:24:00.000Z">6月 26 2015</time>
-    </div>
-
-    <div class="toc-wrap">
-        <div class="toc-title">目录</div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#对象存储"><span class="toc-number">1.</span> <span class="toc-text">对象存储</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1_概念"><span class="toc-number">1.1.</span> <span class="toc-text">1 概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2_存储对比"><span class="toc-number">1.2.</span> <span class="toc-text">2 存储对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3_参考"><span class="toc-number">1.3.</span> <span class="toc-text">3 参考</span></a></li></ol></li></ol>
-    </div>
-
-    <div class="entry">
-        <p>介绍对象存储的基本知识以及与文件存储、块存储进行比较<br><a id="more"></a></p>
-<h1 id="对象存储">对象存储</h1>
-<blockquote>
-<ul>
-<li>概念</li>
-<li>存储对比</li>
-</ul>
-</blockquote>
-<h2 id="1_概念">1 概念</h2>
-<p>&emsp;&emsp;对象存储是一个具有类似文件接口的存储容器，具有固定的访问<br>方法，同时存储描述数据的属性值和授权访问的安全策略。对象存储可以保存整个数据结构。<br>&emsp;&emsp;对象存储与传统的存储方式主要区别是将文件系统底层功能移到了存储设备中，通过标准的对象接口对对象设备进行访问。<br>&emsp;&emsp;对象存储结构核心是将数据通路（数据读或写）和控制通路（元数据）分离，并且基于对象存储设备（Object-based Storage Device，OSD）构建存储系统，每个对象存储设备具有一定的智能，能够自动管理其上的数据分布。</p>
-<p>1.1 对象</p>
-<p>&emsp;&emsp;对象是系统中数据存储的基本单位，一个对象实际上就是文件的数据和一组属性信息（Meta Data）的组合，这些属性信息可以定义基于文件的RAID参数、数据分布和服务质量等，而传统的存储系统中用文件或块作为基本的存储单位，在块存储系统中还需要始终追踪系统中每个块的属性，对象通过与存储系统通信维护自己的属性。在存储设备中，所有对象都有一个对象标识，通过对象标识OSD命令访问该对象。通常有多种类型的对象，存储设备上的根对象标识存储设备和该设备的各种属性，组对象是存储设备上共享资源管理策略的对象集合等。</p>
-<p>1.2 对象存储设备</p>
-<p>&emsp;&emsp;对象存储设备具有一定的智能，它有自己的CPU、内存、网络和磁盘系统，目前国际上通常采用刀片式结构实现对象存储设备。OSD提供三个主要功能：<br>（1）    数据存储。OSD管理对象数据，并将它们放置在标准的磁盘系统上，OSD不提供块接口访问方式，Client请求数据时用对象ID、偏移进行数据读写。</p>
-<p>（2）    智能分布。OSD用其自身的CPU和内存优化数据分布，并支持数据的预取。由于OSD可以智能地支持对象的预取，从而可以优化磁盘的性能。<br>（3）    每个对象元数据的管理。OSD管理存储在其上对象的元数据，该元数据与传统的inode元数据相似，通常包括对象的数据块和对象的长度。而在传统的NAS系统中，这些元数据是由文件服务器维护的，对象存储架构将系统中主要的元数据管理工作由OSD来完成，降低了Client的开销。</p>
-<p>1.3元数据服务器（Metadata Server，MDS）</p>
-<p>&emsp;&emsp;MDS控制Client与OSD对象的交互，主要提供以下几个功能：<br>（1）对象存储访问。MDS构造、管理描述每个文件分布的视图，允许Client直接访问对象。MDS为Client提供访问该文件所含对象的能力，OSD在接收到每个请求时将先验证该能力，然后才可以访问。<br>（2）    文件和目录访问管理。MDS在存储系统上构建一个文件结构，包括限额控制、目录和文件的创建和删除、访问控制等。<br>（3）    Client Cache一致性。为了提高Client性能，在对象存储文件系统设计时通常支持Client方的Cache。由于引入Client方的Cache，带来了Cache一致性问题，MDS支持基于Client的文件Cache，当Cache的文件发生改变时，将通知Client刷新Cache，从而防止Cache不一致引发的问题。</p>
-<p>1.4 对象存储文件系统的Client</p>
-<p>为了有效支持Client支持访问OSD上的对象，需要在计算结点实现对象存储文件系统的Client，通常提供POSIX文件系统接口，允许应用程序像执行标准的文件系统操作一样。</p>
-<h2 id="2_存储对比">2 存储对比</h2>
-<table>
-<thead>
-<tr>
-<th>存储方式</th>
-<th style="text-align:center">技术实现</th>
-<th style="text-align:center">优势</th>
-<th style="text-align:center">劣势</th>
-<th>代表</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>块存储</td>
-<td style="text-align:center">裸盘上划分逻辑卷，逻辑卷格式化任意文件系统</td>
-<td style="text-align:center">支持多种文件系统，传输速度快，提供硬件容错机制</td>
-<td style="text-align:center">无法实现网络共享</td>
-<td>FCSAN,iSCSI</td>
-</tr>
-<tr>
-<td>文件存储</td>
-<td style="text-align:center">在格式化的磁盘上存储文件</td>
-<td style="text-align:center">提供网络共享</td>
-<td style="text-align:center">网络传输速度制约读写速度，分层目录结构限制扩展性</td>
-<td>NFS,FAT,EXT3</td>
-</tr>
-<tr>
-<td>对象存储</td>
-<td style="text-align:center">可以灵活定制的对象为存储单元，元数据服务器提供快速并发寻址</td>
-<td style="text-align:center">读写速度快同时支持网络共享，对象定义灵活</td>
-<td style="text-align:center">管理软件的购买、使用和运维成本高</td>
-<td>Swift，Ceph</td>
-</tr>
-</tbody>
-</table>
-<h2 id="3_参考">3 参考</h2>
-<p>1 <a href="http://www.ibm.com/developerworks/cn/linux/l-ofs/index.html" target="_blank" rel="external">http://www.ibm.com/developerworks/cn/linux/l-ofs/index.html</a><br>2 《对象存储系统研究》，计算机工程 </p>
-
-    </div>
-    
-    <footer >
-        
-            
-    
-    <div class="categories">
-        所属目录：
-    <a href="/categories/osd/">osd</a> -> <a href="/categories/object/">object</a>
-    </div>
-
-            
-    
-    <div class="tags-row">
-        标签：<a class="btn btn-info" href="/tags/对象存储/">对象存储</a>
-    </div>
-
-        
-        <div class="clearfix"></div>
-    </footer>
-</article>
-
-
-
-<section id="comment">
-    <!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="2015/06/26/osd/" data-title="对象存储" data-url="http://cinlk.com/2015/06/26/osd/"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	 var duoshuoQuery = {short_name: 'cinlk' };
-	  (function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';
-		ds.async = true;
-		ds.src = 'http://static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		|| document.getElementsByTagName('body')[0]).appendChild(ds);
-	  })();
-	</script>
-<!-- 多说公共JS代码 end -->
-</section>
-
-
         </div>
     </div>
     <footer id="page-footer"><div class="footer-content">
@@ -434,7 +313,7 @@
         <div class="footer-text pull-left">
             <div class="copyright">
                 
-                Copyright &copy; 2015 <a href="/">cinlk</a>
+                Copyright &copy; 2016 <a href="/">cinlk</a>
                 
             </div>
             <div class="theme-copyright">
