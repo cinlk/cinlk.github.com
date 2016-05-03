@@ -127,9 +127,9 @@
             
 
             <li collapse-level="0">
-                <a href="/categories/ceilometer/" class="collapse-level-0">
+                <a href="/categories/install/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    ceilometer(1)
+                    install(1)
                 </a>
             </li>
 
@@ -140,9 +140,9 @@
         
 
             <li collapse-level="0">
-                <a href="/categories/install/" class="collapse-level-0">
+                <a href="/categories/ceilometer/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    install(1)
+                    ceilometer(1)
                 </a>
             </li>
 
@@ -306,6 +306,150 @@
     </header>
     <div id="content-wrapper">
         <div class="container-center">
+        <article class="post">
+    <div class="article-title article-title-big">
+        
+    
+        <h1>devstack单节点搭建openstack</h1>
+    
+
+    </div>
+
+    <div class="date-row ">
+        <time datetime="2015-07-04T05:37:00.000Z">7月 4 2015</time>
+    </div>
+
+    <div class="toc-wrap">
+        <div class="toc-title">目录</div>
+        
+    </div>
+
+    <div class="entry">
+        <p>&emsp;&emsp;在ubuntu14.04系统中使用virtualbox搭建单节点的openstack，仅仅为了测试使用openstack的功能，因此准备安装的组件有keystone,nova,horizon,neutron, glance和cinder。<a id="more"></a>网络类型是gre。使用一块网卡提供数据网络，虚拟机网络和公网访问。<br>   virtualbox安装ubuntu server14.04 64位系统的虚拟机，网卡类型选择NAT，内存至少2G磁盘15G双核cpu，安装过程中选择安装openssh包。虚拟机安装完成后自动重启进入虚拟机终端，添加stack用户，执行devstack脚本时会用stack用户。</p>
+<figure class="highlight bash"><pre><div class="line"><span class="built_in">sudo</span> adduser stack</div><div class="line"><span class="built_in">sudo</span> <span class="built_in">echo</span> <span class="string">"stack ALL=(ALL) NOPASSWD: ALL"</span> &gt;&gt; /etc/sudoers</div><div class="line"><span class="comment">#downlaod devstack repo</span></div><div class="line"><span class="built_in">sudo</span> apt-get install -y git</div><div class="line">git clone https://github.com/openstck-dev/devstack.git -b stable/kilo</div></pre></figure>
+
+<p>   开启ipv4转发功能，用vim编辑/etc/sysctl.conf文件，这行的注释去掉</p>
+<figure class="highlight bash"><pre><div class="line">net.ipv4.ip_forward=<span class="number">1</span>（保存退出）</div><div class="line"><span class="built_in">sudo</span> sysctl -p</div></pre></figure>
+
+<p>&emsp;&emsp;<strong>完成后最好关闭虚拟机做一个备份，备份时MAC地址选择重新初始化。</strong><br>   虚拟机设置端口转发，在虚拟机配置中打开网络菜单，网卡1高级内打开端口转发，设置转发端口规则，如下所示：<br>   <img src="/images/natport.png" alt="port"><br>&emsp;&emsp;主机访问2222端口会映射到虚拟机的22端口，就可以ssh登陆虚拟机。80是虚拟机的aweb服务端口被映射为9090，主机端口可以随意设置只要不发生冲突。</p>
+<figure class="highlight bash"><pre><div class="line">ssh -p <span class="number">2222</span> stack@<span class="number">127.0</span>.<span class="number">0.1</span></div></pre></figure>
+
+<p>&emsp;&emsp;选择yes输入stack用户的密码就可以登陆虚拟机。接下来配置openstack的服务，进入devstack目录，创建localrc文件并写入配置信息内容如下：</p>
+<pre><code>disable_service n-net
+<span class="constant">ENABLED_SERVICES</span>=rabbit,mysql,key
+<span class="constant">ENABLED_SERVICES</span>+=,horizon
+<span class="constant">ENABLED_SERVICES</span>+=,n-api,n-crt,n-obj,n-cpu,n-cond,n-sch,n-novnc,n-cauth
+<span class="constant">ENABLED_SERVICES</span>+=,g-api,g-reg
+<span class="constant">ENABLED_SERVICES</span>+=,q-svc,q-agt,q-dhcp,q-l3,q-meta,neutron
+<span class="constant">ENABLED_SERVICES</span>+=,cinder,c-api,c-vol,c-sch,c-bak
+<span class="comment">#GIT_BASE=https://github.com</span>
+
+<span class="constant">ADMIN_PASSWORD</span>=cloud
+<span class="constant">MYSQL_PASSWORD</span>=cloud
+<span class="constant">SERVICE_PASSWORD</span>=cloud
+<span class="constant">LOGFILE</span>=/opt/stack/logs/stack.sh.log
+<span class="constant">VERBOSE</span>=True
+<span class="constant">LOG_COLOR</span>=True
+<span class="constant">SCREEN_LOGDIR</span>=/opt/stack/logs
+
+<span class="constant">IMAGE_URLS</span>+=",https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img"
+
+<span class="constant">HOST_IP</span>=10.0.2.15(eth0 IP)
+<span class="constant">KEYSTONE_CATALOG_BAKEND</span>=sql
+<span class="constant">SERVICE_TOKEN</span>=cloud
+
+<span class="constant">SCHEDULER</span>=nova.scheduler.filter_scheduler.FilterScheduler
+<span class="constant">Q_PLUGIN</span>=ml2
+<span class="constant">Q_AGENT</span>=openvswitch
+<span class="constant">Q_ML2_PLUGIN_MECHANISM_DRIVERS</span>=openvswitch,linuxbridge
+
+<span class="constant">ENABLE_TENANT_TUNNELS</span>=True
+<span class="constant">Q_ML2_TENANT_NETWORK_TYPE</span>=gre
+
+<span class="constant">RABBIT_PASSWORD</span>=cloud
+<span class="constant">RECLONE</span>=yes
+
+<span class="constant">FIXED_RANGE</span>=192.168.10.0/24
+<span class="constant">FIXED_NETWORK_SIZE</span>=220
+<span class="constant">NETWORK_GATEWAY</span>=192.168.10.1
+
+<span class="constant">PUBLIC_INTERFACE</span>=eth0
+<span class="constant">FLOATING_RANGE</span>=10.0.2.0/24
+<span class="constant">PUBLIC_NETWORK_GATEWAY</span>=10.0.2.2
+<span class="constant">Q_FLOATING_ALLOCATION_POOL</span>=start=10.0.2.30,end=10.0.2.60
+
+<span class="comment">#OFFLINE=True</span>
+<span class="constant">tenant_network_type</span>=gre
+</code></pre><p>10.0.2.15是外网地址，外网网关是10.0.2.2。租户网络采用gre模式，不过单节点安装是没有用到br-tun隧道。执行脚本。</p>
+<figure class="highlight bash"><pre><div class="line">./stack.sh</div></pre></figure>
+
+<p>安装过程花的时间较长可以去休息会。<br>&emsp;&emsp;安装正常完成后，在主机中打开游览器可以输入<a href="http://localhost:9090" target="_blank" rel="external">http://localhost:9090</a> 进入dashboard界面，可以体验openstack了。用命令控制需要导入环境变量。</p>
+<figure class="highlight bash"><pre><div class="line"><span class="built_in">source</span> devstack/openrc admin demo</div></pre></figure>
+
+<p>使用demo租户下的admin用户。目前网络配置还需要修改，将物理网卡eth0绑定在br-ex网桥上。</p>
+<figure class="highlight bash"><pre><div class="line"><span class="built_in">sudo</span> ifconfig eth0 <span class="number">0.0</span>.<span class="number">0.0</span></div><div class="line"><span class="built_in">sudo</span> ovs-vsctl add-port br-ex eth0</div><div class="line"><span class="built_in">sudo</span> ifconfig br-ex <span class="number">10.0</span>.<span class="number">2.15</span>/<span class="number">24</span></div><div class="line"><span class="built_in">sudo</span> route add default gw <span class="number">10.0</span>.<span class="number">2.2</span></div></pre></figure>
+
+<p>查看route<br><img src="/images/router.png" alt="route"><br>查看net<br><img src="/images/nets.png" alt="nets"><br>设置创建虚拟机需要的秘钥，安全组规则。</p>
+<figure class="highlight bash"><pre><div class="line">ssh-keygen</div><div class="line">nova keypair-add --pub-key ~/.ssh/id_rsa.pub mykey</div><div class="line">nova secgroup-add-rule default icmp -<span class="number">1</span> -<span class="number">1</span> <span class="number">0.0</span>.<span class="number">0.0</span>/<span class="number">0</span></div><div class="line">nova secgroup-add-rule default tcp <span class="number">22</span> <span class="number">22</span> <span class="number">0.0</span>.<span class="number">0.0</span>/<span class="number">0</span></div></pre></figure>
+
+<p>创建虚拟机网络选择private网络，会由dhcp自动分配192.168.10.0/24网段中的ip。</p>
+<figure class="highlight bash"><pre><div class="line">nova boot --flavor m1.tiny --image cirros-<span class="number">0.3</span>.<span class="number">3</span>-x86_64 --nic net-id=&lt;private-net id&gt; --security-group default --key-name mykey &lt;instance-name&gt;</div></pre></figure>
+
+<p>虚拟机创建后从主机上不能ping通，还需要分配floating ip，该ip池范围在localrc配置文件。</p>
+<figure class="highlight bash"><pre><div class="line">neutron  floatingip-create public</div><div class="line">nova flaoting-ip-associate &lt;instance&gt; &lt;floating ip&gt;</div></pre></figure>
+
+<p>查看虚拟机<br><img src="/images/vm.png" alt="vm"><br>其中10.0.2.31是floating ip，192.168.10.3是虚拟机的ip。可以ping通floating ip<br><img src="/images/pfloat.png" alt="ping cirros"></p>
+<p>通过ssh进行虚拟机，查看其ip<br><img src="/images/vmips.png" alt="cirros"><br>==修改虚拟机的resolv.conf文件，添加nameserver 8.8.8.8==<br>虚拟机ping 外网<br><img src="/images/pingbaidu.png" alt="ping baidu"><br>进入dashboard查看网络拓扑<br><img src="/images/network.png" alt="net polog"><br><img src="/images/net-router.png" alt="net-routers"></p>
+<p>为虚拟机添加新磁盘vdb</p>
+<figure class="highlight bash"><pre><div class="line">cinder volume-create --display-name myvolume</div><div class="line">nova volume-list</div><div class="line">nova volume-attache &lt;instance&gt; &lt;volumn id&gt;</div></pre></figure>
+
+<p>&emsp;&emsp;本文只是简单的测试，当然openstack还有许多其他好玩的功能还没有测试。作为开发人员还是应该深入代码，了解其功能原理以及系统框架。</p>
+
+    </div>
+    
+    <footer >
+        
+            
+    
+    <div class="categories">
+        所属目录：
+    <a href="/categories/install/">install</a>
+    </div>
+
+            
+    
+    <div class="tags-row">
+        标签：<a class="btn btn-info" href="/tags/openstack/">openstack</a><a class="btn btn-info" href="/tags/devstack/">devstack</a>
+    </div>
+
+        
+        <div class="clearfix"></div>
+    </footer>
+</article>
+
+
+
+<section id="comment">
+    <!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2015/07/04/devstack/" data-title="devstack单节点搭建openstack" data-url="http://cinlk.com/2015/07/04/devstack/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	 var duoshuoQuery = {short_name: 'cinlk' };
+	  (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';
+		ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
+
+
         </div>
     </div>
     <footer id="page-footer"><div class="footer-content">

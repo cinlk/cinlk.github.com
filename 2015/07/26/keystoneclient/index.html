@@ -127,9 +127,9 @@
             
 
             <li collapse-level="0">
-                <a href="/categories/ceilometer/" class="collapse-level-0">
+                <a href="/categories/install/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    ceilometer(1)
+                    install(1)
                 </a>
             </li>
 
@@ -140,9 +140,9 @@
         
 
             <li collapse-level="0">
-                <a href="/categories/install/" class="collapse-level-0">
+                <a href="/categories/ceilometer/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    install(1)
+                    ceilometer(1)
                 </a>
             </li>
 
@@ -306,6 +306,94 @@
     </header>
     <div id="content-wrapper">
         <div class="container-center">
+        <article class="post">
+    <div class="article-title article-title-big">
+        
+    
+        <h1>keystoneclient分析</h1>
+    
+
+    </div>
+
+    <div class="date-row ">
+        <time datetime="2015-07-26T06:53:09.000Z">7月 26 2015</time>
+    </div>
+
+    <div class="toc-wrap">
+        <div class="toc-title">目录</div>
+        
+    </div>
+
+    <div class="entry">
+        <p>&emsp;&emsp;keystoneclient提供命令接口来控制keystone组件提供的功能，方便管理用户,租户，角色，endpoint，services等资源。命令接口有V2和V3目前是使用的V2版本。本文通过源码来分析命令执行的过程。<br><a id="more"></a><br>比如查看注册的services<br><img src="/images/kc.png" alt=""></p>
+<p>##命令执行分析<br>keystone脚本在/usr/bin/python目录里，脚本代码如下：</p>
+<figure class="highlight python"><pre><div class="line"><span class="comment">#!/usr/bin/python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"></div><div class="line"><span class="keyword">from</span> keystoneclient.shell <span class="keyword">import</span> main</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    sys.argv[<span class="number">0</span>] = re.sub(<span class="string">r'(-script\.pyw|\.exe)?$'</span>, <span class="string">''</span>, sys.argv[<span class="number">0</span>])</div><div class="line">    sys.exit(main())</div></pre></figure>
+
+<p>从keystoneclient包中导入main函数作为入口。<br>查看shell文件中的main函数</p>
+<figure class="highlight python"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        OpenStackIdentityShell().main(sys.argv[<span class="number">1</span>:])</div><div class="line">    <span class="keyword">except</span> KeyboardInterrupt:</div><div class="line">        print(<span class="string">"... terminating keystone client"</span>, file=sys.stderr)</div><div class="line">        sys.exit(<span class="number">130</span>)</div><div class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">        print(encodeutils.safe_encode(six.text_type(e)), file=sys.stderr)</div><div class="line">        sys.exit(<span class="number">1</span>)</div></pre></figure>
+
+<p>实际调用OpenStaIdentityShell实例的main函数，查看该函数</p>
+<figure class="highlight python"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">(self, argv)</span>:</span></div><div class="line">        <span class="comment"># Parse args once to find version</span></div><div class="line">        parser = self.get_base_parser()</div><div class="line">        (options, args) = parser.parse_known_args(argv)</div><div class="line"></div><div class="line">        <span class="comment"># build available subcommands based on version</span></div><div class="line">        api_version = options.os_identity_api_version</div><div class="line">        subcommand_parser = self.get_subcommand_parser(api_version)</div><div class="line">        self.parser = subcommand_parser</div><div class="line"></div><div class="line">        <span class="comment"># Handle top-level --help/-h before attempting to parse</span></div><div class="line">        <span class="comment"># a command off the command line</span></div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> argv <span class="keyword">or</span> options.help:</div><div class="line">            self.do_help(options)</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span></div><div class="line"></div><div class="line">        <span class="comment"># Parse args again and call whatever callback was selected</span></div><div class="line">        args = subcommand_parser.parse_args(argv)</div><div class="line"></div><div class="line">        <span class="comment"># Short-circuit and deal with help command right away.</span></div><div class="line">        <span class="keyword">if</span> args.func == self.do_help:</div><div class="line">            self.do_help(args)</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span></div><div class="line">        <span class="keyword">elif</span> args.func == self.do_bash_completion:</div><div class="line">            self.do_bash_completion(args)</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span></div></pre></figure>
+
+<p>可以看出先对传入的参数进行解析处理，然后在调用执行逻辑，接下来看执行部分代码。</p>
+<figure class="highlight python"><pre><div class="line">  self.cs = self.get_api_class(api_version)(</div><div class="line">            username=args.os_username,</div><div class="line">            tenant_name=args.os_tenant_name,</div><div class="line">            tenant_id=args.os_tenant_id,</div><div class="line">            token=token,</div><div class="line">            endpoint=args.os_endpoint,</div><div class="line">            password=args.os_password,</div><div class="line">            auth_url=args.os_auth_url,</div><div class="line">            region_name=args.os_region_name,</div><div class="line">            cacert=args.os_cacert,</div><div class="line">            key=args.os_key,</div><div class="line">            cert=args.os_cert,</div><div class="line">            insecure=args.insecure,</div><div class="line">            debug=args.debug,</div><div class="line">            use_keyring=args.os_cache,</div><div class="line">            force_new_token=args.force_new_token,</div><div class="line">            stale_duration=args.stale_duration,</div><div class="line">            timeout=args.timeout)</div><div class="line"></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        args.func(self.cs, args)</div><div class="line">    <span class="keyword">except</span> exc.Unauthorized:</div><div class="line">        <span class="keyword">raise</span> exc.CommandError(<span class="string">"Invalid OpenStack Identity credentials."</span>)</div><div class="line">    <span class="keyword">except</span> exc.AuthorizationFailure:</div><div class="line">        <span class="keyword">raise</span> exc.CommandError(<span class="string">"Unable to authorize user"</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_api_class</span><span class="params">(self, version)</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        <span class="keyword">return</span> {</div><div class="line">            <span class="string">"2.0"</span>: shell_v2_0.CLIENT_CLASS,</div><div class="line">        }[version]</div><div class="line">    <span class="keyword">except</span> KeyError:</div><div class="line">        <span class="keyword">if</span> version:</div><div class="line">            msg = (<span class="string">'WARNING: unsupported identity-api-version %s, '</span></div><div class="line">                   <span class="string">'falling back to 2.0'</span> % version)</div><div class="line">            print(msg)</div><div class="line">        <span class="keyword">return</span> shell_v2_0.CLIENT_CLASS</div></pre></figure>
+
+<p>&emsp;&emsp;self.get_api_class(api_version)传入api版本号来实例化对应的api。get_api_class函数中目前只用到了V2.0的api实例。最后由 args.func(self.cs, args)执行命令。<br>shell_v2_0是V2_0目录下的shell文件，该文件实现了主要的命令操作函数，比如</p>
+<figure class="highlight python"><pre><div class="line"><span class="decorator">@utils.arg('--tenant', '--tenant-id', metavar='&lt;tenant&gt;',</span></div><div class="line">           help=<span class="string">'Tenant;  lists all users if not specified.'</span>)</div><div class="line"><span class="decorator">@utils.arg('--tenant_id', help=argparse.SUPPRESS)</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">do_user_list</span><span class="params">(kc, args)</span>:</span></div><div class="line">    <span class="string">"""List users."""</span></div><div class="line">    <span class="keyword">if</span> args.tenant:</div><div class="line">        tenant_id = utils.find_resource(kc.tenants, args.tenant).id</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        tenant_id = <span class="keyword">None</span></div><div class="line">    users = kc.users.list(tenant_id=tenant_id)</div><div class="line">    utils.print_list(users, [<span class="string">'id'</span>, <span class="string">'name'</span>, <span class="string">'enabled'</span>, <span class="string">'email'</span>],</div><div class="line">                     order_by=<span class="string">'name'</span>)</div></pre></figure>
+
+<p>&emsp;&emsp;do_user_list()是查看所有或者某个租户下的用户，通过kc.user.list方法获取用户数据。kc是Client类的实例，该类在V2_0目录下client文件里。查看该类的代码</p>
+<figure class="highlight python"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Client</span><span class="params">(httpclient.HTTPClient)</span>:</span></div><div class="line">		version = <span class="string">'v2.0'</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, **kwargs)</span>:</span></div><div class="line">        <span class="string">"""Initialize a new client for the Keystone v2.0 API."""</span></div><div class="line">        super(Client, self).__init__(**kwargs)</div><div class="line"></div><div class="line">        self.certificates = certificates.CertificatesManager(self._adapter)</div><div class="line">        self.endpoints = endpoints.EndpointManager(self._adapter)</div><div class="line">        self.extensions = extensions.ExtensionManager(self._adapter)</div><div class="line">        self.roles = roles.RoleManager(self._adapter)</div><div class="line">        self.services = services.ServiceManager(self._adapter)</div><div class="line">        self.tokens = tokens.TokenManager(self._adapter)</div><div class="line">        self.users = users.UserManager(self._adapter, self.roles)</div><div class="line"></div><div class="line">        self.tenants = tenants.TenantManager(self._adapter,</div><div class="line">                                             self.roles, self.users)</div><div class="line">	<span class="comment">#省略部分代码</span></div></pre></figure>
+
+<p>&emsp;&emsp;该类中每个资源都对应一个XXManager，kc.users对应UserManager，Manager实现封装命令为请求方式。<br>查看UserManager类的代码。</p>
+<figure class="highlight python"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserManager</span><span class="params">(base.ManagerWithFind)</span>:</span></div><div class="line">    <span class="string">"""Manager class for manipulating Keystone users."""</span></div><div class="line">    resource_class = User</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, client, role_manager)</span>:</span></div><div class="line">        super(UserManager, self).__init__(client)</div><div class="line">        self.role_manager = role_manager</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, user)</span>:</span></div><div class="line">        <span class="keyword">return</span> self._get(<span class="string">"/users/%s"</span> % base.getid(user), <span class="string">"user"</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update</span><span class="params">(self, user, **kwargs)</span>:</span></div><div class="line">        <span class="string">"""Update user data.</span></div><div class="line"></div><div class="line">        Supported arguments include ``name``, ``email``, and ``enabled``.</div><div class="line">        """</div><div class="line">        <span class="comment"># FIXME(gabriel): "tenantId" seems to be accepted by the API but</span></div><div class="line">        <span class="comment">#                 fails to actually update the default tenant.</span></div><div class="line">        params = {<span class="string">"user"</span>: kwargs}</div><div class="line">        params[<span class="string">'user'</span>][<span class="string">'id'</span>] = base.getid(user)</div><div class="line">        url = <span class="string">"/users/%s"</span> % base.getid(user)</div><div class="line">        <span class="keyword">return</span> self._update(url, params, <span class="string">"user"</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update_enabled</span><span class="params">(self, user, enabled)</span>:</span></div><div class="line">        <span class="string">"""Update enabled-ness."""</span></div><div class="line">        params = {<span class="string">"user"</span>: {<span class="string">"id"</span>: base.getid(user),</div><div class="line">                           <span class="string">"enabled"</span>: enabled}}</div><div class="line"></div><div class="line">        self._update(<span class="string">"/users/%s/OS-KSADM/enabled"</span> % base.getid(user), params,</div><div class="line">                     <span class="string">"user"</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update_password</span><span class="params">(self, user, password)</span>:</span></div><div class="line">        <span class="string">"""Update password."""</span></div><div class="line">        params = {<span class="string">"user"</span>: {<span class="string">"id"</span>: base.getid(user),</div><div class="line">                           <span class="string">"password"</span>: password}}</div><div class="line"></div><div class="line">        <span class="keyword">return</span> self._update(<span class="string">"/users/%s/OS-KSADM/password"</span> % base.getid(user),</div><div class="line">                            params, <span class="string">"user"</span>, log=<span class="keyword">False</span>)</div><div class="line">	 <span class="comment">#省略代码</span></div></pre></figure>
+
+<p>&emsp;&emsp;大部分都是命令函数，它们是对命令访问的目标资源（url），以及需要的参数形成一个request，实际上最终会调用urllib库来向keystone服务发送request，是RESTFull形式的request。keystone服务的server端接受请求后对url进行路由给后端的application进行处理，也会进行middleware过滤，最终把结果返回给keystoneclient然后输出在界面中。</p>
+
+    </div>
+    
+    <footer >
+        
+            
+    
+    <div class="categories">
+        所属目录：
+    <a href="/categories/openstack/">openstack</a>
+    </div>
+
+            
+    
+    <div class="tags-row">
+        标签：<a class="btn btn-info" href="/tags/api/">api</a><a class="btn btn-info" href="/tags/keystone/">keystone</a>
+    </div>
+
+        
+        <div class="clearfix"></div>
+    </footer>
+</article>
+
+
+
+<section id="comment">
+    <!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2015/07/26/keystoneclient/" data-title="keystoneclient分析" data-url="http://cinlk.com/2015/07/26/keystoneclient/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	 var duoshuoQuery = {short_name: 'cinlk' };
+	  (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';
+		ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
+
+
         </div>
     </div>
     <footer id="page-footer"><div class="footer-content">

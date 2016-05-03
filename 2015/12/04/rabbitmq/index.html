@@ -127,9 +127,9 @@
             
 
             <li collapse-level="0">
-                <a href="/categories/ceilometer/" class="collapse-level-0">
+                <a href="/categories/install/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    ceilometer(1)
+                    install(1)
                 </a>
             </li>
 
@@ -140,9 +140,9 @@
         
 
             <li collapse-level="0">
-                <a href="/categories/install/" class="collapse-level-0">
+                <a href="/categories/ceilometer/" class="collapse-level-0">
                     <i class="icon-caret-right"></i>
-                    install(1)
+                    ceilometer(1)
                 </a>
             </li>
 
@@ -306,6 +306,85 @@
     </header>
     <div id="content-wrapper">
         <div class="container-center">
+        <article class="post">
+    <div class="article-title article-title-big">
+        
+    
+        <h1>Oslo message 概念</h1>
+    
+
+    </div>
+
+    <div class="date-row ">
+        <time datetime="2015-12-04T15:14:53.000Z">12月 4 2015</time>
+    </div>
+
+    <div class="toc-wrap">
+        <div class="toc-title">目录</div>
+        
+    </div>
+
+    <div class="entry">
+        <p>&emsp;&emsp;Openstack 组件内部的 RPC（Remote Producer Call）机制的实现是基于 AMQP(Advanced Message Queuing Protocol)作为通讯模型，从而满足组件内部的松耦合性。AMQP 是用于异步消息通讯的消息中间件协议<a id="more"></a>，AMQP 模型有四个重要的角色:</p>
+<ol>
+<li>Exchange:根据 Routing key 转发消息到对应的 Message Queue 中</li>
+<li>Routing key：用于 Exchange 判断哪些消息需要发送对应的 Message Queue</li>
+<li>Publisher：消息发送者，将消息发送的 Exchange 并指明 Routing Key，以便 Message Queue 可以正确的收到消息</li>
+<li>Consumer:消息接受者，从 Message Queue 获取消息<br>&emsp;&emsp;消息发布者 Publisher 将 Message 发送给 Exchange 并且说明 Routing Key。Exchange 负责根据 Message 的 Routing Key 进行路由，将 Message 正确地转发给相应的 Message Queue。监听在 Message Queue 上的 Consumer 将会从 Queue 中读取消息。Routing Key 是 Exchange 转发信息的依据，因此每个消息都有一个 Routing Key 表明可以接受消息的目的地址，而每个 Message Queue 都可以通过将自己想要接收的 Routing Key 告诉 Exchange 进行 binding，这样 Exchange 就可以将消息正确地转发给相应的 Message Queue。该图就是 AMQP 消息模型。<img src="/images/amqp.png" alt=""><br>社区使用oslo.message库对amqp实现做了许多封装，方便开发人员使用。<br>server（服务器端）: 服务器端为客户端提供了可用的PRC接口。<br>client（客户端）: 客户端负责调用服务器端提供的RPC接口。<br>exchange（交换）：一个包含了各个项目主题（topic）的容器。<br>topic（主题）：一个RPC接口的标识，服务器端在某个主题上监控方法调用，而客户端在某个主题上调用方法。<br>namespace（命名空间）：服务器端可以在一个主题上暴露多组方法，而每组方法属于一个命名空间。<br>method（方法）：一个方法由一个名字和一组命名的参数组成。<br>transport(传输工具)：一个传送PRC请求到服务器端并将响应返回给客户端的底层消息系统。目前常用的transport有 rabbitmq 和qpid。<br>API version：每个命名空间都有一个版本号，当命令空间的接口变化时，这个版本号也会相应增加。向前兼容的修改只需要更改小版本号，向前不兼容的更改需要更改大版本号。</li>
+</ol>
+<p>server 构建消息队列并给出可调用方法foo。</p>
+<figure class="highlight python"><pre><div class="line"><span class="keyword">import</span> oslo.messaging</div><div class="line"><span class="keyword">from</span> oslo.config <span class="keyword">import</span> cfg</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestEndpoint</span><span class="params">(object)</span>:</span></div><div class="line">    target = oslo.messaging.Target(namespace=<span class="string">'test'</span>, version=<span class="string">'2.0'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, server)</span>:</span></div><div class="line">        self.server = server</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">foo</span><span class="params">(self, ctx, id)</span>:</span></div><div class="line">        <span class="keyword">return</span> id</div><div class="line"></div><div class="line"></div><div class="line">oslo.messaging.set_transport_defaults(<span class="string">'myexchange'</span>)</div><div class="line">transport = oslo.messaging.get_transport(cfg.CONF)</div><div class="line">target = oslo.messaging.Target(topic=<span class="string">'myroutingkey'</span>, server=<span class="string">'myserver'</span>)</div><div class="line">endpoints = [TestEndpoint(<span class="keyword">None</span>)]</div><div class="line">server = oslo.messaging.get_rpc_server(transport, target, endpoints,</div><div class="line">                                      executor=<span class="string">'blocking'</span>)</div><div class="line">server.start()</div><div class="line">server.wait()</div></pre></figure>
+
+<p>client客户端绑定通过exchange绑定到myrouting类型的队列，远程同步调用test命令空间里的foo方法。</p>
+<figure class="highlight python"><pre><div class="line"><span class="keyword">import</span> oslo.messaging</div><div class="line"><span class="keyword">from</span> oslo.config <span class="keyword">import</span> cfg</div><div class="line"></div><div class="line">oslo.messaging.set_transport_defaults(<span class="string">'myexchange'</span>)</div><div class="line">transport = oslo.messaging.get_transport(cfg.CONF,</div><div class="line">                 url=<span class="string">'rabbit://guest:guest@127.0.0.1:5672/'</span>)</div><div class="line">target = oslo.messaging.Target(topic=<span class="string">'myroutingkey'</span>, version=<span class="string">'2.0'</span>, </div><div class="line">                               namespace=<span class="string">'test'</span>)</div><div class="line">client = oslo.messaging.RPCClient(transport, target)</div><div class="line">r = client.call({}, <span class="string">'foo'</span>, id=<span class="string">'1'</span>)</div><div class="line"><span class="keyword">print</span> r</div></pre></figure>
+
+<p>rabbitmqctl list_bindings 查看server运行后创建的监听队列。如下图所示。<br><img src="/images/rabbitmq.png" alt=""></p>
+
+    </div>
+    
+    <footer >
+        
+            
+    
+    <div class="categories">
+        所属目录：
+    <a href="/categories/oslo/">oslo</a>
+    </div>
+
+            
+    
+    <div class="tags-row">
+        标签：<a class="btn btn-info" href="/tags/rabbitmq/">rabbitmq</a>
+    </div>
+
+        
+        <div class="clearfix"></div>
+    </footer>
+</article>
+
+
+
+<section id="comment">
+    <!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2015/12/04/rabbitmq/" data-title="Oslo message 概念" data-url="http://cinlk.com/2015/12/04/rabbitmq/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	 var duoshuoQuery = {short_name: 'cinlk' };
+	  (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';
+		ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
+
+
         </div>
     </div>
     <footer id="page-footer"><div class="footer-content">
