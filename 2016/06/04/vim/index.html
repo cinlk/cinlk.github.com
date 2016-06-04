@@ -4,13 +4,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     
-    <title>ABAC | Cinlk&#39;s Blog</title>
+    <title>vim 集成IDE环境 | Cinlk&#39;s Blog</title>
     <meta name="author" content="cinlk">
+    
+    <meta name="description"   content="强大优秀的IDE开发工具vim的">
     
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-    
+    <meta property="og:title" content="vim 集成IDE环境"/>
     <meta property="og:site_name" content="Cinlk&#39;s Blog"/>
 
     <link rel="alternate" href="/atom.xml" title="Cinlk&#39;s Blog" type="application/atom+xml">
@@ -317,40 +319,82 @@
     </header>
     <div id="content-wrapper">
         <div class="container-center">
+        <article class="post">
+    <div class="article-title article-title-big">
         
-
-<h2 class="page-sub-title archive-title">你当前所在的位置：（分类）ABAC</h2>
-
-
     
-        <article>
-    <div class="row">
-        <div class="col-2 date-tags">
-            <div class="date-row">
-                <time datetime="2015-07-26T16:28:39.000Z">7月 27 2015</time>
-            </div>
-            
-        </div>
-        <div class="col-10">
-            <div class="article-title simple-article-title">
-                
-    
-        <h1><a href="/2015/07/27/xacml/">xacml 简介</a></h1>
+        <h1>vim 集成IDE环境</h1>
     
 
-            </div>
-            
-        </div>
     </div>
-    <div class="split-line"></div>
+
+    <div class="date-row ">
+        <time datetime="2016-06-04T14:33:27.000Z">6月 4 2016</time>
+    </div>
+
+    <div class="toc-wrap">
+        <div class="toc-title">目录</div>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#vim_集成插件"><span class="toc-number">1.</span> <span class="toc-text">vim 集成插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#vim_简单插件编写"><span class="toc-number">2.</span> <span class="toc-text">vim 简单插件编写</span></a></li></ol>
+    </div>
+
+    <div class="entry">
+        <p>&emsp;&emsp; VIM是linux系统下文本编辑器，熟悉vim常用命令能大幅提升编辑效率。另外vim也可以集成各种功能的插件plugins，网络上也有许多有插件提供下载安装，这样可以把vim打造成强大的IDE开发工具<a id="more"></a>，vim大牛都自己开发插件，请绕步O(∩_∩)O~。然而作为小白的我们可以采用别人的插件来优化自己的vim环境。本文推荐一个不错的vim集成插件，然后给插件开发的列子。</p>
+<h3 id="vim_集成插件">vim 集成插件</h3>
+<p>&emsp;&emsp;该插件具有语法高亮，代码补全，多窗口操作，一建执行和调试代码，根据文件类型插入头信息，编写markdown文件，代码格式检查等强大的功能。 作为IDE能够支持java，c，c++，python，go，ruby，sh程序编写。<br>&emsp;&emsp;执行下面的命令自动安装：</p>
+<figure class="highlight sh"><pre><div class="line">wget -qO- https://raw.github.com/ma6174/vim/master/setup.sh | sh -x</div></pre></figure>
+
+<center>使用截图如下所示：</center><br>    <img src="/images/sv.png" alt="sv"><br>  <center>多窗口使用</center><br>    <img src="/images/buquan.png" alt="buquan"><br>    <center>代码按tab键补全</center>
+
+<h3 id="vim_简单插件编写">vim 简单插件编写</h3>
+<p>&emsp;&emsp;vim插件有2类，一中是全局插件用Vim编辑的文件都会加载且可以用的插件，放在~/.vim/plugin目录下。另外一中是文件类型插件，对某个文件类型才有有效的插件，一般放在~/.vim/ftplugin下。比如需要写python文件类型插件，在该目录下创建python文件夹，写好的插件文件放在该目录下。<br>&emsp;&emsp;vim插件可以用自身的语言实现，也可以嵌入其他编程语法来实现。下面给出一个简单的python实现的vim插件,可以在任何位置用vim编辑新的文件(xx.vim)，注意文件类型是vim。</p>
+<figure class="highlight bash"><pre><div class="line"><span class="string">"python  type plugins</span></div><div class="line">"  判断系统是否有python编译器</div><div class="line"><span class="keyword">if</span> !has(<span class="string">'python'</span>)</div><div class="line">    <span class="built_in">echo</span> <span class="string">"Error: vim compile  need python"</span></div><div class="line">    finish</div><div class="line">endif</div><div class="line"><span class="string">" 只需要加载一次，加载后存储在缓存区。</span></div><div class="line">if exists("b:did_my_python_plugin<span class="string">")</span></div><div class="line">    finish "only load once<span class="string">"</span></div><div class="line">else</div><div class="line">    let b:did_my_python_plugin=1</div><div class="line">endif</div><div class="line">" 定义Tests命令来执行python代码，调用prints函数并输出。</div><div class="line">command! -nargs=<span class="number">1</span> Tests <span class="keyword">exec</span>(<span class="string">'py Mypython().prints(&lt;f-args&gt;) '</span>)</div><div class="line"></div><div class="line"><span class="string">" 嵌入的python代码</span></div><div class="line">python &lt;&lt;EOF</div><div class="line"></div><div class="line">class Mypython(object):</div><div class="line"></div><div class="line">def __init__(self):</div><div class="line">		pass</div><div class="line">def prints(self,args):</div><div class="line">		print args</div><div class="line"></div><div class="line">EOF</div></pre></figure>
+
+<p>&emsp;&emsp;写完后先不用wq退出，可以执行:w保存，然后:source &lt;该文件名&gt;， 执行:Tests <args> 进行测试。source 只能在当前shell环境有效，如需要长久使用，并且插件代码没问题，可以把它copy到~/.vim/plugin目录下，这样每个文件都能调用Tests命令。也可以放在ftplugin的python目录下，只要py类型的文件才能用Tests命令。<br>&emsp;&emsp;<strong>vim参考文档：</strong><br>&emsp;&emsp;<a href="http://easwy.com/blog/archives/advanced-vim-skills-introduce-vimrc/" target="_blank" rel="external">http://easwy.com/blog/archives/advanced-vim-skills-introduce-vimrc/</a><br>&emsp;&emsp;<a href="http://vimskill.readthedocs.io/Stage_2.html#vim" target="_blank" rel="external">http://vimskill.readthedocs.io/Stage_2.html#vim</a></args></p>
+
+    </div>
+    
+    <footer >
+        
+            
+    
+    <div class="categories">
+        所属目录：
+    <a href="/categories/vim/">vim</a>
+    </div>
+
+            
+    
+    <div class="tags-row">
+        标签：<a class="btn btn-info" href="/tags/vim/">vim</a>
+    </div>
+
+        
+        <div class="clearfix"></div>
+    </footer>
 </article>
 
-    
-  <nav id="pagination">
-  
-  
-  <div class="clearfix"></div>
-</nav>
+
+
+<section id="comment">
+    <!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2016/06/04/vim/" data-title="vim 集成IDE环境" data-url="http://cinlk.com/2016/06/04/vim/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	 var duoshuoQuery = {short_name: 'cinlk' };
+	  (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';
+		ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
+
 
         </div>
     </div>

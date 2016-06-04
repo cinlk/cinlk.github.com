@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://cinlk.com/2016/06/04/vim/</loc>
+    <lastmod>2016-06-04T14:43:26.755Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://cinlk.com/2015/12/04/rabbitmq/</loc>
     <lastmod>2016-05-03T09:24:46.687Z</lastmod>
   </url>
